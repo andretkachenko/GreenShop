@@ -1,14 +1,13 @@
 ﻿using Common.Models.Categories.Interfaces;
+using Common.Models.Comments;
+using Common.Models.Entity.Interfaces;
 using Common.Models.Specifications;
 using System.Collections.Generic;
 
 namespace Common.Models.Products.Interfaces
 {
-    public interface IProduct
+    public interface IProduct : IEntity
     {
-        int Id { get; set; }
-        string Name { get; set; }
-
         string Description { get; set; }
 
         decimal BasePrice { get; set; }
@@ -16,5 +15,6 @@ namespace Common.Models.Products.Interfaces
 
         ICategory Category { get; set; }
         List<ISpecification> Specifications { get; set; }
+        List<IComment> Comments { get; set; }
     }
 }

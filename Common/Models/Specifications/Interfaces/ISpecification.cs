@@ -1,8 +1,8 @@
-﻿namespace Common.Models.Specifications
+﻿using Common.Models.Entity.Interfaces;
+
+namespace Common.Models.Specifications
 {
-    public interface ISpecification
+    public interface ISpecification : IEntity
     {
-        int Id { get; set; }
-        string Name { get; set; }
     }
 }
