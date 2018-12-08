@@ -336,6 +336,3 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
-
-# Actual configuration files
-/Common/Configuration/*.json
