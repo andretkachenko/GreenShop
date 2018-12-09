@@ -6,7 +6,7 @@ namespace Common.Configuration.SQL
     /// Abstract class, describing basic logic for SqlContext.
     /// Getter for Context should be overriden in order to use establish proper connection
     /// </summary>
-    public abstract class SqlContext
+    public abstract class BaseSqlContext
     {
         /// <summary>
         /// Reads configuration file and returns connection string assembled from it
