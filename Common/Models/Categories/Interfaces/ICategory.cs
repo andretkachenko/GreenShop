@@ -4,7 +4,7 @@ namespace Common.Models.Categories.Interfaces
 {
     public interface ICategory : IEntity
     {
-        bool IsSubCategory { get; set; }
+        int ParentCategoryId { get; set; }
 
         ICategory SubCategory { get; set; }
     }
