@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalog.DataAccessor;
+using Catalog.Services.Categories;
+using Catalog.Services.Categories.Interfaces;
+using Common.Interfaces;
+using Common.Models.Categories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +31,10 @@ namespace Catalog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Dependency injection block
+            services.AddSingleton<ICategoriesService, CategoriesService>();
+            services.AddSingleton<IDataAccessor<Category>, Categories>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

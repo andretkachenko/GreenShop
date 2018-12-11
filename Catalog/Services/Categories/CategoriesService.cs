@@ -1,46 +1,69 @@
-﻿using Common.Models.Categories;
+﻿using Catalog.Services.Categories.Interfaces;
+using Common.Interfaces;
+using Common.Models.Categories;
+using Common.Validatiors.Categories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace Catalog.Services.Categories
 {
-    public static class CategoriesService
+    public class CategoriesService : ICategoriesService
     {
-        public static async Task<IEnumerable<Category>> GetAllCategories()
+        public readonly IDataAccessor<Category> Categories;
+
+        public CategoriesService(IDataAccessor<Category> dataAccessor)
         {
-            var categories = await DataAccess.Categories.GetAllCategories();
+            Categories = dataAccessor;
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategories()
+        {
+            var categories = await Categories.GetAll();
 
             return categories;
         }
 
-        public static async Task<Category> GetCategory(int id)
+        public async Task<Category> GetCategory(int id)
         {
-            var category = await DataAccess.Categories.GetCategory(id);
+            var validator = new CategoryIdValidator();
+            validator.ValidateAndThrow(id);
+
+            var category = await Categories.Get(id);
 
             return category;
         }
 
-        public static async Task<bool> AddCategory(Category category)
+        public async Task<bool> AddCategory(Category category)
         {
-            var rowsAffected = await DataAccess.Categories.AddCategory(category);
+            var validator = new CategoryValidator();
+            validator.ValidateAndThrow(category);
+
+            var rowsAffected = await Categories.Add(category);
 
             var success = rowsAffected == 1;
 
             return success;
         }
 
-        public static async Task<bool> DeleteCategory(int id)
+        public async Task<bool> EditCategory(Category category)
         {
-            var rowsAffected = await DataAccess.Categories.DeleteCategory(id);
+            var validator = new CategoryValidator();
+            validator.ValidateAndThrow(category);
+
+            var rowsAffected = await Categories.Edit(category);
 
             var success = rowsAffected == 1;
 
             return success;
         }
 
-        public static async Task<bool> EditCategory(Category category)
+        public async Task<bool> DeleteCategory(int id)
         {
-            var rowsAffected = await DataAccess.Categories.EditCategory(category);
+            var validator = new CategoryIdValidator();
+            validator.ValidateAndThrow(id);
+
+            var rowsAffected = await Categories.Delete(id);
 
             var success = rowsAffected == 1;
 

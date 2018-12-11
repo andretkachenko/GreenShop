@@ -1,14 +1,15 @@
 ﻿using Catalog.Utils;
+using Common.Interfaces;
 using Common.Models.Categories;
 using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catalog.DataAccess
+namespace Catalog.DataAccessor
 {
-    public static class Categories
+    public class Categories : IDataAccessor<Category>
     {
-        public static async Task<IEnumerable<Category>> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAll()
         {
             using (var context = SqlContext.Context)
             {
@@ -23,7 +24,7 @@ namespace Catalog.DataAccess
             }
         }
 
-        public static async Task<Category> GetCategory(int id)
+        public async Task<Category> Get(int id)
         {
             using (var context = SqlContext.Context)
             {
@@ -42,7 +43,7 @@ namespace Catalog.DataAccess
             }
         }
 
-        public static async Task<int> AddCategory(Category category)
+        public async Task<int> Add(Category category)
         {
             using (var context = SqlContext.Context)
             {
@@ -77,7 +78,7 @@ namespace Catalog.DataAccess
             }
         }
 
-        public static async Task<int> DeleteCategory(int id)
+        public async Task<int> Delete(int id)
         {
             using (var context = SqlContext.Context)
             {
@@ -94,7 +95,7 @@ namespace Catalog.DataAccess
             }
         }
 
-        public static async Task<int> EditCategory(Category category)
+        public async Task<int> Edit(Category category)
         {
             using (var context = SqlContext.Context)
             {

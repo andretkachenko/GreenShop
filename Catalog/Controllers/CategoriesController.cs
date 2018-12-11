@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalog.Services.Categories;
+using Catalog.Services.Categories.Interfaces;
 using Common.Models.Categories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +10,18 @@ namespace Catalog.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
+        private readonly ICategoriesService _categoriesService;
+        
+        public CategoriesController(ICategoriesService categoriesService)
+        {
+            _categoriesService = categoriesService;
+        }
+
         // GET api/categories
         [HttpGet]
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            var categories = await CategoriesService.GetAllCategories();
+            var categories = await _categoriesService.GetAllCategories();
 
             return categories;
         }
@@ -25,7 +30,7 @@ namespace Catalog.Controllers
         [HttpGet("{id}")]
         public async Task<Category> GetCategoryAsync(int id)
         {
-            var category = await CategoriesService.GetCategory(id);
+            var category = await _categoriesService.GetCategory(id);
 
             return category;
         }
@@ -34,7 +39,7 @@ namespace Catalog.Controllers
         [HttpPost]
         public async Task<bool> AddCategoryAsync([FromBody] Category category)
         {
-            var success = await CategoriesService.AddCategory(category);
+            var success = await _categoriesService.AddCategory(category);
 
             return success;
         }
@@ -43,7 +48,7 @@ namespace Catalog.Controllers
         [HttpPut]
         public async Task<bool> EditCategoryAsync([FromBody] Category category)
         {
-            var success = await CategoriesService.EditCategory(category);
+            var success = await _categoriesService.EditCategory(category);
 
             return success;
         }
@@ -52,7 +57,7 @@ namespace Catalog.Controllers
         [HttpDelete("{id}")]
         public async Task<bool> DeleteCategoryAsync(int id)
         {
-            var success = await CategoriesService.DeleteCategory(id);
+            var success = await _categoriesService.DeleteCategory(id);
 
             return success;
         }
