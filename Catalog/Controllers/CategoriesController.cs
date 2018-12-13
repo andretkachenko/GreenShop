@@ -37,7 +37,7 @@ namespace Catalog.Controllers
 
         // POST api/categories
         [HttpPost]
-        public async Task<bool> AddCategoryAsync([FromBody] Category category)
+        public async Task<int> AddCategoryAsync([FromBody] Category category)
         {
             var success = await _categoriesService.AddCategory(category);
 

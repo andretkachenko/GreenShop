@@ -1,7 +1,9 @@
-﻿using Catalog.Utils;
+﻿using Catalog.DataAccessors;
+using Catalog.Utils;
 using Common.Interfaces;
 using Common.Models.Categories;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,23 +13,15 @@ namespace Catalog.DataAccessor
 {
     public class Categories : IDataAccessor<Category>
     {
-        private SqlConnection context = SqlContext.Context;
-        private bool disposed = false;
-
         /// <summary>
         /// Asynchronously gets all Categories
         /// </summary>
         /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAll()
         {
-            using (context)
+            using (var context = SqlContext.Context)
             {
-                var categories = await context.QueryAsync<Category>(@"
-                    SELECT [Id]
-                          ,[Name]
-                          ,[ParentCatergoryId]
-                    FROM [Categories]
-                ");
+                var categories = await context.GetAllAsync<Category>();
 
                 return categories;
             }
@@ -40,18 +34,9 @@ namespace Catalog.DataAccessor
         /// <returns>Task with specified Category</returns>
         public async Task<Category> Get(int id)
         {
-            using (context)
+            using (var context = SqlContext.Context)
             {
-                var category = await context.QueryFirstOrDefaultAsync<Category>(@"
-                    SELECT [Id]
-                          ,[Name]
-                          ,[ParentCatergoryId]
-                    FROM [Categories]
-                    WHERE [Id] = @id
-                ", new
-                {
-                    id
-                });
+                var category = await context.GetAsync<Category>(id);
 
                 return category;
             }
@@ -61,39 +46,14 @@ namespace Catalog.DataAccessor
         /// Asynchronously adds Category
         /// </summary>
         /// <param name="category">Category to add</param>
-        /// <returns>Number of rows affected</returns>
+        /// <returns>Category Id</returns>
         public async Task<int> Add(Category category)
         {
-            using (context)
+            using (var context = SqlContext.Context)
             {
-                var query = string.Empty;
+                var id = await context.InsertAsync(category);
 
-                if (category.ParentCategoryId != 0)
-                {
-                    query = @"
-                    INSERT INTO [Categories]
-                        ([Name]
-                        ,[ParentCatergoryId])
-                    VALUES
-                        (@name
-                        ,@parentId)";
-                }
-                else
-                {
-                    query = @"
-                    INSERT INTO [Categories]
-                        ([Name])
-                    VALUES
-                        (@name)";
-                }
-
-                var affectedRows = await context.ExecuteAsync(query, new
-                {
-                    name = category.Name,
-                    parentId = category.ParentCategoryId
-                });
-
-                return affectedRows;
+                return id;
             }
         }
 
@@ -104,7 +64,7 @@ namespace Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<int> Delete(int id)
         {
-            using (context)
+            using (var context = SqlContext.Context)
             {
                 var affectedRows = await context.ExecuteAsync(@"
                     DELETE
@@ -126,7 +86,7 @@ namespace Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<int> Edit(Category category)
         {
-            using (context)
+            using (var context = SqlContext.Context)
             {
                 var query = @"
                     UPDATE [Categories]
@@ -153,24 +113,6 @@ namespace Catalog.DataAccessor
 
                 return affectedRows;
             }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-            }
-            disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

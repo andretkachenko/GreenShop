@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IDataAccessor<T> : IDisposable
+    public interface IDataAccessor<T>
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> Get(int id);

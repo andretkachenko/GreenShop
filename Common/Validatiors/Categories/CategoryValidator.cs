@@ -19,4 +19,12 @@ namespace Common.Validatiors.Categories
             RuleFor(id => id).GreaterThan(0);
         }
     }
+
+    public class CategoryNameValidator : AbstractValidator<string>
+    {
+        public CategoryNameValidator()
+        {
+            RuleFor(name => name).NotEmpty();
+        }
+    }
 }

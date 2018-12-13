@@ -47,17 +47,15 @@ namespace Catalog.Services.Categories
         /// Asynchronously adds Category
         /// </summary>
         /// <param name="category">Category to add</param>
-        /// <returns>Number of rows affected</returns>
-        public async Task<bool> AddCategory(Category category)
+        /// <returns>Category id</returns>
+        public async Task<int> AddCategory(Category category)
         {
-            var validator = new CategoryValidator();
-            validator.ValidateAndThrow(category);
+            var validator = new CategoryNameValidator();
+            validator.ValidateAndThrow(category.Name);
 
-            var rowsAffected = await Categories.Add(category);
+            var id = await Categories.Add(category);
 
-            var success = rowsAffected == 1;
-
-            return success;
+            return id;
         }
 
         /// <summary>
@@ -67,8 +65,8 @@ namespace Catalog.Services.Categories
         /// <returns>Number of rows affected</returns>
         public async Task<bool> EditCategory(Category category)
         {
-            var validator = new CategoryValidator();
-            validator.ValidateAndThrow(category);
+            var validator = new CategoryIdValidator();
+            validator.ValidateAndThrow(category.Id);
 
             var rowsAffected = await Categories.Edit(category);
 
