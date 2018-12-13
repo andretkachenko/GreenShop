@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace Catalog.DataAccessors
 {
+    /// <summary>
+    /// Comments Dapper Accessor
+    /// </summary>
     public class Comments : IDataAccessor<Comment>
     {
         private string query;
 
         public async Task<int> Add(Comment comment)
         {
-            using (System.Data.SqlClient.SqlConnection context = SqlContext.Context)
+            using (var context = SqlContext.Context)
             {
                 query = @"
                 INSERT INTO [Comments]
@@ -36,7 +39,7 @@ namespace Catalog.DataAccessors
 
         public async Task<int> Delete(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = SqlContext.Context)
+            using (var context = SqlContext.Context)
             {
                 query = @"
                         DELETE
@@ -52,7 +55,7 @@ namespace Catalog.DataAccessors
 
         public async Task<int> Edit(Comment comment)
         {
-            using (System.Data.SqlClient.SqlConnection context = SqlContext.Context)
+            using (var context = SqlContext.Context)
             {
                 query = @"
                         UPDATE [Comments]
@@ -79,7 +82,7 @@ namespace Catalog.DataAccessors
 
         public async Task<Comment> Get(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = SqlContext.Context)
+            using (var context = SqlContext.Context)
             {
                 query = @"
                   SELECT [Id]
@@ -97,7 +100,7 @@ namespace Catalog.DataAccessors
 
         public async Task<IEnumerable<Comment>> GetAll()
         {
-            using (System.Data.SqlClient.SqlConnection context = SqlContext.Context)
+            using (var context = SqlContext.Context)
             {
                 query = @"
                   SELECT [Id]
