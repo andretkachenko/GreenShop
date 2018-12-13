@@ -2,16 +2,25 @@
 using Common.Interfaces;
 using Common.Models.Categories;
 using Dapper;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Catalog.DataAccessor
 {
     public class Categories : IDataAccessor<Category>
     {
+        private SqlConnection context = SqlContext.Context;
+        private bool disposed = false;
+
+        /// <summary>
+        /// Asynchronously gets all Categories
+        /// </summary>
+        /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAll()
         {
-            using (var context = SqlContext.Context)
+            using (context)
             {
                 var categories = await context.QueryAsync<Category>(@"
                     SELECT [Id]
@@ -24,9 +33,14 @@ namespace Catalog.DataAccessor
             }
         }
 
+        /// <summary>
+        /// Asynchronously gets Category with the specific id
+        /// </summary>
+        /// <param name="id">Id of the Category to get</param>
+        /// <returns>Task with specified Category</returns>
         public async Task<Category> Get(int id)
         {
-            using (var context = SqlContext.Context)
+            using (context)
             {
                 var category = await context.QueryFirstOrDefaultAsync<Category>(@"
                     SELECT [Id]
@@ -43,9 +57,14 @@ namespace Catalog.DataAccessor
             }
         }
 
+        /// <summary>
+        /// Asynchronously adds Category
+        /// </summary>
+        /// <param name="category">Category to add</param>
+        /// <returns>Number of rows affected</returns>
         public async Task<int> Add(Category category)
         {
-            using (var context = SqlContext.Context)
+            using (context)
             {
                 var query = string.Empty;
 
@@ -78,9 +97,14 @@ namespace Catalog.DataAccessor
             }
         }
 
+        /// <summary>
+        /// Asynchronously removed Category with specified id
+        /// </summary>
+        /// <param name="id">Id of the Category to delete</param>
+        /// <returns>Number of rows affected</returns>
         public async Task<int> Delete(int id)
         {
-            using (var context = SqlContext.Context)
+            using (context)
             {
                 var affectedRows = await context.ExecuteAsync(@"
                     DELETE
@@ -95,20 +119,25 @@ namespace Catalog.DataAccessor
             }
         }
 
+        /// <summary>
+        /// Asynchronously edits specified Category
+        /// </summary>
+        /// <param name="category">Category, that contains id of entity that should be changed, and all changed values</param>
+        /// <returns>Number of rows affected</returns>
         public async Task<int> Edit(Category category)
         {
-            using (var context = SqlContext.Context)
+            using (context)
             {
                 var query = @"
                     UPDATE [Categories]
                     SET
                 ";
 
-                if(!string.IsNullOrWhiteSpace(category.Name))
+                if (!string.IsNullOrWhiteSpace(category.Name))
                 {
                     query += " [Name] = @name";
                 }
-                if(category.ParentCategoryId != 0)
+                if (category.ParentCategoryId != 0)
                 {
                     query += " [ParentCategoryId] = @parentId";
                 }
@@ -124,6 +153,24 @@ namespace Catalog.DataAccessor
 
                 return affectedRows;
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IDataAccessor<T>
+    public interface IDataAccessor<T> : IDisposable
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> Get(int id);
