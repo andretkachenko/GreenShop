@@ -1,8 +1,12 @@
 ﻿using Catalog.DataAccessor;
+using Catalog.DataAccessors;
 using Catalog.Services.Categories;
 using Catalog.Services.Categories.Interfaces;
+using Catalog.Services.Products;
+using Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Categories;
+using Common.Models.Products;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Catalog.Utils
@@ -27,8 +31,9 @@ namespace Catalog.Utils
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private void RegisterSingletones(IServiceCollection services)
         {
-            services.AddSingleton<ICategoriesService, CategoriesService>();
             services.AddSingleton<IDataAccessor<Category>, Categories>();
+
+            services.AddSingleton<IDataAccessor<Product>, Products>();
         }
 
 
@@ -50,7 +55,11 @@ namespace Catalog.Utils
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private void RegisterTransient(IServiceCollection services)
         {
+            // Categories
+            services.AddTransient<ICategoriesService, CategoriesService>();
 
+            // Products
+            services.AddTransient<IProductsService, ProductsService>();
         }
     }
 }

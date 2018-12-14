@@ -4,6 +4,7 @@ using Common.Models.Products.Interfaces;
 using Common.Models.Specifications.Interfaces;
 using Common.Validatiors;
 using Dapper.Contrib.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -22,6 +23,7 @@ namespace Common.Models.Products
         public int CategoryId { get; set; }
         
         [Write(false)]
+        [JsonIgnore]
         public ICategory Category { get; set; }
         [Write(false)]
         public IEnumerable<ISpecification> Specifications { get; set; }

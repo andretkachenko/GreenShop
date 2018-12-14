@@ -1,10 +1,10 @@
 ﻿using Catalog.Services.Categories.Interfaces;
 using Common.Interfaces;
 using Common.Models.Categories;
-using Common.Validatiors.Categories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentValidation;
+using Common.Validatiors;
 
 namespace Catalog.Services.Categories
 {
@@ -35,7 +35,7 @@ namespace Catalog.Services.Categories
         /// <returns>Task with specified Category</returns>
         public async Task<Category> GetCategory(int id)
         {
-            var validator = new CategoryIdValidator();
+            var validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
             var category = await Categories.Get(id);
@@ -50,7 +50,7 @@ namespace Catalog.Services.Categories
         /// <returns>Category id</returns>
         public async Task<int> AddCategory(Category category)
         {
-            var validator = new CategoryNameValidator();
+            var validator = new EntityNameValidator();
             validator.ValidateAndThrow(category.Name);
 
             var id = await Categories.Add(category);
@@ -65,7 +65,7 @@ namespace Catalog.Services.Categories
         /// <returns>Number of rows affected</returns>
         public async Task<bool> EditCategory(Category category)
         {
-            var validator = new CategoryIdValidator();
+            var validator = new IdValidator();
             validator.ValidateAndThrow(category.Id);
 
             var rowsAffected = await Categories.Edit(category);
@@ -82,7 +82,7 @@ namespace Catalog.Services.Categories
         /// <returns>Number of rows affected</returns>
         public async Task<bool> DeleteCategory(int id)
         {
-            var validator = new CategoryIdValidator();
+            var validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
             var rowsAffected = await Categories.Delete(id);
