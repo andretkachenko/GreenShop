@@ -1,15 +1,19 @@
 ﻿using Common.Models.Categories.Interfaces;
+using Common.Validatiors;
+using Dapper.Contrib.Extensions;
 using System;
 
 namespace Common.Models.Categories
 {
+    [Table("Categories")]
     public class Category : ICategory
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
         public int ParentCategoryId { get; set; }
-
+        
+        [Write(false)]
         public ICategory SubCategory { get; set; }
 
         public override bool Equals(object obj)
@@ -21,10 +25,7 @@ namespace Common.Models.Categories
             }
 
             // Return true if the fields match:
-            return (Id == that.Id) 
-                && (Name == that.Name) 
-                && (ParentCategoryId == that.ParentCategoryId) 
-                && (SubCategory == that.SubCategory);
+            return EqualityValidator.ReflectiveEquals(this, that);
         }
 
         public bool Equals(Category obj)
@@ -36,10 +37,7 @@ namespace Common.Models.Categories
             }
 
             // Return true if the fields match:
-            return (Id == obj.Id)
-                && (Name == obj.Name)
-                && (ParentCategoryId == obj.ParentCategoryId)
-                && (SubCategory == obj.SubCategory);
+            return EqualityValidator.ReflectiveEquals(this, obj);
         }
 
         public override int GetHashCode()

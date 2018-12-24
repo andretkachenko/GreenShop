@@ -10,7 +10,7 @@ namespace Catalog.Services.Categories.Interfaces
 
         Task<Category> GetCategory(int id);
 
-        Task<bool> AddCategory(Category category);
+        Task<int> AddCategory(Category category);
 
         Task<bool> DeleteCategory(int id);
 

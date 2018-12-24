@@ -12,6 +12,7 @@ namespace Common.Models.Products.Interfaces
 
         decimal BasePrice { get; set; }
         float Rating { get; set; }
+        int CategoryId { get; set; }
 
         ICategory Category { get; set; }
         IEnumerable<ISpecification> Specifications { get; set; }
