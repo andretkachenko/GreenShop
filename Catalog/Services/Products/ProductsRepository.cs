@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Catalog.Services.Products
 {
-    public class ProductsService : IProductsService
+    public class ProductsRepository : IProductsRepository
     {
-        public readonly IDataAccessor<Product> Products;
+        private readonly IDataAccessor<Product> Products;
 
-        public ProductsService(IDataAccessor<Product> dataAccessor)
+        public ProductsRepository(IDataAccessor<Product> dataAccessor)
         {
             Products = dataAccessor;
         }

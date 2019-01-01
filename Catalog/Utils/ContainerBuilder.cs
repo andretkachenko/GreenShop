@@ -55,11 +55,8 @@ namespace Catalog.Utils
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private void RegisterTransient(IServiceCollection services)
         {
-            // Categories
-            services.AddTransient<ICategoriesService, CategoriesService>();
-
-            // Products
-            services.AddTransient<IProductsService, ProductsService>();
+            services.AddTransient<ICategoriesRepository, CategoriesRepository>();
+            services.AddTransient<IProductsRepository, ProductsRepository>();
         }
     }
 }

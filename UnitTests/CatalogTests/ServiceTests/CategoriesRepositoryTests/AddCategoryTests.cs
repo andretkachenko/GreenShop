@@ -6,22 +6,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
+namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
 {
     [TestClass]
-    public class DeleteCategoryTests
+    public class AddCategoryTests
     {
         private Mock<IDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesService Service;
+        private CategoriesRepository Service;
 
-        public DeleteCategoryTests()
+        public AddCategoryTests()
         {
             CategoriesAccessorMock = new Mock<IDataAccessor<Category>>();
-            Service = new CategoriesService(CategoriesAccessorMock.Object);
+            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
         }
 
         [TestMethod]
-        public void ValidId_ReturnsTrue()
+        public void ValidCategory_ReturnsTrue()
         {
             // Arrange
             var id = 1;
@@ -40,13 +40,13 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
         }
 
         [TestMethod]
-        public void NegativeId_ThrowsValidationException()
+        public void NegativeCategoryId_ThrowsValidationException()
         {
             // Arrange
             var id = -1;
 
             // Act
-            var result = Service.GetCategory(id);
+            var result = Service.DeleteCategory(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -54,7 +54,7 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
         }
 
         [TestMethod]
-        public void InvalidId_ReturnsFalse()
+        public void InvalidCategoryId_ReturnsFalse()
         {
             // Arrange
             var id = 99999;
@@ -70,7 +70,6 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
             Assert.AreEqual(expectedResult, result.Result);
-
         }
     }
 }

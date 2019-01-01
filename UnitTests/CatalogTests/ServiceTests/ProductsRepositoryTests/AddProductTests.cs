@@ -6,22 +6,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.ProductsServiceTests
+namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
 {
     [TestClass]
-    public class DeleteProductTests
+    public class AddProductTests
     {
         private Mock<IDataAccessor<Product>> ProductsAccessorMock;
-        private ProductsService Service;
+        private ProductsRepository Service;
 
-        public DeleteProductTests()
+        public AddProductTests()
         {
             ProductsAccessorMock = new Mock<IDataAccessor<Product>>();
-            Service = new ProductsService(ProductsAccessorMock.Object);
+            Service = new ProductsRepository(ProductsAccessorMock.Object);
         }
 
         [TestMethod]
-        public void ValidId_ReturnsTrue()
+        public void ValidProduct_ReturnsTrue()
         {
             // Arrange
             var id = 1;
@@ -40,13 +40,13 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsServiceTests
         }
 
         [TestMethod]
-        public void NegativeId_ThrowsValidationException()
+        public void NegativeProductId_ThrowsValidationException()
         {
             // Arrange
             var id = -1;
 
             // Act
-            var result = Service.GetProduct(id);
+            var result = Service.DeleteProduct(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -54,7 +54,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsServiceTests
         }
 
         [TestMethod]
-        public void InvalidId_ReturnsFalse()
+        public void InvalidProductId_ReturnsFalse()
         {
             // Arrange
             var id = 99999;
@@ -70,7 +70,6 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsServiceTests
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
             Assert.AreEqual(expectedResult, result.Result);
-
         }
     }
 }

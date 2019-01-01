@@ -8,11 +8,11 @@ using Common.Validatiors;
 
 namespace Catalog.Services.Categories
 {
-    public class CategoriesService : ICategoriesService
+    public class CategoriesRepository : ICategoriesRepository
     {
-        public readonly IDataAccessor<Category> Categories;
+        private readonly IDataAccessor<Category> Categories;
 
-        public CategoriesService(IDataAccessor<Category> dataAccessor)
+        public CategoriesRepository(IDataAccessor<Category> dataAccessor)
         {
             Categories = dataAccessor;
         }

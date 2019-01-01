@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Catalog.Services.Categories.Interfaces
 {
-    public interface ICategoriesService
+    public interface ICategoriesRepository
     {
         Task<IEnumerable<Category>> GetAllCategories();
 

@@ -7,18 +7,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.ProductsServiceTests
+namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
 {
     [TestClass]
     public class GetAllProductsTests
     {
         private Mock<IDataAccessor<Product>> ProductsAccessorMock;
-        private ProductsService Service;
+        private ProductsRepository Service;
 
         public GetAllProductsTests()
         {
             ProductsAccessorMock = new Mock<IDataAccessor<Product>>();
-            Service = new ProductsService(ProductsAccessorMock.Object);
+            Service = new ProductsRepository(ProductsAccessorMock.Object);
         }
 
         [TestMethod]

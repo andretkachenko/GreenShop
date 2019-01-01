@@ -6,18 +6,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
+namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
 {
     [TestClass]
-    public class AddCategoryTests
+    public class EditCategoryTests
     {
         private Mock<IDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesService Service;
+        private CategoriesRepository Service;
 
-        public AddCategoryTests()
+        public EditCategoryTests()
         {
             CategoriesAccessorMock = new Mock<IDataAccessor<Category>>();
-            Service = new CategoriesService(CategoriesAccessorMock.Object);
+            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
         }
 
         [TestMethod]
@@ -25,14 +25,23 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
         {
             // Arrange
             var id = 1;
+            var name = "RenamedTestCategory";
+            var parentId = 3;
             var expectedResult = true;
 
+            var category = new Category
+            {
+                Id = id,
+                Name = name,
+                ParentCategoryId = parentId
+            };
+
             CategoriesAccessorMock
-                .Setup(categories => categories.Delete(id))
+                .Setup(categories => categories.Edit(category))
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = Service.DeleteCategory(id);
+            var result = Service.EditCategory(category);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -44,9 +53,18 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
         {
             // Arrange
             var id = -1;
+            var name = "RenamedTestCategory";
+            var parentId = 3;
+
+            var category = new Category
+            {
+                Id = id,
+                Name = name,
+                ParentCategoryId = parentId
+            };
 
             // Act
-            var result = Service.DeleteCategory(id);
+            var result = Service.EditCategory(category);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -58,14 +76,23 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
         {
             // Arrange
             var id = 99999;
+            var name = "NonExistingCategory";
+            var parentId = 3;
             var expectedResult = false;
 
+            var category = new Category
+            {
+                Id = id,
+                Name = name,
+                ParentCategoryId = parentId
+            };
+
             CategoriesAccessorMock
-                .Setup(categories => categories.Delete(id))
+                .Setup(categories => categories.Edit(category))
                 .Returns(Task.FromResult(0));
 
             // Act
-            var result = Service.DeleteCategory(id);
+            var result = Service.EditCategory(category);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

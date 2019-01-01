@@ -6,18 +6,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
+namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
 {
     [TestClass]
     public class GetCategoryTests
     {
         private Mock<IDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesService Service;
+        private CategoriesRepository Service;
 
         public GetCategoryTests()
         {
             CategoriesAccessorMock = new Mock<IDataAccessor<Category>>();
-            Service = new CategoriesService(CategoriesAccessorMock.Object);
+            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
         }
 
         [TestMethod]

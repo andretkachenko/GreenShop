@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalog.Services.Products.Interfaces;
 using Common.Models.Products;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Controllers
@@ -13,9 +10,9 @@ namespace Catalog.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductsService _productsService;
+        private readonly IProductsRepository _productsService;
 
-        public ProductsController(IProductsService productsService)
+        public ProductsController(IProductsRepository productsService)
         {
             _productsService = productsService;
         }

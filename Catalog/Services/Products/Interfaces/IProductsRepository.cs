@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Catalog.Services.Products.Interfaces
 {
-    public interface IProductsService
+    public interface IProductsRepository
     {
         Task<IEnumerable<Product>> GetAllProducts();
 

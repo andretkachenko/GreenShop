@@ -6,42 +6,33 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
+namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
 {
     [TestClass]
-    public class EditCategoryTests
+    public class DeleteCategoryTests
     {
         private Mock<IDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesService Service;
+        private CategoriesRepository Service;
 
-        public EditCategoryTests()
+        public DeleteCategoryTests()
         {
             CategoriesAccessorMock = new Mock<IDataAccessor<Category>>();
-            Service = new CategoriesService(CategoriesAccessorMock.Object);
+            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
         }
 
         [TestMethod]
-        public void ValidCategory_ReturnsTrue()
+        public void ValidId_ReturnsTrue()
         {
             // Arrange
             var id = 1;
-            var name = "RenamedTestCategory";
-            var parentId = 3;
             var expectedResult = true;
 
-            var category = new Category
-            {
-                Id = id,
-                Name = name,
-                ParentCategoryId = parentId
-            };
-
             CategoriesAccessorMock
-                .Setup(categories => categories.Edit(category))
+                .Setup(categories => categories.Delete(id))
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = Service.EditCategory(category);
+            var result = Service.DeleteCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -49,22 +40,13 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
         }
 
         [TestMethod]
-        public void NegativeCategoryId_ThrowsValidationException()
+        public void NegativeId_ThrowsValidationException()
         {
             // Arrange
             var id = -1;
-            var name = "RenamedTestCategory";
-            var parentId = 3;
-
-            var category = new Category
-            {
-                Id = id,
-                Name = name,
-                ParentCategoryId = parentId
-            };
 
             // Act
-            var result = Service.EditCategory(category);
+            var result = Service.GetCategory(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -72,31 +54,23 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
         }
 
         [TestMethod]
-        public void InvalidCategoryId_ReturnsFalse()
+        public void InvalidId_ReturnsFalse()
         {
             // Arrange
             var id = 99999;
-            var name = "NonExistingCategory";
-            var parentId = 3;
             var expectedResult = false;
 
-            var category = new Category
-            {
-                Id = id,
-                Name = name,
-                ParentCategoryId = parentId
-            };
-
             CategoriesAccessorMock
-                .Setup(categories => categories.Edit(category))
+                .Setup(categories => categories.Delete(id))
                 .Returns(Task.FromResult(0));
 
             // Act
-            var result = Service.EditCategory(category);
+            var result = Service.DeleteCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
             Assert.AreEqual(expectedResult, result.Result);
+
         }
     }
 }
