@@ -1,29 +1,48 @@
-﻿using Catalog.Utils;
+﻿using Common.Configuration.MongoDB;
+using Common.Configuration.SQL;
 using Common.Interfaces;
 using Common.Models.Products;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System;
+using MongoDB.Driver;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Catalog.Properties;
+using AutoMapper;
+using System.Linq;
 
 namespace Catalog.DataAccessors
 {
-    public class Products : IDataAccessor<Product>
+    public class Products : ISqlDataAccessor<Product>
     {
+        private readonly ISqlContext _sql;
+        private readonly IMongoContext _mongoContext;
+        private readonly IMapper _mapper;
+
+        public Products(ISqlContext sqlContext, IMongoContext mongoContext, IMapper mapper)
+        {
+            _sql = sqlContext;
+            _mongoContext = mongoContext;
+            _mapper = mapper;
+        }
+
         /// <summary>
         /// Asynchronously gets all Products
         /// </summary>
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAll()
         {
-            using (var context = SqlContext.Context)
-            {
-                var categories = await context.GetAllAsync<Product>();
+            IEnumerable<Product> sqlProducts, mongoProducts, products;
 
-                return categories;
+            using (var context = _sql.Context)
+            {
+                sqlProducts = await context.GetAllAsync<Product>();
             }
+
+            mongoProducts = await _mongoContext.Database.GetCollection<Product>(Resources.Products).Find(_ => true).ToListAsync();
+            products = MergeProducts(sqlProducts, mongoProducts);
+
+            return products;
         }
 
         /// <summary>
@@ -33,7 +52,7 @@ namespace Catalog.DataAccessors
         /// <returns>Task with specified Product</returns>
         public async Task<Product> Get(int id)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var category = await context.GetAsync<Product>(id);
 
@@ -48,7 +67,7 @@ namespace Catalog.DataAccessors
         /// <returns>Task with specified Category</returns>
         public async Task<int> Add(Product product)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var id = await context.InsertAsync(product);
 
@@ -63,7 +82,7 @@ namespace Catalog.DataAccessors
         /// <returns>Number of rows affected</returns>
         public async Task<int> Delete(int id)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var affectedRows = await context.ExecuteAsync(@"
                     DELETE
@@ -85,7 +104,7 @@ namespace Catalog.DataAccessors
         /// <returns>Number of rows affected</returns>
         public async Task<int> Edit(Product product)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var query = @"
                     UPDATE [Products]
@@ -127,6 +146,23 @@ namespace Catalog.DataAccessors
 
                 return affectedRows;
             }
+        }
+
+        private IEnumerable<Product> MergeProducts(IEnumerable<Product> sqlProducts, IEnumerable<Product> mongoProducts)
+        {
+            var products = new List<Product>();
+
+            foreach (var sqlProduct in sqlProducts)
+            {
+                var mongoProduct = mongoProducts.FirstOrDefault(x => x.Id == sqlProduct.Id);
+                if (mongoProduct != null)
+                {
+                    _mapper.Map(sqlProduct, mongoProduct);
+                }
+                products.Add(sqlProduct);
+            }
+
+            return products;
         }
     }
 }
