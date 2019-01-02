@@ -1,9 +1,10 @@
-﻿using Common.Models.Attributes;
+﻿using Common.Models.Specifications;
 using Common.Models.Categories.Interfaces;
 using Common.Models.Comments.Interfaces;
 using Common.Models.Products.Interfaces;
 using Common.Validatiors;
 using Dapper.Contrib.Extensions;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
@@ -13,8 +14,11 @@ namespace Common.Models.Products
 {
     public class Product : IProduct
     {
-        [BsonId]
+        [BsonIgnore]
         public int Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string MongoId { get; set; }
         [BsonIgnore]
         public string Name { get; set; }
 
@@ -31,9 +35,9 @@ namespace Common.Models.Products
         
         [Write(false), JsonIgnore, BsonIgnore]
         public ICategory Category { get; set; }
-        [Write(false), BsonIgnore]
+        [Write(false), JsonIgnore, BsonIgnore]
         public IEnumerable<IComment> Comments { get; set; }
-        [BsonElement("specifications")]
+        [BsonElement("specifications"), Write(false)]
         public IEnumerable<Specification> Specifications { get; set; }
 
         public override bool Equals(object obj)

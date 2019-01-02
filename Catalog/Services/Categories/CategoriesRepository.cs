@@ -10,9 +10,9 @@ namespace Catalog.Services.Categories
 {
     public class CategoriesRepository : ICategoriesRepository
     {
-        private readonly IDataAccessor<Category> Categories;
+        private readonly ISqlDataAccessor<Category> Categories;
 
-        public CategoriesRepository(IDataAccessor<Category> dataAccessor)
+        public CategoriesRepository(ISqlDataAccessor<Category> dataAccessor)
         {
             Categories = dataAccessor;
         }

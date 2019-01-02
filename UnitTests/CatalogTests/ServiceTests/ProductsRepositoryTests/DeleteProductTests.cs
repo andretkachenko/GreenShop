@@ -1,4 +1,5 @@
 ﻿using Catalog.Services.Products;
+using Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Products;
 using FluentValidation;
@@ -11,13 +12,17 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
     [TestClass]
     public class DeleteProductTests
     {
-        private Mock<IDataAccessor<Product>> ProductsAccessorMock;
+        private Mock<ISqlDataAccessor<Product>> ProductsSqlAccessorMock;
+        private Mock<IMongoDataAccessor<Product>> ProductsMongoAccessorMock;
+        private Mock<IProductMerger> ProductMergerMock;
         private ProductsRepository Service;
 
         public DeleteProductTests()
         {
-            ProductsAccessorMock = new Mock<IDataAccessor<Product>>();
-            Service = new ProductsRepository(ProductsAccessorMock.Object);
+            ProductsSqlAccessorMock = new Mock<ISqlDataAccessor<Product>>();
+            ProductsMongoAccessorMock = new Mock<IMongoDataAccessor<Product>>();
+            ProductMergerMock = new Mock<IProductMerger>();
+            Service = new ProductsRepository(ProductsSqlAccessorMock.Object, ProductsMongoAccessorMock.Object, ProductMergerMock.Object);
         }
 
         [TestMethod]
@@ -27,7 +32,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             var id = 1;
             var expectedResult = true;
 
-            ProductsAccessorMock
+            ProductsSqlAccessorMock
                 .Setup(products => products.Delete(id))
                 .Returns(Task.FromResult(1));
 
@@ -60,7 +65,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             var id = 99999;
             var expectedResult = false;
 
-            ProductsAccessorMock
+            ProductsSqlAccessorMock
                 .Setup(products => products.Delete(id))
                 .Returns(Task.FromResult(0));
 

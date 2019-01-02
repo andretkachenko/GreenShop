@@ -1,5 +1,4 @@
-﻿using Catalog.Utils;
-using Common.Configuration.SQL;
+﻿using Common.Configuration.SQL;
 using Common.Interfaces;
 using Common.Models.Categories;
 using Dapper;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Catalog.DataAccessor
 {
-    public class Categories : IDataAccessor<Category>
+    public class Categories : ISqlDataAccessor<Category>
     {
         public readonly ISqlContext _sql;
 

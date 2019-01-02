@@ -1,29 +1,20 @@
-﻿using Common.Configuration.MongoDB;
-using Common.Configuration.SQL;
+﻿using Common.Configuration.SQL;
 using Common.Interfaces;
 using Common.Models.Products;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalog.Properties;
-using AutoMapper;
-using System.Linq;
 
 namespace Catalog.DataAccessors
 {
-    public class Products : ISqlDataAccessor<Product>
+    public class SqlProducts : ISqlDataAccessor<Product>
     {
         private readonly ISqlContext _sql;
-        private readonly IMongoContext _mongoContext;
-        private readonly IMapper _mapper;
 
-        public Products(ISqlContext sqlContext, IMongoContext mongoContext, IMapper mapper)
+        public SqlProducts(ISqlContext sqlContext)
         {
             _sql = sqlContext;
-            _mongoContext = mongoContext;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -32,17 +23,12 @@ namespace Catalog.DataAccessors
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAll()
         {
-            IEnumerable<Product> sqlProducts, mongoProducts, products;
-
             using (var context = _sql.Context)
             {
-                sqlProducts = await context.GetAllAsync<Product>();
+                var products = await context.GetAllAsync<Product>();
+
+                return products;
             }
-
-            mongoProducts = await _mongoContext.Database.GetCollection<Product>(Resources.Products).Find(_ => true).ToListAsync();
-            products = MergeProducts(sqlProducts, mongoProducts);
-
-            return products;
         }
 
         /// <summary>
@@ -54,9 +40,9 @@ namespace Catalog.DataAccessors
         {
             using (var context = _sql.Context)
             {
-                var category = await context.GetAsync<Product>(id);
+                var product = await context.GetAsync<Product>(id);
 
-                return category;
+                return product;
             }
         }
 
@@ -109,7 +95,7 @@ namespace Catalog.DataAccessors
                 var query = @"
                     UPDATE [Products]
                     SET
-                ";
+                    ";
 
                 if (!string.IsNullOrWhiteSpace(product.Name))
                 {
@@ -146,23 +132,6 @@ namespace Catalog.DataAccessors
 
                 return affectedRows;
             }
-        }
-
-        private IEnumerable<Product> MergeProducts(IEnumerable<Product> sqlProducts, IEnumerable<Product> mongoProducts)
-        {
-            var products = new List<Product>();
-
-            foreach (var sqlProduct in sqlProducts)
-            {
-                var mongoProduct = mongoProducts.FirstOrDefault(x => x.Id == sqlProduct.Id);
-                if (mongoProduct != null)
-                {
-                    _mapper.Map(sqlProduct, mongoProduct);
-                }
-                products.Add(sqlProduct);
-            }
-
-            return products;
         }
     }
 }

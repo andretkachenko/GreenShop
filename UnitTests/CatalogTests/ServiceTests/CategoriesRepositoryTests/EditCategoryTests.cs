@@ -11,12 +11,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
     [TestClass]
     public class EditCategoryTests
     {
-        private Mock<IDataAccessor<Category>> CategoriesAccessorMock;
+        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorMock;
         private CategoriesRepository Service;
 
         public EditCategoryTests()
         {
-            CategoriesAccessorMock = new Mock<IDataAccessor<Category>>();
+            CategoriesAccessorMock = new Mock<ISqlDataAccessor<Category>>();
             Service = new CategoriesRepository(CategoriesAccessorMock.Object);
         }
 

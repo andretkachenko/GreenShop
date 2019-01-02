@@ -36,7 +36,9 @@ namespace Catalog.Utils
             services.AddSingleton<IMongoContext, MongoContext>();
             services.AddSingleton<ISqlContext, SqlContext>();
 
-            services.AddSingleton<IDataAccessor<Category>, Categories>();
+            services.AddSingleton<ISqlDataAccessor<Category>, Categories>();
+            services.AddSingleton<ISqlDataAccessor<Product>, SqlProducts>();
+            services.AddSingleton<IProductMerger, ProductMerger>();
         }
 
 
@@ -47,7 +49,7 @@ namespace Catalog.Utils
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private static void RegisterScoped(IServiceCollection services)
         {
-            services.AddScoped<IDataAccessor<Product>, Products>();
+            services.AddScoped<IMongoDataAccessor<Product>, MongoProducts>();
         }
 
 

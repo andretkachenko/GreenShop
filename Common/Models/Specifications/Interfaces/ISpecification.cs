@@ -1,7 +1,7 @@
 ﻿using Common.Models.Entity.Interfaces;
 using System.Collections.Generic;
 
-namespace Common.Models.Attributes.Interfaces
+namespace Common.Models.Specifications.Interfaces
 {
     public interface ISpecification : IEntity
     {

@@ -1,14 +1,11 @@
-﻿using Common.Models.Attributes.Interfaces;
+﻿using Common.Models.Specifications.Interfaces;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
 using System.Collections.Generic;
 
-namespace Common.Models.Attributes
+namespace Common.Models.Specifications
 {
     public class Specification : ISpecification
     {
-        [BsonId]
-        public int Id { get; set; }
         [BsonElement("name")]
         public string Name { get; set; }
 

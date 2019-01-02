@@ -1,4 +1,5 @@
 ﻿using Catalog.Services.Products;
+using Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Products;
 using FluentValidation;
@@ -11,13 +12,17 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
     [TestClass]
     public class GetProductsTests
     {
-        private Mock<IDataAccessor<Product>> ProductsAccessorMock;
+        private Mock<ISqlDataAccessor<Product>> ProductsSqlAccessorMock;
+        private Mock<IMongoDataAccessor<Product>> ProductsMongoAccessorMock;
+        private Mock<IProductMerger> ProductMergerMock;
         private ProductsRepository Service;
 
         public GetProductsTests()
         {
-            ProductsAccessorMock = new Mock<IDataAccessor<Product>>();
-            Service = new ProductsRepository(ProductsAccessorMock.Object);
+            ProductsSqlAccessorMock = new Mock<ISqlDataAccessor<Product>>();
+            ProductsMongoAccessorMock = new Mock<IMongoDataAccessor<Product>>();
+            ProductMergerMock = new Mock<IProductMerger>();
+            Service = new ProductsRepository(ProductsSqlAccessorMock.Object, ProductsMongoAccessorMock.Object, ProductMergerMock.Object);
         }
 
         [TestMethod]
@@ -26,7 +31,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             // Arrange
             var id = 1;
 
-            ProductsAccessorMock
+            ProductsSqlAccessorMock
                 .Setup(products => products.Get(id))
                 .Returns(Task.FromResult(ExpectedValidProduct));
 
@@ -43,7 +48,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             // Arrange
             var id = 1;
 
-            ProductsAccessorMock
+            ProductsSqlAccessorMock
                 .Setup(products => products.Get(id))
                 .Returns(Task.FromResult(ExpectedValidProduct));
 
@@ -60,7 +65,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             // Arrange
             var id = 99999;
 
-            ProductsAccessorMock
+            ProductsSqlAccessorMock
                 .Setup(products => products.Get(id))
                 .Returns(Task.FromResult(ExpectedInvalidProduct));
 

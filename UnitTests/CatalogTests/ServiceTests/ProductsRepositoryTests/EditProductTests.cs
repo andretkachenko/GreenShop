@@ -1,4 +1,5 @@
 ﻿using Catalog.Services.Products;
+using Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Products;
 using FluentValidation;
@@ -11,13 +12,17 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
     [TestClass]
     public class EditProductTests
     {
-        private Mock<IDataAccessor<Product>> ProductsAccessorMock;
+        private Mock<ISqlDataAccessor<Product>> ProductsSqlAccessorMock;
+        private Mock<IMongoDataAccessor<Product>> ProductsMongoAccessorMock;
+        private Mock<IProductMerger> ProductMergerMock;
         private ProductsRepository Service;
 
         public EditProductTests()
         {
-            ProductsAccessorMock = new Mock<IDataAccessor<Product>>();
-            Service = new ProductsRepository(ProductsAccessorMock.Object);
+            ProductsSqlAccessorMock = new Mock<ISqlDataAccessor<Product>>();
+            ProductsMongoAccessorMock = new Mock<IMongoDataAccessor<Product>>();
+            ProductMergerMock = new Mock<IProductMerger>();
+            Service = new ProductsRepository(ProductsSqlAccessorMock.Object, ProductsMongoAccessorMock.Object, ProductMergerMock.Object);
         }
 
         [TestMethod]
@@ -42,7 +47,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
                 Rating = rating
             };
 
-            ProductsAccessorMock
+            ProductsSqlAccessorMock
                 .Setup(products => products.Edit(product))
                 .Returns(Task.FromResult(1));
 
@@ -105,7 +110,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
                 Rating = rating
             };
 
-            ProductsAccessorMock
+            ProductsSqlAccessorMock
                 .Setup(products => products.Edit(product))
                 .Returns(Task.FromResult(0));
 
