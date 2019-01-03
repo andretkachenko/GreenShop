@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Products;
+﻿using Target = Catalog.Services.Products.ProductsRepository;
 using Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Products;
@@ -7,22 +7,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
+namespace UnitTests.Catalog.Services.ProductsRepository
 {
     [TestClass]
     public class GetProductsTests
     {
-        private Mock<ISqlDataAccessor<Product>> ProductsSqlAccessorMock;
-        private Mock<IMongoDataAccessor<Product>> ProductsMongoAccessorMock;
-        private Mock<IProductMerger> ProductMergerMock;
-        private ProductsRepository Service;
+        private Mock<ISqlDataAccessor<Product>> ProductsSqlAccessorStub;
+        private Mock<IMongoDataAccessor<Product>> ProductsMongoAccessorStub;
+        private Mock<IProductMerger> ProductMergerStub;
+        private Target ProductsRepository;
 
         public GetProductsTests()
         {
-            ProductsSqlAccessorMock = new Mock<ISqlDataAccessor<Product>>();
-            ProductsMongoAccessorMock = new Mock<IMongoDataAccessor<Product>>();
-            ProductMergerMock = new Mock<IProductMerger>();
-            Service = new ProductsRepository(ProductsSqlAccessorMock.Object, ProductsMongoAccessorMock.Object, ProductMergerMock.Object);
+            ProductsSqlAccessorStub = new Mock<ISqlDataAccessor<Product>>();
+            ProductsMongoAccessorStub = new Mock<IMongoDataAccessor<Product>>();
+            ProductMergerStub = new Mock<IProductMerger>();
+            ProductsRepository = new Target(ProductsSqlAccessorStub.Object, ProductsMongoAccessorStub.Object, ProductMergerStub.Object);
         }
 
         [TestMethod]
@@ -31,12 +31,12 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             // Arrange
             var id = 1;
 
-            ProductsSqlAccessorMock
+            ProductsSqlAccessorStub
                 .Setup(products => products.Get(id))
                 .Returns(Task.FromResult(ExpectedValidProduct));
 
             // Act
-            var result = Service.GetProduct(id);
+            var result = ProductsRepository.GetProduct(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Product>));
@@ -48,12 +48,12 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             // Arrange
             var id = 1;
 
-            ProductsSqlAccessorMock
+            ProductsSqlAccessorStub
                 .Setup(products => products.Get(id))
                 .Returns(Task.FromResult(ExpectedValidProduct));
 
             // Act
-            var result = Service.GetProduct(id);
+            var result = ProductsRepository.GetProduct(id);
 
             // Assert
             Assert.AreEqual(result.Result, ExpectedValidProduct);
@@ -65,12 +65,12 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             // Arrange
             var id = 99999;
 
-            ProductsSqlAccessorMock
+            ProductsSqlAccessorStub
                 .Setup(products => products.Get(id))
                 .Returns(Task.FromResult(ExpectedInvalidProduct));
 
             // Act
-            var result = Service.GetProduct(id);
+            var result = ProductsRepository.GetProduct(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Product>));
@@ -84,7 +84,7 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
             var id = -1;
 
             // Act
-            var result = Service.GetProduct(id);
+            var result = ProductsRepository.GetProduct(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Categories;
+﻿using Target = Catalog.Services.Categories.CategoriesRepository;
 using Common.Interfaces;
 using Common.Models.Categories;
 using FluentValidation;
@@ -6,18 +6,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
+namespace UnitTests.Catalog.Services.CategoriesRepository
 {
     [TestClass]
     public class AddCategoryTests
     {
-        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesRepository Service;
+        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorStub;
+        private Target CategoriesRepository;
 
         public AddCategoryTests()
         {
-            CategoriesAccessorMock = new Mock<ISqlDataAccessor<Category>>();
-            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
+            CategoriesAccessorStub = new Mock<ISqlDataAccessor<Category>>();
+            CategoriesRepository = new Target(CategoriesAccessorStub.Object);
         }
 
         [TestMethod]
@@ -27,12 +27,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
             var id = 1;
             var expectedResult = true;
 
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.Delete(id))
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = Service.DeleteCategory(id);
+            var result = CategoriesRepository.DeleteCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -46,7 +46,7 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
             var id = -1;
 
             // Act
-            var result = Service.DeleteCategory(id);
+            var result = CategoriesRepository.DeleteCategory(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -60,12 +60,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
             var id = 99999;
             var expectedResult = false;
 
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.Delete(id))
                 .Returns(Task.FromResult(0));
 
             // Act
-            var result = Service.DeleteCategory(id);
+            var result = CategoriesRepository.DeleteCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Categories;
+﻿using Target = Catalog.Services.Categories.CategoriesRepository;
 using Common.Interfaces;
 using Common.Models.Categories;
 using FluentValidation;
@@ -6,18 +6,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
+namespace UnitTests.Catalog.Services.CategoriesRepository
 {
     [TestClass]
     public class EditCategoryTests
     {
-        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesRepository Service;
+        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorStub;
+        private Target Service;
 
         public EditCategoryTests()
         {
-            CategoriesAccessorMock = new Mock<ISqlDataAccessor<Category>>();
-            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
+            CategoriesAccessorStub = new Mock<ISqlDataAccessor<Category>>();
+            Service = new Target(CategoriesAccessorStub.Object);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
                 ParentCategoryId = parentId
             };
 
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.Edit(category))
                 .Returns(Task.FromResult(1));
 
@@ -87,7 +87,7 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
                 ParentCategoryId = parentId
             };
 
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.Edit(category))
                 .Returns(Task.FromResult(0));
 

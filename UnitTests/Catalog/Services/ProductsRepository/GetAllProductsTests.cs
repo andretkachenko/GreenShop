@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Products;
+﻿using Target = Catalog.Services.Products.ProductsRepository;
 using Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Products;
@@ -8,34 +8,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
+namespace UnitTests.Catalog.Services.ProductsRepository
 {
     [TestClass]
     public class GetAllProductsTests
     {
-        private Mock<ISqlDataAccessor<Product>> ProductsSqlAccessorMock;
-        private Mock<IMongoDataAccessor<Product>> ProductsMongoAccessorMock;
-        private Mock<IProductMerger> ProductMergerMock;
-        private ProductsRepository Service;
+        private Mock<ISqlDataAccessor<Product>> ProductsSqlAccessorStub;
+        private Mock<IMongoDataAccessor<Product>> ProductsMongoAccessorStub;
+        private Mock<IProductMerger> ProductMergerStub;
+        private Target ProductsRepository;
 
         public GetAllProductsTests()
         {
-            ProductsSqlAccessorMock = new Mock<ISqlDataAccessor<Product>>();
-            ProductsMongoAccessorMock = new Mock<IMongoDataAccessor<Product>>();
-            ProductMergerMock = new Mock<IProductMerger>();
-            Service = new ProductsRepository(ProductsSqlAccessorMock.Object, ProductsMongoAccessorMock.Object, ProductMergerMock.Object);
+            ProductsSqlAccessorStub = new Mock<ISqlDataAccessor<Product>>();
+            ProductsMongoAccessorStub = new Mock<IMongoDataAccessor<Product>>();
+            ProductMergerStub = new Mock<IProductMerger>();
+            ProductsRepository = new Target(ProductsSqlAccessorStub.Object, ProductsMongoAccessorStub.Object, ProductMergerStub.Object);
         }
 
         [TestMethod]
         public void ReturnsExpectedType()
         {
             // Arrange
-            ProductsSqlAccessorMock
+            ProductsSqlAccessorStub
                 .Setup(products => products.GetAll())
                 .Returns(Task.FromResult(ExpectedProductList));
 
             // Act
-            var result = Service.GetAllProducts();
+            var result = ProductsRepository.GetAllProducts();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<IEnumerable<Product>>));
@@ -45,12 +45,12 @@ namespace UnitTests.CatalogTests.ServiceTests.ProductsRepositoryTests
         public void ReturnsExpectedProduct()
         {
             // Arrange
-            ProductsSqlAccessorMock
+            ProductsSqlAccessorStub
                 .Setup(products => products.GetAll())
                 .Returns(Task.FromResult(ExpectedProductList));
 
             // Act
-            var result = Service.GetAllProducts();
+            var result = ProductsRepository.GetAllProducts();
 
             // Assert
             Assert.AreEqual(result.Result.First(), ExpectedProductList.First());

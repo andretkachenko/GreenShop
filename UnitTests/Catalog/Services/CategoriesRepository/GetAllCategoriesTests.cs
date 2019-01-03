@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Categories;
+﻿using Target = Catalog.Services.Categories.CategoriesRepository;
 using Common.Interfaces;
 using Common.Models.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,25 +7,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
+namespace UnitTests.Catalog.Services.CategoriesRepository
 {
     [TestClass]
     public class GetAllCategoriesTests
     {
-        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesRepository Service;
+        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorStub;
+        private Target Service;
 
         public GetAllCategoriesTests()
         {
-            CategoriesAccessorMock = new Mock<ISqlDataAccessor<Category>>();
-            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
+            CategoriesAccessorStub = new Mock<ISqlDataAccessor<Category>>();
+            Service = new Target(CategoriesAccessorStub.Object);
         }
 
         [TestMethod]
         public void ReturnsExpectedType()
         {
             // Arrange
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.GetAll())
                 .Returns(Task.FromResult(ExpectedCategoryList));
 
@@ -40,7 +40,7 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
         public void ReturnsExpectedCategory()
         {
             // Arrange
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.GetAll())
                 .Returns(Task.FromResult(ExpectedCategoryList));
 

@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Categories;
+﻿using Target = Catalog.Services.Categories.CategoriesRepository;
 using Common.Interfaces;
 using Common.Models.Categories;
 using FluentValidation;
@@ -6,18 +6,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
+namespace UnitTests.Catalog.Services.CategoriesRepository
 {
     [TestClass]
     public class GetCategoryTests
     {
-        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorMock;
-        private CategoriesRepository Service;
+        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorStub;
+        private Target CategoriesRepository;
 
         public GetCategoryTests()
         {
-            CategoriesAccessorMock = new Mock<ISqlDataAccessor<Category>>();
-            Service = new CategoriesRepository(CategoriesAccessorMock.Object);
+            CategoriesAccessorStub = new Mock<ISqlDataAccessor<Category>>();
+            CategoriesRepository = new Target(CategoriesAccessorStub.Object);
         }
 
         [TestMethod]
@@ -26,12 +26,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
             // Arrange
             var id = 1;
 
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.Get(id))
                 .Returns(Task.FromResult(ExpectedValidCategory));
 
             // Act
-            var result = Service.GetCategory(id);
+            var result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Category>));
@@ -43,12 +43,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
             // Arrange
             var id = 1;
 
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.Get(id))
                 .Returns(Task.FromResult(ExpectedValidCategory));
 
             // Act
-            var result = Service.GetCategory(id);
+            var result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.AreEqual(result.Result, ExpectedValidCategory);
@@ -60,12 +60,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
             // Arrange
             var id = 99999;
 
-            CategoriesAccessorMock
+            CategoriesAccessorStub
                 .Setup(categories => categories.Get(id))
                 .Returns(Task.FromResult(ExpectedInvalidCategory));
 
             // Act
-            var result = Service.GetCategory(id);
+            var result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Category>));
@@ -79,7 +79,7 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesRepositoryTests
             var id = -1;
 
             // Act
-            var result = Service.GetCategory(id);
+            var result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
