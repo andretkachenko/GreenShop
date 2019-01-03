@@ -124,11 +124,29 @@ namespace Catalog.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sqlProduct is null.
+        /// </summary>
+        internal static string NullSqlProductException {
+            get {
+                return ResourceManager.GetString("NullSqlProductException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Products.
         /// </summary>
         internal static string Products {
             get {
                 return ResourceManager.GetString("Products", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to sqlProduct&apos;s and mongoProduct&apos;s MongoId does not match..
+        /// </summary>
+        internal static string ProductsMismatchException {
+            get {
+                return ResourceManager.GetString("ProductsMismatchException", resourceCulture);
             }
         }
         

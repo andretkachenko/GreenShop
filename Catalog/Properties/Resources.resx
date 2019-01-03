@@ -145,9 +145,17 @@
     <value>Mongo</value>
     <comment>Environment variable</comment>
   </data>
+  <data name="NullSqlProductException" xml:space="preserve">
+    <value>sqlProduct is null</value>
+    <comment>Exception message</comment>
+  </data>
   <data name="Products" xml:space="preserve">
     <value>Products</value>
     <comment>MongoDB variable</comment>
+  </data>
+  <data name="ProductsMismatchException" xml:space="preserve">
+    <value>sqlProduct's and mongoProduct's MongoId does not match.</value>
+    <comment>Exception message</comment>
   </data>
   <data name="Specifications" xml:space="preserve">
     <value>Specifications</value>

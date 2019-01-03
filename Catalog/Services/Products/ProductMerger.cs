@@ -1,8 +1,9 @@
-﻿using Catalog.Services.Products.Interfaces;
+﻿using Catalog.Properties;
+using Catalog.Services.Products.Interfaces;
 using Common.Configuration.SQL;
 using Common.Models.Products;
 using Dapper;
-using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -65,10 +66,20 @@ namespace Catalog.Services.Products
         /// <returns>Merged Product</returns>
         public Product MergeProduct(Product sqlProduct, Product mongoProduct)
         {
-            if (mongoProduct != null)
+            if (sqlProduct == null)
             {
-                sqlProduct.Specifications = mongoProduct.Specifications;
+                throw new ArgumentNullException(Resources.NullSqlProductException);
             }
+            if (mongoProduct == null)
+            {
+                return sqlProduct;
+            }
+            if (sqlProduct.MongoId != mongoProduct.MongoId)
+            {
+                throw new ArgumentException(Resources.ProductsMismatchException);
+            }
+
+            sqlProduct.Specifications = mongoProduct.Specifications;
 
             return sqlProduct;
         }
