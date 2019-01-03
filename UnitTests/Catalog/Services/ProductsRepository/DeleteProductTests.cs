@@ -30,11 +30,18 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         {
             // Arrange
             var id = 1;
+            var mongoId = "TestMongoId";
             var expectedResult = true;
 
             ProductsSqlAccessorStub
                 .Setup(products => products.Delete(id))
                 .Returns(Task.FromResult(1));
+            ProductsMongoAccessorStub
+                .Setup(products => products.Delete(mongoId))
+                .Returns(Task.CompletedTask);
+            ProductMergerStub
+                .Setup(stub => stub.GetMongoId(id))
+                .Returns(mongoId);
 
             // Act
             var result = ProductsRepository.DeleteProduct(id);
@@ -63,11 +70,18 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         {
             // Arrange
             var id = 99999;
+            var mongoId = "TestMongoId";
             var expectedResult = false;
 
             ProductsSqlAccessorStub
                 .Setup(products => products.Delete(id))
                 .Returns(Task.FromResult(0));
+            ProductsMongoAccessorStub
+                .Setup(products => products.Delete(mongoId))
+                .Returns(Task.CompletedTask);
+            ProductMergerStub
+                .Setup(stub => stub.GetMongoId(id))
+                .Returns(mongoId);
 
             // Act
             var result = ProductsRepository.DeleteProduct(id);

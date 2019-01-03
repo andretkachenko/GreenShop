@@ -6,6 +6,10 @@ using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Common.Models.Specifications;
+using System.Linq;
+using System;
 
 namespace UnitTests.Catalog.Services.ProductsRepository
 {
@@ -30,10 +34,17 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         {
             // Arrange
             var id = 1;
+            var mongoId = "TestMongoId";
 
             ProductsSqlAccessorStub
                 .Setup(products => products.Get(id))
-                .Returns(Task.FromResult(ExpectedValidProduct));
+                .Returns(Task.FromResult(ExpectedValidSqlProduct));
+            ProductsMongoAccessorStub
+                .Setup(products => products.Get(mongoId))
+                .Returns(Task.FromResult(ExpectedValidMongoProduct));
+            ProductMergerStub
+                .Setup(stub => stub.MergeProduct(It.IsAny<Product>(), It.IsAny<Product>()))
+                .Returns(ExpectedMergedProduct);
 
             // Act
             var result = ProductsRepository.GetProduct(id);
@@ -47,34 +58,58 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         {
             // Arrange
             var id = 1;
+            var mongoId = "TestMongoId";
 
             ProductsSqlAccessorStub
                 .Setup(products => products.Get(id))
-                .Returns(Task.FromResult(ExpectedValidProduct));
+                .Returns(Task.FromResult(ExpectedValidMongoProduct));
+            ProductsMongoAccessorStub
+                .Setup(products => products.Get(mongoId))
+                .Returns(Task.FromResult(ExpectedValidMongoProduct));
+            ProductMergerStub
+                .Setup(stub => stub.MergeProduct(It.IsAny<Product>(), It.IsAny<Product>()))
+                .Returns(ExpectedMergedProduct);
 
             // Act
-            var result = ProductsRepository.GetProduct(id);
+            var result = ProductsRepository.GetProduct(id).Result;
 
             // Assert
-            Assert.AreEqual(result.Result, ExpectedValidProduct);
+            Assert.AreEqual(ExpectedMergedProduct.Id, result.Id);
+            Assert.AreEqual(ExpectedMergedProduct.MongoId, result.MongoId);
+            Assert.AreEqual(ExpectedMergedProduct.Name, result.Name);
+            Assert.AreEqual(ExpectedMergedProduct.CategoryId, result.CategoryId);
+            Assert.AreEqual(ExpectedMergedProduct.Description, result.Description);
+            Assert.AreEqual(ExpectedMergedProduct.BasePrice, result.BasePrice);
+            Assert.AreEqual(ExpectedMergedProduct.Rating, result.Rating);
+            Assert.AreEqual(ExpectedMergedProduct.Specifications.First().Name, result.Specifications.First().Name);
+            Assert.AreEqual(ExpectedMergedProduct.Specifications.First().MaxSelectionAvailable, result.Specifications.First().MaxSelectionAvailable);
+            Assert.AreEqual(ExpectedMergedProduct.Specifications.First().Options.Count(), result.Specifications.First().Options.Count());
+            Assert.AreEqual(ExpectedMergedProduct.Specifications.First().Options.First(), result.Specifications.First().Options.First());
         }
 
+        [ExpectedException(typeof(ArgumentNullException))]
         [TestMethod]
         public void InvalidId_ReturnsNull()
         {
             // Arrange
             var id = 99999;
+            var mongoId = "TestMongoId";
 
             ProductsSqlAccessorStub
                 .Setup(products => products.Get(id))
                 .Returns(Task.FromResult(ExpectedInvalidProduct));
+            ProductsMongoAccessorStub
+                .Setup(products => products.Get(mongoId))
+                .Returns(Task.FromResult(ExpectedValidMongoProduct));
+            ProductMergerStub
+                .Setup(stub => stub.MergeProduct(It.IsAny<Product>(), It.IsAny<Product>()))
+                .Throws(new ArgumentNullException());
 
             // Act
-            var result = ProductsRepository.GetProduct(id);
+            var result = ProductsRepository.GetProduct(id).GetAwaiter().GetResult();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<Product>));
-            Assert.IsNull(result.Result);
+            Assert.Fail();
         }
 
         [TestMethod]
@@ -91,7 +126,7 @@ namespace UnitTests.Catalog.Services.ProductsRepository
             Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
 
-        private Product ExpectedValidProduct
+        private Product ExpectedValidSqlProduct
         {
             get
             {
@@ -112,6 +147,43 @@ namespace UnitTests.Catalog.Services.ProductsRepository
                     Rating = rating
                 };
 
+                return product;
+            }
+        }
+
+        private Product ExpectedValidMongoProduct
+        {
+            get
+            {
+                var mongoId = "TestMongoId";
+                var specName = "sampleSpecification";
+                var maxSelectionAvailable = 1;
+                var specOptions = new List<string> { "opt1" };
+
+                var product = new Product
+                {
+                    MongoId = mongoId,
+                    Specifications = new List<Specification>
+                        {
+                            new Specification
+                            {
+                                Name = specName,
+                                MaxSelectionAvailable = maxSelectionAvailable,
+                                Options = specOptions
+                            }
+                        }
+                };
+
+                return product;
+            }
+        }
+
+        private Product ExpectedMergedProduct
+        {
+            get
+            {
+                var product = ExpectedValidSqlProduct;
+                product.Specifications = ExpectedValidMongoProduct.Specifications;
                 return product;
             }
         }

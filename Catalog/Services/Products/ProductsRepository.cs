@@ -76,15 +76,14 @@ namespace Catalog.Services.Products
         {
             var validator = new EntityNameValidator();
             validator.ValidateAndThrow(product.Name);
-
+            
             product.MongoId = MongoHelper.GenerateMongoId();
             var sqlAddTask = SqlProducts.Add(product);
-            var mongoAddTask = MongoProducts.Add(product);
-            var taskList = new List<Task>
+            var taskList = new List<Task> { sqlAddTask };
+            if (product.HasMongoProperties())
             {
-                sqlAddTask,
-                mongoAddTask
-            };
+                taskList.Add(MongoProducts.Add(product));
+            }
             await Task.WhenAll(taskList);
 
             var id = sqlAddTask.Result;

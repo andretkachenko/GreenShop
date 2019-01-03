@@ -46,9 +46,14 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
 
             // Act
             var result = Service.GetAllCategories();
+            var actualCategory = result.GetAwaiter().GetResult().First();
+            var expectedCategory = ExpectedCategoryList.First();
 
             // Assert
-            Assert.AreEqual(result.Result.First(), ExpectedCategoryList.First());
+            Assert.AreEqual(result.Result.Count(), ExpectedCategoryList.Count());
+            Assert.AreEqual(actualCategory.Id, expectedCategory.Id);
+            Assert.AreEqual(actualCategory.Name, expectedCategory.Name);
+            Assert.AreEqual(actualCategory.ParentCategoryId, expectedCategory.ParentCategoryId);
         }
 
         private IEnumerable<Category> ExpectedCategoryList

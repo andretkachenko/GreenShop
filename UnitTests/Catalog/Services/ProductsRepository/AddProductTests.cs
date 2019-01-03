@@ -29,52 +29,54 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         public void ValidProduct_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var expectedResult = true;
+            var expectedId = 1;
+            var name = "RenamedTestProduct";
+            var parentId = 3;
+            var description = "TestDescription";
+            var basePrice = 12m;
+            var rating = 4.5f;
+
+            var product = new Product
+            {
+                Name = name,
+                CategoryId = parentId,
+                Description = description,
+                BasePrice = basePrice,
+                Rating = rating
+            };
 
             ProductsSqlAccessorStub
-                .Setup(products => products.Delete(id))
-                .Returns(Task.FromResult(1));
+                .Setup(products => products.Add(It.IsAny<Product>()))
+                .Returns(Task.FromResult(expectedId));
+            ProductsMongoAccessorStub
+                .Setup(products => products.Add(It.IsAny<Product>()))
+                .Returns(Task.CompletedTask);
 
             // Act
-            var result = ProductsRepository.DeleteProduct(id);
+            var result = ProductsRepository.AddProduct(product);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<bool>));
-            Assert.AreEqual(expectedResult, result.Result);
+            Assert.IsInstanceOfType(result, typeof(Task<int>));
+            Assert.AreEqual(expectedId, result.Result);
         }
 
         [TestMethod]
-        public void NegativeProductId_ThrowsValidationException()
+        public void EmptyName_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            var name = "";
+
+            var product = new Product
+            {
+                Name = name
+            };
 
             // Act
-            var result = ProductsRepository.DeleteProduct(id);
+            var result = ProductsRepository.AddProduct(product);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
             Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
-        }
-
-        [TestMethod]
-        public void InvalidProductId_ReturnsFalse()
-        {
-            // Arrange
-            var id = 99999;
-            var expectedResult = false;
-
-            ProductsSqlAccessorStub
-                .Setup(products => products.Delete(id))
-                .Returns(Task.FromResult(0));
-
-            // Act
-            var result = ProductsRepository.DeleteProduct(id);
-
-            // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<bool>));
-            Assert.AreEqual(expectedResult, result.Result);
         }
     }
 }

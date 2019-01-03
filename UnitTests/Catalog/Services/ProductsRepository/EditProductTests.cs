@@ -50,6 +50,9 @@ namespace UnitTests.Catalog.Services.ProductsRepository
             ProductsSqlAccessorStub
                 .Setup(products => products.Edit(product))
                 .Returns(Task.FromResult(1));
+            ProductsMongoAccessorStub
+                .Setup(products => products.Edit(product))
+                .Returns(Task.CompletedTask);
 
             // Act
             var result = ProductsRepository.EditProduct(product);

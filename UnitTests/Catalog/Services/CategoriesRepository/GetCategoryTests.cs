@@ -49,9 +49,12 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
 
             // Act
             var result = CategoriesRepository.GetCategory(id);
+            var actualCategory = result.GetAwaiter().GetResult();
 
             // Assert
-            Assert.AreEqual(result.Result, ExpectedValidCategory);
+            Assert.AreEqual(actualCategory.Id, ExpectedValidCategory.Id);
+            Assert.AreEqual(actualCategory.Name, ExpectedValidCategory.Name);
+            Assert.AreEqual(actualCategory.ParentCategoryId, ExpectedValidCategory.ParentCategoryId);
         }
 
         [TestMethod]

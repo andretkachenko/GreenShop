@@ -7,6 +7,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Models.Specifications;
 
 namespace UnitTests.Catalog.Services.ProductsRepository
 {
@@ -32,7 +33,10 @@ namespace UnitTests.Catalog.Services.ProductsRepository
             // Arrange
             ProductsSqlAccessorStub
                 .Setup(products => products.GetAll())
-                .Returns(Task.FromResult(ExpectedProductList));
+                .Returns(Task.FromResult(ExpectedProductSqlList));
+            ProductsMongoAccessorStub
+                .Setup(products => products.GetAll())
+                .Returns(Task.FromResult(ExpectedProductMongoList));
 
             // Act
             var result = ProductsRepository.GetAllProducts();
@@ -45,23 +49,43 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         public void ReturnsExpectedProduct()
         {
             // Arrange
+            var expectedProduct = ExpectedMergedList.First();
             ProductsSqlAccessorStub
                 .Setup(products => products.GetAll())
-                .Returns(Task.FromResult(ExpectedProductList));
+                .Returns(Task.FromResult(ExpectedProductSqlList));
+            ProductsMongoAccessorStub
+                .Setup(products => products.GetAll())
+                .Returns(Task.FromResult(ExpectedProductMongoList));
+            ProductMergerStub
+                .Setup(stub => stub.MergeProducts(It.IsAny<IEnumerable<Product>>(), It.IsAny<IEnumerable<Product>>()))
+                .Returns(ExpectedMergedList);
 
             // Act
             var result = ProductsRepository.GetAllProducts();
+            var actualProduct = result.Result.First();
 
             // Assert
-            Assert.AreEqual(result.Result.First(), ExpectedProductList.First());
+            Assert.AreEqual(result.Result.Count(), ExpectedMergedList.Count());
+            Assert.AreEqual(actualProduct.Id, expectedProduct.Id);
+            Assert.AreEqual(actualProduct.MongoId, expectedProduct.MongoId);
+            Assert.AreEqual(actualProduct.Name, expectedProduct.Name);
+            Assert.AreEqual(actualProduct.CategoryId, expectedProduct.CategoryId);
+            Assert.AreEqual(actualProduct.Description, expectedProduct.Description);
+            Assert.AreEqual(actualProduct.BasePrice, expectedProduct.BasePrice);
+            Assert.AreEqual(actualProduct.Rating, expectedProduct.Rating);
+            Assert.AreEqual(actualProduct.Specifications.First().Name, expectedProduct.Specifications.First().Name);
+            Assert.AreEqual(actualProduct.Specifications.First().MaxSelectionAvailable, expectedProduct.Specifications.First().MaxSelectionAvailable);
+            Assert.AreEqual(actualProduct.Specifications.First().Options.Count(), expectedProduct.Specifications.First().Options.Count());
+            Assert.AreEqual(actualProduct.Specifications.First().Options.First(), expectedProduct.Specifications.First().Options.First());
         }
 
-        private IEnumerable<Product> ExpectedProductList
+        private IEnumerable<Product> ExpectedProductSqlList
         {
             get
             {
                 var id = 1;
                 var name = "TestProduct";
+                var mongoId = "TestMongoId";
                 var parentId = 3;
                 var description = "TestDescription";
                 var basePrice = 12m;
@@ -72,6 +96,7 @@ namespace UnitTests.Catalog.Services.ProductsRepository
                         new Product
                         {
                             Id = id,
+                            MongoId = mongoId,
                             Name = name,
                             CategoryId = parentId,
                             Description = description,
@@ -81,6 +106,47 @@ namespace UnitTests.Catalog.Services.ProductsRepository
                     };
 
                 return productsList;
+            }
+        }
+
+        private IEnumerable<Product> ExpectedProductMongoList
+        {
+            get
+            {
+                var mongoId = "TestMongoId";
+                var specName = "sampleSpecification";
+                var maxSelectionAvailable = 1;
+                var specOptions = new List<string> { "opt1" };
+
+                var productsList = new List<Product>()
+                {
+                    new Product
+                    {
+                        MongoId = mongoId,
+                        Specifications = new List<Specification>
+                        {
+                            new Specification
+                            {
+                                Name = specName,
+                                MaxSelectionAvailable = maxSelectionAvailable,
+                                Options = specOptions
+                            }
+                        }
+                    }
+                };
+
+                return productsList;
+            }
+        }
+
+        private IEnumerable<Product> ExpectedMergedList
+        {
+            get
+            {
+                var expectedProduct = ExpectedProductSqlList.First();
+                expectedProduct.Specifications = ExpectedProductMongoList.First().Specifications;
+
+                return new List<Product> { expectedProduct };
             }
         }
     }

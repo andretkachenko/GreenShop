@@ -11,7 +11,7 @@ namespace Catalog.Extensions
         /// <param name="product">Product to investigate</param>
         public static bool HasMongoProperties(this Product product)
         {
-            return product.Specifications.Any();
+            return product.Specifications != null && product.Specifications.Any();
         }
 
         /// <summary>
