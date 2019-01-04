@@ -1,6 +1,6 @@
 ﻿namespace Common.Models.Entity.Interfaces
 {
-    public interface IEntity : IIdentifiable
+    public interface IEntity
     {
         string Name { get; set; }
     }

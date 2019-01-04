@@ -2,7 +2,7 @@
 
 namespace Common.Models.Categories.Interfaces
 {
-    public interface ICategory : IEntity
+    public interface ICategory : IEntity, IIdentifiable
     {
         int ParentCategoryId { get; set; }
 

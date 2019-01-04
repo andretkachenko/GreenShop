@@ -1,25 +1,29 @@
-﻿using Catalog.DataAccessors;
-using Catalog.Utils;
+﻿using Common.Configuration.SQL;
 using Common.Interfaces;
 using Common.Models.Categories;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Catalog.DataAccessor
 {
-    public class Categories : IDataAccessor<Category>
+    public class Categories : ISqlDataAccessor<Category>
     {
+        public readonly ISqlContext _sql;
+
+        public Categories(ISqlContext sqlContext)
+        {
+            _sql = sqlContext;
+        }
+
         /// <summary>
         /// Asynchronously gets all Categories
         /// </summary>
         /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAll()
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var categories = await context.GetAllAsync<Category>();
 
@@ -34,7 +38,7 @@ namespace Catalog.DataAccessor
         /// <returns>Task with specified Category</returns>
         public async Task<Category> Get(int id)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var category = await context.GetAsync<Category>(id);
 
@@ -49,7 +53,7 @@ namespace Catalog.DataAccessor
         /// <returns>Category Id</returns>
         public async Task<int> Add(Category category)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var id = await context.InsertAsync(category);
 
@@ -64,7 +68,7 @@ namespace Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<int> Delete(int id)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var affectedRows = await context.ExecuteAsync(@"
                     DELETE
@@ -86,7 +90,7 @@ namespace Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<int> Edit(Category category)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var query = @"
                     UPDATE [Categories]

@@ -61,6 +61,15 @@ namespace Catalog.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection.
+        /// </summary>
+        internal static string Connection {
+            get {
+                return ResourceManager.GetString("Connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DataSource.
         /// </summary>
         internal static string DataSource {
@@ -75,6 +84,87 @@ namespace Catalog.Properties {
         internal static string InitialCatalog {
             get {
                 return ResourceManager.GetString("InitialCatalog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GreenShop-Catalog.
+        /// </summary>
+        internal static string MongoCatalog {
+            get {
+                return ResourceManager.GetString("MongoCatalog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConnectionString.
+        /// </summary>
+        internal static string MongoConnectionString {
+            get {
+                return ResourceManager.GetString("MongoConnectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database.
+        /// </summary>
+        internal static string MongoDatabase {
+            get {
+                return ResourceManager.GetString("MongoDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mongo.
+        /// </summary>
+        internal static string MongoSection {
+            get {
+                return ResourceManager.GetString("MongoSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to sqlProduct is null.
+        /// </summary>
+        internal static string NullSqlProductException {
+            get {
+                return ResourceManager.GetString("NullSqlProductException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Products.
+        /// </summary>
+        internal static string Products {
+            get {
+                return ResourceManager.GetString("Products", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to sqlProduct&apos;s and mongoProduct&apos;s MongoId does not match..
+        /// </summary>
+        internal static string ProductsMismatchException {
+            get {
+                return ResourceManager.GetString("ProductsMismatchException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specifications.
+        /// </summary>
+        internal static string Specifications {
+            get {
+                return ResourceManager.GetString("Specifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SQL.
+        /// </summary>
+        internal static string SqlSection {
+            get {
+                return ResourceManager.GetString("SqlSection", resourceCulture);
             }
         }
     }

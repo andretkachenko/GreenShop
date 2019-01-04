@@ -1,13 +1,14 @@
 ﻿using Common.Models.Categories.Interfaces;
 using Common.Models.Comments.Interfaces;
 using Common.Models.Entity.Interfaces;
-using Common.Models.Specifications.Interfaces;
+using Common.Models.Specifications;
 using System.Collections.Generic;
 
 namespace Common.Models.Products.Interfaces
 {
-    public interface IProduct : IEntity
+    public interface IProduct : IEntity, IIdentifiable
     {
+        string MongoId { get; set; }
         string Description { get; set; }
 
         decimal BasePrice { get; set; }
@@ -15,7 +16,7 @@ namespace Common.Models.Products.Interfaces
         int CategoryId { get; set; }
 
         ICategory Category { get; set; }
-        IEnumerable<ISpecification> Specifications { get; set; }
         IEnumerable<IComment> Comments { get; set; }
+        IEnumerable<Specification> Specifications { get; set; }
     }
 }
