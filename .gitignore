@@ -339,6 +339,6 @@ ASALocalRun/
 
 
 # Environment specific appsettings
-appsettings.development.json
-appsettings.staging.json
-appsettings.production.json
+appsettings.[Dd]evelopment.json
+appsettings.[Ss]taging.json
+appsettings.[Pp]roduction.json
