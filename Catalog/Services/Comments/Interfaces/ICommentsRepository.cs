@@ -6,7 +6,7 @@ using Common.Models.Comments;
 
 namespace Catalog.Services.Comments.Interfaces
 {
-    public interface ICommentsService
+    public interface ICommentsRepository
     {
         Task<IEnumerable<Comment>> GetAllCommetns();
 

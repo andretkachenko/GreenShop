@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Catalog.Services.Comments
 {
-    public class CommentsService : ICommentsService
+    public class CommentsRepository : ICommentsRepository
     {
         public readonly IDataAccessor<Comment> Comments;
 
-        public CommentsService(IDataAccessor<Comment> dataAccessor)
+        public CommentsRepository(IDataAccessor<Comment> dataAccessor)
         {
             Comments = dataAccessor;
         }

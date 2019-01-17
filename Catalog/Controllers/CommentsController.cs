@@ -8,7 +8,7 @@ namespace Catalog.Controllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
-        private readonly ICommentsService _commentServices;
+        private readonly ICommentsRepository _commentServices;
         public CommentsController()
         {
 
