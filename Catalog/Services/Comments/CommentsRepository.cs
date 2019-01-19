@@ -1,6 +1,9 @@
 ﻿using Catalog.Services.Comments.Interfaces;
 using Common.Interfaces;
 using Common.Models.Comments;
+using Common.Validatiors.Categories;
+using Common.Validatiors.Comments;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,9 +23,12 @@ namespace Catalog.Services.Comments
         {
             return await Comments.Add(comment) == 1;
         }
-
+       
         public async Task<bool> DeleteComment(int id)
         {
+            var validator = new CommentIdValidator();
+            validator.ValidateAndThrow(id);
+
             return await Comments.Delete(id) == 1;
         }
 

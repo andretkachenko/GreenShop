@@ -1,4 +1,5 @@
 ﻿using Common.Models.Comments.Interfaces;
+using Common.Models.Products.Interfaces;
 
 namespace Common.Models.Comments
 {
@@ -9,5 +10,7 @@ namespace Common.Models.Comments
         public string Author { get; set; }
 
         public string Message { get; set; }
+
+        public IProduct Product { get; set; }
     }
 }
