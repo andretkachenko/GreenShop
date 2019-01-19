@@ -1,10 +1,8 @@
 ﻿using Catalog.Services.Comments.Interfaces;
 using Common.Interfaces;
 using Common.Models.Comments;
-using Common.Validatiors.Categories;
 using Common.Validatiors.Comments;
 using FluentValidation;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
