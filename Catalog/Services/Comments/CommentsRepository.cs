@@ -10,55 +10,55 @@ namespace Catalog.Services.Comments
 {
     public class CommentsRepository : ICommentsRepository
     {
-        public readonly IChildtDataAccessor<Comment> Comments;
+        public readonly ISqlChildDataAccessor<Comment> Comments;
 
-        public CommentsRepository(IChildtDataAccessor<Comment> dataAccessor)
+        public CommentsRepository(ISqlChildDataAccessor<Comment> dataAccessor)
         {
             Comments = dataAccessor;
         }
 
-        public async Task<bool> AddComment(int productID, Comment comment)
+        public async Task<bool> AddComment(Comment comment)
         {
             var validator = new CommentValidator();
             validator.ValidateAndThrow(comment);
 
-            var rowEffected = await Comments.Add(productID, comment);
-            var resul = rowEffected == 1;
+            var rowsAffected = await Comments.Add(comment);
+            var resul = rowsAffected == 1;
             return resul;
         }
 
-        public async Task<bool> DeleteComment(int productID, int id)
+        public async Task<bool> DeleteComment(int id)
         {
             var validator = new CommentIdValidator();
             validator.ValidateAndThrow(id);
 
-            var rowEffected = await Comments.Delete(productID, id);
-            var result = rowEffected == 1;
+            var rowsAffected = await Comments.Delete(id);
+            var result = rowsAffected == 1;
             return result;
         }
 
-        public async Task<bool> EditComment(int productID, Comment comment)
+        public async Task<bool> EditComment(Comment comment)
         {
             var validator = new CommentValidator();
             validator.ValidateAndThrow(comment);
 
-            var rowEffected = await Comments.Edit(productID, comment);
-            var result = rowEffected == 1;
+            var rowsAffected = await Comments.Edit(comment);
+            var result = rowsAffected == 1;
             return result;
         }
 
-        public async Task<IEnumerable<Comment>> GetAllCommetns(int productID)
+        public async Task<IEnumerable<Comment>> GetAllProductComments(int productID)
         {
-            var comments = await Comments.GetAll(productID);
+            var comments = await Comments.GetAllParentRelated(productID);
             return comments;
         }
 
-        public async Task<Comment> GetComment(int productID, int id)
+        public async Task<Comment> GetComment(int id)
         {
             var validator = new CommentIdValidator();
             validator.ValidateAndThrow(id);
 
-            Comment comment = await Comments.Get(productID,id);
+            Comment comment = await Comments.Get(id);
             return comment;
         }
     }

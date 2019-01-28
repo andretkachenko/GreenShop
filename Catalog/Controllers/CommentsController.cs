@@ -22,43 +22,43 @@ namespace Catalog.Controllers
         [HttpGet("{productID}")]
         public async Task<IEnumerable<Comment>> GetAllProductCommentsAsync(int productID)
         {
-            var comments = await _commentServices.GetAllCommetns(productID);
+            var comments = await _commentServices.GetAllProductComments(productID);
 
             return comments;
         }
 
         //Get comment by ID
         [HttpGet("{productID}/comments/{id})")]
-        public async Task<Comment> GetComment(int productID, int id)
+        public async Task<Comment> GetComment(int id)
         {
-            var comment = await _commentServices.GetComment(productID, id);
+            var comment = await _commentServices.GetComment(id);
 
             return comment;
         }
 
         //Put Comment
         [HttpPut("{productID}")]
-        public async Task<bool> EditCommentAsync(int productID, [FromBody] Comment comment)
+        public async Task<bool> EditCommentAsync([FromBody] Comment comment)
         {
-            var success = await _commentServices.EditComment(productID, comment);
+            var success = await _commentServices.EditComment(comment);
 
             return success;
         }
 
         //Delete Comment
         [HttpDelete("{productID}/comments/{id})")]
-        public async Task<bool> DeleteComment(int productID, int id)
+        public async Task<bool> DeleteComment(int id)
         {
-            var success = await _commentServices.DeleteComment(productID, id);
+            var success = await _commentServices.DeleteComment(id);
 
             return success;
         }
 
         //Post Comment
         [HttpPost("{productID}")]
-        public async Task<bool> AddComment(int productID, [FromBody] Comment comment)
+        public async Task<bool> AddComment([FromBody] Comment comment)
         {
-            var success = await _commentServices.AddComment(productID, comment);
+            var success = await _commentServices.AddComment(comment);
 
             return success;
         }

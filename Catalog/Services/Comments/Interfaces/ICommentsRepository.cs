@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Models.Comments;
 
@@ -8,14 +6,14 @@ namespace Catalog.Services.Comments.Interfaces
 {
     public interface ICommentsRepository
     {
-        Task<IEnumerable<Comment>> GetAllCommetns(int id);
+        Task<IEnumerable<Comment>> GetAllProductComments(int productID);
 
-        Task<Comment> GetComment(int productID, int id);
+        Task<Comment> GetComment(int id);
 
-        Task<bool> AddComment(int productID, Comment comment);
+        Task<bool> AddComment(Comment comment);
 
-        Task<bool> EditComment(int productID, Comment comment);
+        Task<bool> EditComment(Comment comment);
 
-        Task<bool> DeleteComment(int productID, int id);
+        Task<bool> DeleteComment(int id);
     }
 }

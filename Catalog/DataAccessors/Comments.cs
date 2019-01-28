@@ -1,7 +1,9 @@
 ﻿using Catalog.Utils;
+using Common.Configuration.SQL;
 using Common.Interfaces;
 using Common.Models.Comments;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,34 +12,28 @@ namespace Catalog.DataAccessors
     /// <summary>
     /// Comments Dapper Accessor
     /// </summary>
-    public class Comments : IDataAccessor<Comment>
+    public class Comments : ISqlChildDataAccessor<Comment>
     {
+        public readonly ISqlContext _sql;
+
+        public Comments(ISqlContext sqlContext)
+        {
+            _sql = sqlContext;
+        }
+
         public async Task<int> Add(Comment comment)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
-                var query = @"
-                INSERT INTO [Comments]
-                    ([Author],
-                    [Message])
-                VALUES
-                    (@author,
-                    @message)";
+                var id = await context.InsertAsync(comment);
 
-
-                int affectedRows = await context.ExecuteAsync(query, new
-                {
-                    author = comment.Author,
-                    message = comment.Message
-                });
-
-                return affectedRows;
+                return id;
             }
         }
 
         public async Task<int> Delete(int id)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var query = @"
                         DELETE
@@ -53,7 +49,7 @@ namespace Catalog.DataAccessors
 
         public async Task<int> Edit(Comment comment)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
                 var query = @"
                         UPDATE [Comments]
@@ -66,13 +62,18 @@ namespace Catalog.DataAccessors
                 {
                     query += "[Message] = @message";
                 }
+                if (comment.ProductId > 0)
+                {
+                    query += "[ProductId] = @productId";
+                }
 
                 query += " WHERE [Id] = @id";
                 int affectedRows = await context.ExecuteAsync(query, new
                 {
                     id = comment.Id,
                     author = comment.Author,
-                    message = comment.Message
+                    message = comment.Message,
+                    productId = comment.ProductId
                 });
                 return affectedRows;
             }
@@ -80,32 +81,39 @@ namespace Catalog.DataAccessors
 
         public async Task<Comment> Get(int id)
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
-                var query = @"
-                  SELECT [Id]
-                        ,[Author]
-                        ,[Message]
-                  FROM [Contents]
-                  WHERE [Id] = @id";
-                Comment comment = await context.QueryFirstOrDefaultAsync<Comment>(query, new
-                {
-                    id
-                });
+                var comment = await context.GetAsync<Comment>(id);
+
                 return comment;
             }
         }
 
         public async Task<IEnumerable<Comment>> GetAll()
         {
-            using (var context = SqlContext.Context)
+            using (var context = _sql.Context)
             {
-                var query = @"
-                  SELECT [Id]
+                var comments = await context.GetAllAsync<Comment>();
+
+                return comments;
+            }
+        }
+
+        public async Task<IEnumerable<Comment>> GetAllParentRelated(int productId)
+        {
+            using (var context = _sql.Context)
+            {
+                var comments = await context.QueryAsync<Comment>(@"
+                    SELECT [Id]
                         ,[Author]
                         ,[Message]
-                  FROM [Contents]";
-                IEnumerable<Comment> comments = await context.QueryAsync<Comment>(query);
+                        ,[ProductId]
+                    FROM [Contents]
+                    WHERE [ProductId] = @productId
+                ", new
+                {
+                    productId
+                });
 
                 return comments;
             }
