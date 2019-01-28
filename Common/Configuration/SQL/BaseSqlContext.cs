@@ -11,7 +11,7 @@ namespace Common.Configuration.SQL
         /// <summary>
         /// Reads configuration file and returns connection string assembled from it
         /// </summary>
-        protected static SqlConnection Context { get; }
+        protected SqlConnection Context { get; }
 
         /// <summary>
         /// Assembles connection string from configuration file

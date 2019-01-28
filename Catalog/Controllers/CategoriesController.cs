@@ -10,9 +10,9 @@ namespace Catalog.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoriesService _categoriesService;
+        private readonly ICategoriesRepository _categoriesService;
         
-        public CategoriesController(ICategoriesService categoriesService)
+        public CategoriesController(ICategoriesRepository categoriesService)
         {
             _categoriesService = categoriesService;
         }
@@ -37,7 +37,7 @@ namespace Catalog.Controllers
 
         // POST api/categories
         [HttpPost]
-        public async Task<bool> AddCategoryAsync([FromBody] Category category)
+        public async Task<int> AddCategoryAsync([FromBody] Category category)
         {
             var success = await _categoriesService.AddCategory(category);
 

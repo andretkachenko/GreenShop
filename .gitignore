@@ -336,3 +336,9 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+
+# Environment specific appsettings
+appsettings.[Dd]evelopment.json
+appsettings.[Ss]taging.json
+appsettings.[Pp]roduction.json

@@ -117,10 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Connection" xml:space="preserve">
+    <value>Connection</value>
+    <comment>Environment variable</comment>
+  </data>
   <data name="DataSource" xml:space="preserve">
     <value>DataSource</value>
+    <comment>Environment variable</comment>
   </data>
   <data name="InitialCatalog" xml:space="preserve">
     <value>InitialCatalog</value>
+    <comment>Environment variable</comment>
+  </data>
+  <data name="MongoCatalog" xml:space="preserve">
+    <value>GreenShop-Catalog</value>
+    <comment>MongoDB variable</comment>
+  </data>
+  <data name="MongoConnectionString" xml:space="preserve">
+    <value>ConnectionString</value>
+    <comment>Environment variable</comment>
+  </data>
+  <data name="MongoDatabase" xml:space="preserve">
+    <value>Database</value>
+    <comment>Environmebt variable</comment>
+  </data>
+  <data name="MongoSection" xml:space="preserve">
+    <value>Mongo</value>
+    <comment>Environment variable</comment>
+  </data>
+  <data name="NullSqlProductException" xml:space="preserve">
+    <value>sqlProduct is null</value>
+    <comment>Exception message</comment>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+    <comment>MongoDB variable</comment>
+  </data>
+  <data name="ProductsMismatchException" xml:space="preserve">
+    <value>sqlProduct's and mongoProduct's MongoId does not match.</value>
+    <comment>Exception message</comment>
+  </data>
+  <data name="Specifications" xml:space="preserve">
+    <value>Specifications</value>
+    <comment>MongoDB variable</comment>
+  </data>
+  <data name="SqlSection" xml:space="preserve">
+    <value>SQL</value>
+    <comment>Environment variable</comment>
   </data>
 </root>

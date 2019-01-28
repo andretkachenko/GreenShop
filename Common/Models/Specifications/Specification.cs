@@ -1,12 +1,17 @@
-﻿using Common.Models.Specifications.Interfaces.Generic;
+﻿using Common.Models.Specifications.Interfaces;
+using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace Common.Models.Specifications
 {
-    public class Specification<T> : ISpecification<T>
+    public class Specification : ISpecification
     {
-        public int Id { get; set; }
+        [BsonElement("name")]
         public string Name { get; set; }
 
-        public T Value { get; set; }
+        [BsonElement("max_selection_available")]
+        public int MaxSelectionAvailable { get; set; }
+        [BsonElement("options")]
+        public IEnumerable<string> Options { get; set; }
     }
 }
