@@ -8,14 +8,14 @@ namespace Catalog.Services.Comments.Interfaces
 {
     public interface ICommentsRepository
     {
-        Task<IEnumerable<Comment>> GetAllCommetns();
+        Task<IEnumerable<Comment>> GetAllCommetns(int id);
 
-        Task<Comment> GetComment(int id);
+        Task<Comment> GetComment(int productID, int id);
 
-        Task<bool> AddComment(Comment comment);
+        Task<bool> AddComment(int productID, Comment comment);
 
-        Task<bool> EditComment(Comment comment);
+        Task<bool> EditComment(int productID, Comment comment);
 
-        Task<bool> DeleteComment(int id);
+        Task<bool> DeleteComment(int productID, int id);
     }
 }

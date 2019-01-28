@@ -11,12 +11,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
     [TestClass]
     public class AddCategoryTests
     {
-        private Mock<IDataAccessor<Category>> CategoriesAccessorMock;
+        private Mock<IParentDataAccessor<Category>> CategoriesAccessorMock;
         private CategoriesService Service;
 
         public AddCategoryTests()
         {
-            CategoriesAccessorMock = new Mock<IDataAccessor<Category>>();
+            CategoriesAccessorMock = new Mock<IParentDataAccessor<Category>>();
             Service = new CategoriesService(CategoriesAccessorMock.Object);
         }
 

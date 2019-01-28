@@ -11,6 +11,6 @@ namespace Common.Models.Comments
 
         public string Message { get; set; }
 
-        public IProduct Product { get; set; }
+        public int ProductId { get; set; }
     }
 }

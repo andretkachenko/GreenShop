@@ -10,9 +10,9 @@ namespace Catalog.Services.Categories
 {
     public class CategoriesService : ICategoriesService
     {
-        public readonly IDataAccessor<Category> Categories;
+        public readonly IParentDataAccessor<Category> Categories;
 
-        public CategoriesService(IDataAccessor<Category> dataAccessor)
+        public CategoriesService(IParentDataAccessor<Category> dataAccessor)
         {
             Categories = dataAccessor;
         }

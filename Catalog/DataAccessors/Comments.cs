@@ -12,13 +12,11 @@ namespace Catalog.DataAccessors
     /// </summary>
     public class Comments : IDataAccessor<Comment>
     {
-        private string query;
-
         public async Task<int> Add(Comment comment)
         {
             using (var context = SqlContext.Context)
             {
-                query = @"
+                var query = @"
                 INSERT INTO [Comments]
                     ([Author],
                     [Message])
@@ -41,7 +39,7 @@ namespace Catalog.DataAccessors
         {
             using (var context = SqlContext.Context)
             {
-                query = @"
+                var query = @"
                         DELETE
                         FROM [Comments]
                         WHERE [Id] = @id";
@@ -57,7 +55,7 @@ namespace Catalog.DataAccessors
         {
             using (var context = SqlContext.Context)
             {
-                query = @"
+                var query = @"
                         UPDATE [Comments]
                         SET";
                 if (!string.IsNullOrWhiteSpace(comment.Author))
@@ -84,7 +82,7 @@ namespace Catalog.DataAccessors
         {
             using (var context = SqlContext.Context)
             {
-                query = @"
+                var query = @"
                   SELECT [Id]
                         ,[Author]
                         ,[Message]
@@ -102,7 +100,7 @@ namespace Catalog.DataAccessors
         {
             using (var context = SqlContext.Context)
             {
-                query = @"
+                var query = @"
                   SELECT [Id]
                         ,[Author]
                         ,[Message]

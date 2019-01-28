@@ -11,12 +11,12 @@ namespace UnitTests.CatalogTests.ServiceTests.CategoriesServiceTests
     [TestClass]
     public class DeleteCategoryTests
     {
-        private Mock<IDataAccessor<Category>> CategoriesAccessorMock;
+        private Mock<IParentDataAccessor<Category>> CategoriesAccessorMock;
         private CategoriesService Service;
 
         public DeleteCategoryTests()
         {
-            CategoriesAccessorMock = new Mock<IDataAccessor<Category>>();
+            CategoriesAccessorMock = new Mock<IParentDataAccessor<Category>>();
             Service = new CategoriesService(CategoriesAccessorMock.Object);
         }
 
