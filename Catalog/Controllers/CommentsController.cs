@@ -28,7 +28,7 @@ namespace Catalog.Controllers
         }
 
         //Get comment by ID
-        [HttpGet("{productID}/comments/{id})")]
+        [HttpGet("{ID}")]
         public async Task<Comment> GetComment(int id)
         {
             var comment = await _commentServices.GetComment(id);
@@ -38,15 +38,15 @@ namespace Catalog.Controllers
 
         //Put Comment
         [HttpPut("{productID}")]
-        public async Task<bool> EditCommentAsync([FromBody] Comment comment)
+        public async Task<bool> EditCommentAsync(int productID, [FromBody] string message)
         {
-            var success = await _commentServices.EditComment(comment);
+            var success = await _commentServices.EditComment(productID, message);
 
             return success;
         }
 
         //Delete Comment
-        [HttpDelete("{productID}/comments/{id})")]
+        [HttpDelete("{id}")]
         public async Task<bool> DeleteComment(int id)
         {
             var success = await _commentServices.DeleteComment(id);
@@ -55,7 +55,7 @@ namespace Catalog.Controllers
         }
 
         //Post Comment
-        [HttpPost("{productID}")]
+        [HttpPost]
         public async Task<bool> AddComment([FromBody] Comment comment)
         {
             var success = await _commentServices.AddComment(comment);

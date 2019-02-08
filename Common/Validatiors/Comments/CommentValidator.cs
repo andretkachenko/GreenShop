@@ -10,13 +10,20 @@ namespace Common.Validatiors.Comments
             RuleFor(comment => comment.Id).GreaterThan(0);
             RuleFor(comment => comment.Message).NotNull();
         }
-       
+
+    }
+    public class CommenMessageValidator : AbstractValidator<string>
+    {
+        public CommenMessageValidator()
+        {
+            RuleFor(message => message).NotEmpty();
+        }
     }
     public class CommentIdValidator : AbstractValidator<int>
+    {
+        public CommentIdValidator()
         {
-            public CommentIdValidator()
-            {
-                RuleFor(id => id).GreaterThan(0);
-            }
+            RuleFor(id => id).GreaterThan(0);
         }
+    }
 }

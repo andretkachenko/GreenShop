@@ -14,6 +14,8 @@ namespace Catalog.Services.Comments.Interfaces
 
         Task<bool> EditComment(Comment comment);
 
+        Task<bool> EditComment(int id,string message);
+        
         Task<bool> DeleteComment(int id);
     }
 }

@@ -39,10 +39,18 @@ namespace Catalog.Services.Comments
 
         public async Task<bool> EditComment(Comment comment)
         {
-            var validator = new CommentValidator();
-            validator.ValidateAndThrow(comment);
+            throw new System.NotImplementedException();
+        }
 
-            var rowsAffected = await Comments.Edit(comment);
+        public async Task<bool> EditComment(int id, string message)
+        {
+            var idValidator = new CommentIdValidator();
+            idValidator.ValidateAndThrow(id);
+
+            var messageValidator = new CommenMessageValidator();
+            messageValidator.ValidateAndThrow(message);
+
+            var rowsAffected = await Comments.Edit(id, message);
             var result = rowsAffected == 1;
             return result;
         }

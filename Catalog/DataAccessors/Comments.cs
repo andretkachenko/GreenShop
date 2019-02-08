@@ -4,6 +4,7 @@ using Common.Interfaces;
 using Common.Models.Comments;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -47,36 +48,31 @@ namespace Catalog.DataAccessors
             }
         }
 
-        public async Task<int> Edit(Comment comment)
+        public async Task<int> Edit(int Id, string Message)
         {
             using (var context = _sql.Context)
             {
                 var query = @"
                         UPDATE [Comments]
                         SET";
-                if (!string.IsNullOrWhiteSpace(comment.Author))
-                {
-                    query += "[Author] = @author";
-                }
-                if (!string.IsNullOrWhiteSpace(comment.Message))
+                if (!string.IsNullOrWhiteSpace(Message))
                 {
                     query += "[Message] = @message";
-                }
-                if (comment.ProductId > 0)
-                {
-                    query += "[ProductId] = @productId";
                 }
 
                 query += " WHERE [Id] = @id";
                 int affectedRows = await context.ExecuteAsync(query, new
                 {
-                    id = comment.Id,
-                    author = comment.Author,
-                    message = comment.Message,
-                    productId = comment.ProductId
+                    id = Id,
+                    message = Message,
                 });
                 return affectedRows;
             }
+        }
+
+        public async Task<int> Edit(Comment entity)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Comment> Get(int id)
@@ -91,12 +87,7 @@ namespace Catalog.DataAccessors
 
         public async Task<IEnumerable<Comment>> GetAll()
         {
-            using (var context = _sql.Context)
-            {
-                var comments = await context.GetAllAsync<Comment>();
-
-                return comments;
-            }
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Comment>> GetAllParentRelated(int productId)
