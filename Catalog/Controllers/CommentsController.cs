@@ -19,16 +19,16 @@ namespace Catalog.Controllers
         }
 
         //GET all comments from product
-        [HttpGet("{productID}")]
-        public async Task<IEnumerable<Comment>> GetAllProductCommentsAsync(int productID)
+        [HttpGet("{productId}")]
+        public async Task<IEnumerable<Comment>> GetAllProductCommentsAsync(int productId)
         {
-            var comments = await _commentServices.GetAllProductComments(productID);
+            var comments = await _commentServices.GetAllProductComments(productId);
 
             return comments;
         }
 
         //Get comment by ID
-        [HttpGet("{ID}")]
+        [HttpGet("{id}")]
         public async Task<Comment> GetComment(int id)
         {
             var comment = await _commentServices.GetComment(id);
@@ -37,10 +37,10 @@ namespace Catalog.Controllers
         }
 
         //Put Comment
-        [HttpPut("{productID}")]
-        public async Task<bool> EditCommentAsync(int productID, [FromBody] string message)
+        [HttpPut("{productId}")]
+        public async Task<bool> EditCommentAsync(int productId, [FromBody] string message)
         {
-            var success = await _commentServices.EditComment(productID, message);
+            var success = await _commentServices.EditComment(productId, message);
 
             return success;
         }

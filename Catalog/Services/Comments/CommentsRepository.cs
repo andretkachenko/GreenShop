@@ -37,17 +37,14 @@ namespace Catalog.Services.Comments
             return result;
         }
 
-        public async Task<bool> EditComment(Comment comment)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async Task<bool> EditComment(Comment comment) => await EditComment(comment.Id, comment.Message);
 
         public async Task<bool> EditComment(int id, string message)
         {
             var idValidator = new CommentIdValidator();
             idValidator.ValidateAndThrow(id);
 
-            var messageValidator = new CommenMessageValidator();
+            var messageValidator = new CommentMessageValidator();
             messageValidator.ValidateAndThrow(message);
 
             var rowsAffected = await Comments.Edit(id, message);

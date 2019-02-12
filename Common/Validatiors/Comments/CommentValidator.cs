@@ -7,14 +7,16 @@ namespace Common.Validatiors.Comments
     {
         public CommentValidator()
         {
+            RuleFor(comment => comment.ProductId).GreaterThan(0);
+            RuleFor(comment => comment.Author).NotNull();
             RuleFor(comment => comment.Id).GreaterThan(0);
             RuleFor(comment => comment.Message).NotNull();
         }
 
     }
-    public class CommenMessageValidator : AbstractValidator<string>
+    public class CommentMessageValidator : AbstractValidator<string>
     {
-        public CommenMessageValidator()
+        public CommentMessageValidator()
         {
             RuleFor(message => message).NotEmpty();
         }
