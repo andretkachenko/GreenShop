@@ -1,6 +1,6 @@
 # GreenShop
 
-[![Build status](https://ci.appveyor.com/api/projects/status/6iq0509g3gh1j9ei/branch/dev?svg=true)](https://ci.appveyor.com/project/Bledhard/greenshop)
+[![Build Status](https://alexars.visualstudio.com/GreenShop/_apis/build/status/Bledhard.GreenShop?branchName=dev)](https://alexars.visualstudio.com/GreenShop/_build/latest?definitionId=3&branchName=dev)
 
 eShop based on microservice architecture
 Currently we didn't find time to make a proper readme. But we will make it eventually :)
