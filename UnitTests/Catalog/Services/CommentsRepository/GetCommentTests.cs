@@ -4,6 +4,7 @@ using Common.Models.Comments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace UnitTests.Catalog.Services.CommentsRepository
 {
@@ -20,6 +21,20 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         }
 
         [TestMethod]
+        public void NegativeCommentId_ThrowsValidationException()
+        {
+            //Arange
+            var id = -1;
+
+            //var Act
+            var result = CommentRepository.GetComment(id);
+
+            //Assert
+            Assert.AreEqual(result.Status, TaskStatus.Faulted);
+            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
+        }
+
+        [TestMethod]
         public void ReturnExpectedComment()
         {
             //Arrange
@@ -29,7 +44,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
                 .Returns(Task.FromResult(ExpectedValidComment));
 
             //Act 
-            var result =  CommentRepository.GetComment(id);
+            var result = CommentRepository.GetComment(id);
             var comment = result.GetAwaiter().GetResult();
 
             //Assert

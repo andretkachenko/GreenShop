@@ -55,6 +55,9 @@ namespace Catalog.Services.Comments
 
         public async Task<IEnumerable<Comment>> GetAllProductComments(int productID)
         {
+            var idValidator = new CommentIdValidator();
+            idValidator.ValidateAndThrow(productID);
+
             var comments = await Comments.GetAllParentRelated(productID);
             return comments;
         }

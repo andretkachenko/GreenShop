@@ -6,6 +6,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using FluentValidation;
 
 namespace UnitTests.Catalog.Services.CommentsRepository
 {
@@ -19,6 +20,20 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         {
             CommentsAccessorStub = new Mock<ISqlChildDataAccessor<Comment>>();
             CommentRepository = new Target(CommentsAccessorStub.Object);
+        }
+
+        [TestMethod]
+        public void NegativeCommentsProductId_ThrowsValidationException()
+        {
+            //Arange
+            var productId = -1;
+
+            //var Act
+            var result = CommentRepository.GetAllProductComments(productId);
+
+            //Assert
+            Assert.AreEqual(result.Status, TaskStatus.Faulted);
+            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
 
         [TestMethod]

@@ -4,6 +4,7 @@ using Common.Models.Comments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace UnitTests.Catalog.Services.CommentsRepository
 {
@@ -23,7 +24,6 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void ValidComment_ReturnsTrue()
         {
             //Arrange
-            var id = 1;
             var authorId = 1;
             var message = "TetsCommentMessage";
             var parentId = 1;
@@ -31,9 +31,8 @@ namespace UnitTests.Catalog.Services.CommentsRepository
 
             var comment = new Comment
             {
-                Id = id,
                 AuthorId = authorId,
-                Message=message,
+                Message = message,
                 ProductId = parentId
             };
 
@@ -47,6 +46,29 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
             Assert.AreEqual(expectedResult, result.Result);
+        }
+
+        [TestMethod]
+        public void NegativeCommentsProductId_ThrowsValidationException()
+        {
+            //Arange
+            var authorId = 1;
+            var message = "TetsCommentMessage";
+            var productId = -1;
+
+            var comment = new Comment
+            {
+                AuthorId = authorId,
+                Message = message,
+                ProductId = productId
+            };
+
+            //var Act
+            var result = CommentRepository.AddComment(comment);
+
+            //Assert
+            Assert.AreEqual(result.Status, TaskStatus.Faulted);
+            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
     }
 }
