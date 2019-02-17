@@ -34,7 +34,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
 
             //Assert
             Assert.AreEqual(comment.Id, ExpectedValidComment.Id);
-            Assert.AreEqual(comment.Author, ExpectedValidComment.Author);
+            Assert.AreEqual(comment.AuthorId, ExpectedValidComment.AuthorId);
             Assert.AreEqual(comment.Message, ExpectedValidComment.Message);
         }
 
@@ -43,14 +43,14 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             get
             {
                 var id = 1;
-                var author = "TestAuthor";
+                var authorId = 1;
                 var parentID = 1;
                 var message = "TestMessage";
 
                 var comment = new Comment
                 {
                     Id = id,
-                    Author = author,
+                    AuthorId = authorId,
                     ProductId = parentID,
                     Message = message
                 };

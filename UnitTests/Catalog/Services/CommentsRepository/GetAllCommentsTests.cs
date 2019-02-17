@@ -37,7 +37,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
 
             //Assert
             Assert.AreEqual(comment.Id, expectedComment.Id);
-            Assert.AreEqual(comment.Author, expectedComment.Author);
+            Assert.AreEqual(comment.AuthorId, expectedComment.AuthorId);
             Assert.AreEqual(comment.Message, expectedComment.Message);
         }
 
@@ -47,7 +47,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             {
                 var id = 1;
                 var parentId = 1;
-                var author = "TestAuthor";
+                var authorId = 1;
                 var message = "TestMessage";
 
                 var commentsList = new List<Comment>
@@ -56,7 +56,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
                     {
                         Id=id,
                         ProductId=parentId,
-                        Author=author,
+                        AuthorId=authorId,
                         Message=message
                     }
                 };

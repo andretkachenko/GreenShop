@@ -24,7 +24,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         {
             //Arrange
             var id = 1;
-            var author = "TestAuthor";
+            var authorId = 1;
             var message = "TetsCommentMessage";
             var parentId = 1;
             var expectedResult = true;
@@ -32,7 +32,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var comment = new Comment
             {
                 Id = id,
-                Author = author,
+                AuthorId = authorId,
                 Message=message,
                 ProductId = parentId
             };

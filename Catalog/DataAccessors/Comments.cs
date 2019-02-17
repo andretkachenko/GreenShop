@@ -70,10 +70,7 @@ namespace Catalog.DataAccessors
             }
         }
 
-        public async Task<int> Edit(Comment entity)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<int> Edit(Comment entity) => throw new NotImplementedException();
 
         public async Task<Comment> Get(int id)
         {
@@ -85,10 +82,7 @@ namespace Catalog.DataAccessors
             }
         }
 
-        public async Task<IEnumerable<Comment>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IEnumerable<Comment>> GetAll() => throw new NotImplementedException();
 
         public async Task<IEnumerable<Comment>> GetAllParentRelated(int productId)
         {
@@ -99,7 +93,7 @@ namespace Catalog.DataAccessors
                         ,[Author]
                         ,[Message]
                         ,[ProductId]
-                    FROM [Contents]
+                    FROM [Comments]
                     WHERE [ProductId] = @productId
                 ", new
                 {
@@ -109,5 +103,7 @@ namespace Catalog.DataAccessors
                 return comments;
             }
         }
+
+
     }
 }

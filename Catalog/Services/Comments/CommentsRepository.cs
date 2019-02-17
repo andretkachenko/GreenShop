@@ -3,6 +3,7 @@ using Common.Interfaces;
 using Common.Models.Comments;
 using Common.Validatiors.Comments;
 using FluentValidation;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -37,10 +38,7 @@ namespace Catalog.Services.Comments
             return result;
         }
 
-        public async Task<bool> EditComment(Comment comment)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task<bool> EditComment(Comment comment) => throw new NotImplementedException();
 
         public async Task<bool> EditComment(int id, string message)
         {

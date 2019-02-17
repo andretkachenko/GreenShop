@@ -7,7 +7,8 @@ namespace Common.Validatiors.Comments
     {
         public CommentValidator()
         {
-            RuleFor(comment => comment.Id).GreaterThan(0);
+            RuleFor(comment => comment.ProductId).GreaterThan(0);
+            RuleFor(comment => comment.AuthorId).GreaterThan(0);
             RuleFor(comment => comment.Message).NotNull();
         }
 
