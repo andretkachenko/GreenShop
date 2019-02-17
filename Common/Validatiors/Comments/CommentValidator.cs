@@ -13,9 +13,9 @@ namespace Common.Validatiors.Comments
         }
 
     }
-    public class CommenMessageValidator : AbstractValidator<string>
+    public class CommentMessageValidator : AbstractValidator<string>
     {
-        public CommenMessageValidator()
+        public CommentMessageValidator()
         {
             RuleFor(message => message).NotEmpty();
         }

@@ -19,10 +19,10 @@ namespace Catalog.Controllers
         }
 
         //GET all comments from product
-        [HttpGet("product/{productID}")]
-        public async Task<IEnumerable<Comment>> GetAllProductCommentsAsync(int productID)
+        [HttpGet("product/{productId}")]
+        public async Task<IEnumerable<Comment>> GetAllProductCommentsAsync(int productId)
         {
-            var comments = await _commentServices.GetAllProductComments(productID);
+            var comments = await _commentServices.GetAllProductComments(productId);
 
             return comments;
         }

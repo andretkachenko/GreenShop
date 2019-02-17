@@ -45,7 +45,7 @@ namespace Catalog.Services.Comments
             var idValidator = new CommentIdValidator();
             idValidator.ValidateAndThrow(id);
 
-            var messageValidator = new CommenMessageValidator();
+            var messageValidator = new CommentMessageValidator();
             messageValidator.ValidateAndThrow(message);
 
             var rowsAffected = await Comments.Edit(id, message);
