@@ -5,24 +5,21 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalog.Properties;
-using AutoMapper;
 
 namespace Catalog.DataAccessors
 {
     public class MongoProducts : IMongoDataAccessor<Product>
     {
         private readonly IMongoContext _mongoContext;
-        private readonly IMapper _mapper;
 
         /// <summary>
         /// Get Mongo Collection for Products
         /// </summary>
         private IMongoCollection<Product> MongoCollection => _mongoContext.Database.GetCollection<Product>(Resources.Products);
 
-        public MongoProducts(IMongoContext mongoContext, IMapper mapper)
+        public MongoProducts(IMongoContext mongoContext)
         {
             _mongoContext = mongoContext;
-            _mapper = mapper;
         }
 
         /// <summary>
