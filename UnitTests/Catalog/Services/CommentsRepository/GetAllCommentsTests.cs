@@ -28,7 +28,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             //Arange
             var productId = -1;
 
-            //var Act
+            //Act
             var result = CommentRepository.GetAllProductComments(productId);
 
             //Assert

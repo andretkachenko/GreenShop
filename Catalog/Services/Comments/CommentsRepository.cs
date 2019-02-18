@@ -1,6 +1,7 @@
 ﻿using Catalog.Services.Comments.Interfaces;
 using Common.Interfaces;
 using Common.Models.Comments;
+using Common.Validatiors;
 using Common.Validatiors.Comments;
 using FluentValidation;
 using System;
@@ -30,7 +31,7 @@ namespace Catalog.Services.Comments
 
         public async Task<bool> DeleteComment(int id)
         {
-            var validator = new CommentIdValidator();
+            var validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
             var rowsAffected = await Comments.Delete(id);
@@ -42,7 +43,7 @@ namespace Catalog.Services.Comments
 
         public async Task<bool> EditComment(int id, string message)
         {
-            var idValidator = new CommentIdValidator();
+            var idValidator = new IdValidator();
             idValidator.ValidateAndThrow(id);
 
             var messageValidator = new CommentMessageValidator();
@@ -55,7 +56,7 @@ namespace Catalog.Services.Comments
 
         public async Task<IEnumerable<Comment>> GetAllProductComments(int productID)
         {
-            var idValidator = new CommentIdValidator();
+            var idValidator = new IdValidator();
             idValidator.ValidateAndThrow(productID);
 
             var comments = await Comments.GetAllParentRelated(productID);
@@ -64,7 +65,7 @@ namespace Catalog.Services.Comments
 
         public async Task<Comment> GetComment(int id)
         {
-            var validator = new CommentIdValidator();
+            var validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
             Comment comment = await Comments.Get(id);

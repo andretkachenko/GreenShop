@@ -57,7 +57,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var id = -1;
             var message = "TetsCommentMessage";
 
-            //var Act
+            //Act
             var result = CommentRepository.EditComment(id, message);
 
             //Assert
@@ -72,7 +72,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var id = 1;
             var message = "";
 
-            //var Act
+            //Act
             var result = CommentRepository.EditComment(id, message);
 
             //Assert

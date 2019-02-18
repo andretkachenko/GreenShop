@@ -2,7 +2,6 @@
 using Common.Models.Comments;
 using Catalog.Services.Comments.Interfaces;
 using System.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Catalog.Controllers

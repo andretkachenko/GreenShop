@@ -63,7 +63,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
                 ProductId = productId
             };
 
-            //var Act
+            //Act
             var result = CommentRepository.AddComment(comment);
 
             //Assert
