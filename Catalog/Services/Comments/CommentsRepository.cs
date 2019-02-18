@@ -19,6 +19,11 @@ namespace Catalog.Services.Comments
             Comments = dataAccessor;
         }
 
+        /// <summary>
+        ///Asynchronously adds Comment 
+        /// </summary>
+        /// <param name="comment">Comment to add</param>
+        /// <returns>True if succeeded</returns>
         public async Task<bool> AddComment(Comment comment)
         {
             var validator = new CommentValidator();
@@ -29,6 +34,11 @@ namespace Catalog.Services.Comments
             return resul;
         }
 
+        /// <summary>
+        /// Asynchronously Deletes Comment by Id
+        /// </summary>
+        /// <param name="id">Id of the Comment to delete</param>
+        /// <returns>True if succeeded</returns>
         public async Task<bool> DeleteComment(int id)
         {
             var validator = new IdValidator();
@@ -39,8 +49,20 @@ namespace Catalog.Services.Comments
             return result;
         }
 
-        public Task<bool> EditComment(Comment comment) => throw new NotImplementedException();
+        /// <summary>
+        /// Asynchronously Edit comment's message
+        /// <para>This method calls Edit(int, string) using Id and Message from the Comment</para>
+        /// </summary>
+        /// <param name="comment">Comment to edit</param>
+        /// <returns>True if succeeded</returns>
+        public Task<bool> EditComment(Comment comment) => EditComment(comment.Id, comment.Message);
 
+        /// <summary>
+        /// Asynchronously Edit comment's message
+        /// </summary>
+        /// <param name="id">Id of the Comment to edit</param>
+        /// <param name="message">Updated message for the comment</param>
+        /// <returns>True if succeeded</returns>
         public async Task<bool> EditComment(int id, string message)
         {
             var idValidator = new IdValidator();
@@ -54,6 +76,11 @@ namespace Catalog.Services.Comments
             return result;
         }
 
+        /// <summary>
+        /// Gets all Comments by Product Id
+        /// </summary>
+        /// <param name="productID">Id of the product to get its comments</param>
+        /// <returns>Task with list of all comments</returns>
         public async Task<IEnumerable<Comment>> GetAllProductComments(int productID)
         {
             var idValidator = new IdValidator();
@@ -63,6 +90,11 @@ namespace Catalog.Services.Comments
             return comments;
         }
 
+        /// <summary>
+        /// Gets Comment by Id
+        /// </summary>
+        /// <param name="id">Id of the Comment to get</param>
+        /// <returns>Task with specified Comment</returns>
         public async Task<Comment> GetComment(int id)
         {
             var validator = new IdValidator();

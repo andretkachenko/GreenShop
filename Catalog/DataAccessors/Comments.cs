@@ -75,8 +75,8 @@ namespace Catalog.DataAccessors
                 query += " WHERE [Id] = @id";
                 int affectedRows = await context.ExecuteAsync(query, new
                 {
-                    Id = id,
-                    Message = message,
+                    id,
+                    message,
                 });
                 return affectedRows;
             }

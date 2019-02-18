@@ -1,5 +1,4 @@
 ﻿using Common.Models.Comments.Interfaces;
-using Common.Models.Products.Interfaces;
 
 namespace Common.Models.Comments
 {
