@@ -21,13 +21,13 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         }
 
         [TestMethod]
-        public void ValidComment_ReturnsTrue()
+        public void ValidComment_ReturnsId()
         {
             //Arrange
             var authorId = 1;
             var message = "TetsCommentMessage";
             var parentId = 1;
-            var expectedResult = true;
+            var expectedResult = 1;
 
             var comment = new Comment
             {
@@ -44,7 +44,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var result = CommentRepository.AddComment(comment);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<bool>));
+            Assert.IsInstanceOfType(result, typeof(Task<int>));
             Assert.AreEqual(expectedResult, result.Result);
         }
 
