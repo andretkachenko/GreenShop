@@ -12,22 +12,23 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
--job: MainJob
-  displayName: 'Make ${buildConfiguration} build, run tests and check code coverage'
-  steps:
-  - script: dotnet restore
-    displayName: 'Restore NuGet packages'
-  - script: dotnet build --configuration $(buildConfiguration)
-    displayName: 'Make $(buildConfiguration) build'
-  - task: DotNetCoreCLI@2
-    displayName: 'Run Tests'
-    inputs:
-      command: test
-      projects: '**/*Tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
-  - task: DotNetCoreCLI@2
-    displayName: 'Check code coverage'
-    inputs:
-      command: test
-      projects: '**/*Tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+jobs:
+- job: MainJob
+    displayName: 'Make ${buildConfiguration} build, run tests and check code coverage'
+    steps:
+    - script: dotnet restore
+      displayName: 'Restore NuGet packages'
+    - script: dotnet build --configuration $(buildConfiguration)
+      displayName: 'Make $(buildConfiguration) build'
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Tests'
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Check code coverage'
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
