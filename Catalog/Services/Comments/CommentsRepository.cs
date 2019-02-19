@@ -4,7 +4,6 @@ using Common.Models.Comments;
 using Common.Validatiors;
 using Common.Validatiors.Comments;
 using FluentValidation;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -79,14 +78,14 @@ namespace Catalog.Services.Comments
         /// <summary>
         /// Gets all Comments by Product Id
         /// </summary>
-        /// <param name="productID">Id of the product to get its comments</param>
+        /// <param name="productId">Id of the product to get its comments</param>
         /// <returns>Task with list of all comments</returns>
-        public async Task<IEnumerable<Comment>> GetAllProductComments(int productID)
+        public async Task<IEnumerable<Comment>> GetAllProductComments(int productId)
         {
             var idValidator = new IdValidator();
-            idValidator.ValidateAndThrow(productID);
+            idValidator.ValidateAndThrow(productId);
 
-            var comments = await Comments.GetAllParentRelated(productID);
+            var comments = await Comments.GetAllParentRelated(productId);
             return comments;
         }
 
