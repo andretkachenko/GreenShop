@@ -10,7 +10,7 @@ namespace Catalog.Services.Comments.Interfaces
 
         Task<Comment> GetComment(int id);
 
-        Task<bool> AddComment(Comment comment);
+        Task<int> AddComment(Comment comment);
 
         Task<bool> EditComment(Comment comment);
 

@@ -23,14 +23,13 @@ namespace Catalog.Services.Comments
         /// </summary>
         /// <param name="comment">Comment to add</param>
         /// <returns>True if succeeded</returns>
-        public async Task<bool> AddComment(Comment comment)
+        public async Task<int> AddComment(Comment comment)
         {
             var validator = new CommentValidator();
             validator.ValidateAndThrow(comment);
 
-            var rowsAffected = await Comments.Add(comment);
-            var resul = rowsAffected == 1;
-            return resul;
+            var id = await Comments.Add(comment);
+            return id;
         }
 
         /// <summary>
