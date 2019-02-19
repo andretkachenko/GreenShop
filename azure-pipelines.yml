@@ -12,7 +12,6 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-jobs:
 - job: MainJob
   displayName: 'Make ${buildConfiguration} build, run tests and check code coverage'
   steps:
