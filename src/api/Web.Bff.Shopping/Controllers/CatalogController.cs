@@ -5,11 +5,11 @@ namespace ApiGateway.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WebShoppingController : ControllerBase
+    public class CatalogController : ControllerBase
     {
         private readonly ICatalogService _catalogService;
 
-        public WebShoppingController(ICatalogService catalogService)
+        public CatalogController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
         }
