@@ -2,6 +2,8 @@
 using Catalog.DataAccessors;
 using Catalog.Services.Categories;
 using Catalog.Services.Categories.Interfaces;
+using Catalog.Services.Comments;
+using Catalog.Services.Comments.Interfaces;
 using Catalog.Services.Products;
 using Catalog.Services.Products.Interfaces;
 using Catalog.Utils;
@@ -9,6 +11,7 @@ using Common.Configuration.MongoDB;
 using Common.Configuration.SQL;
 using Common.Interfaces;
 using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.Products;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,6 +42,7 @@ namespace Catalog.Extensions
 
             services.AddSingleton<ISqlDataAccessor<Category>, Categories>();
             services.AddSingleton<ISqlDataAccessor<Product>, SqlProducts>();
+            services.AddSingleton<ISqlChildDataAccessor<Comment>, Comments>();
             services.AddSingleton<IProductMerger, ProductMerger>();
         }
 
@@ -63,6 +67,7 @@ namespace Catalog.Extensions
         {
             services.AddTransient<ICategoriesRepository, CategoriesRepository>();
             services.AddTransient<IProductsRepository, ProductsRepository>();
+            services.AddTransient<ICommentsRepository, CommentsRepository>();
         }
     }
 }
