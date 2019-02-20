@@ -66,13 +66,8 @@ namespace Catalog.DataAccessors
             {
                 var query = @"
                         UPDATE [Comments]
-                        SET";
-                if (!string.IsNullOrWhiteSpace(message))
-                {
-                    query += "[Message] = @message";
-                }
-
-                query += " WHERE [Id] = @id";
+                        SET [Message] = @message
+                        WHERE [Id] = @id";
                 int affectedRows = await context.ExecuteAsync(query, new
                 {
                     id,
@@ -122,7 +117,7 @@ namespace Catalog.DataAccessors
             {
                 var comments = await context.QueryAsync<Comment>(@"
                     SELECT [Id]
-                        ,[Author]
+                        ,[AuthorId]
                         ,[Message]
                         ,[ProductId]
                     FROM [Comments]
