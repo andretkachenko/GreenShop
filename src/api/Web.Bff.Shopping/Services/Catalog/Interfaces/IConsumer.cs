@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ApiGateway.Services.Catalog.Interfaces
+namespace Web.Bff.Shopping.Services.Catalog.Interfaces
 {
     public interface IConsumer<T> where T: IIdentifiable
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<T> Get(int id);
-        Task<int> Add(T entity);
-        Task<bool> Delete(int id);
-        Task<bool> Edit(T product);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int id);
+        Task<int> AddAsync(T entity);
+        Task<bool> DeleteAsync(int id);
+        Task<bool> EditAsync(T product);
     }
 }

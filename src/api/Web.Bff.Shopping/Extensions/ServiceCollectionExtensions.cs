@@ -6,6 +6,8 @@ using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
+using Common.Models.Categories;
+using Web.Bff.Shopping.Services.Catalog.Consumers;
 
 namespace Web.Bff.Shopping.Extensions
 {
@@ -13,7 +15,7 @@ namespace Web.Bff.Shopping.Extensions
     {
         internal static IServiceCollection RegisterHttpServices(this IServiceCollection services)
         {
-            services.AddHttpClient<ICatalogService, CatalogService>()
+            services.AddHttpClient<ICategoriesService, CategoriesService>()
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
@@ -51,7 +53,6 @@ namespace Web.Bff.Shopping.Extensions
         {
         }
 
-
         /// <summary>
         /// Method that registers all Transient-type dependencies.
         /// <para>Transient objects are provided as a new instance to every controller and every service.</para>
@@ -59,6 +60,8 @@ namespace Web.Bff.Shopping.Extensions
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private static void RegisterTransient(this IServiceCollection services)
         {
+            services.AddTransient<IConsumer<Category>, CategoriesConsumer>();
+            services.AddTransient<ICategoriesService, CategoriesService>();
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
