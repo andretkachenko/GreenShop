@@ -1,5 +1,5 @@
-﻿using ApiGateway.Services.Catalog;
-using ApiGateway.Services.Catalog.Interfaces;
+﻿using Web.Bff.Shopping.Services.Catalog;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
@@ -7,7 +7,7 @@ using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 
-namespace ApiGateway.Extensions
+namespace Web.Bff.Shopping.Extensions
 {
     internal static class ServiceCollectionExtensions
     {

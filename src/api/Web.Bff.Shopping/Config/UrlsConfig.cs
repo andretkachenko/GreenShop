@@ -1,4 +1,4 @@
-﻿namespace ApiGateway.Config
+﻿namespace Web.Bff.Shopping.Config
 {
     public class UrlsConfig
     {

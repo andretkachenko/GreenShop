@@ -1,7 +1,7 @@
-﻿using ApiGateway.Services.Catalog.Interfaces;
+﻿using Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiGateway.Controllers
+namespace Web.Bff.Shopping.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
