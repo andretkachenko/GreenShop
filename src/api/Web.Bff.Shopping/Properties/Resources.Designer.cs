@@ -65,7 +65,7 @@ namespace Web.Bff.Shopping.Properties {
         /// </summary>
         internal static string RestSharpException {
             get {
-                return ResourceManager.GetString("RestSharException", resourceCulture);
+                return ResourceManager.GetString("RestSharpException", resourceCulture);
             }
         }
     }
