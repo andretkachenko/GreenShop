@@ -1,23 +1,23 @@
 ﻿using Target = Web.Bff.Shopping.Services.Catalog.CategoriesService;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Web.Bff.Shopping.Services.Catalog.Consumers;
 using Common.Models.Categories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
 
 namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
 {
     [TestClass]
     public class GetAllCategoriesTests
     {
-        private Mock<CategoriesConsumer> CategoriesConsumerStub;
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
         private Target CategoriesService;
 
         public GetAllCategoriesTests()
         {
-            CategoriesConsumerStub = new Mock<CategoriesConsumer>();
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
             CategoriesService = new Target(CategoriesConsumerStub.Object);
         }
 
