@@ -1,11 +1,9 @@
 ﻿using Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Common.Models.Categories;
-using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Web.Bff.Shopping.Config;
 using RestSharp;
-using Web.Bff.Shopping.Properties;
 using Web.Bff.Shopping.Helpers;
 using System.Threading.Tasks;
 
@@ -41,7 +39,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         /// <returns>Specified Category</returns>
         public async Task<Category> GetAsync(int id)
         {
-            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.GetAllCategories, Method.GET);
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.GetCategory(id), Method.GET);
             IRestResponse<Category> response = await ExecuteAsync<Category>(request);
             Category category = response.Data;
             return category;
@@ -54,7 +52,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         /// <returns>Category id</returns>
         public async Task<int> AddAsync(Category category)
         {
-            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.GetAllCategories, Method.GET, category);
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.AddCategory, Method.POST, category);
             IRestResponse<int> response = await ExecuteAsync<int>(request);
             int id = response.Data;
             return id;
@@ -67,7 +65,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         /// <returns>Operation result</returns>
         public async Task<bool> EditAsync(Category category)
         {
-            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.GetAllCategories, Method.GET, category);
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.EditCategory, Method.PUT, category);
             IRestResponse<bool> response = await ExecuteAsync<bool>(request);
             bool result = response.Data;
             return result;
@@ -80,7 +78,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         /// <returns>Operation result</returns>
         public async Task<bool> DeleteAsync(int id)
         {
-            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.GetAllCategories, Method.GET);
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CategoryApiOperations.DeleteCategory(id), Method.DELETE);
             IRestResponse<bool> response = await ExecuteAsync<bool>(request);
             bool result = response.Data;
             return result;
@@ -96,11 +94,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         {
             var taskCompletionSource = new TaskCompletionSource<IRestResponse<T>>();
             _client.ExecuteAsync<T>(request, restResponse =>
-        {
-                if (restResponse.ErrorException != null)
-                {
-                    throw new ApplicationException(Resources.RestSharpException, restResponse.ErrorException);
-                }
+            {
                 taskCompletionSource.SetResult(restResponse);
             });
 
