@@ -12,7 +12,7 @@
     "development": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/categories",
+      "launchUrl": "api/catalog/categories",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development"
       }
@@ -20,7 +20,7 @@
     "staging": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/categories",
+      "launchUrl": "api/catalog/categories",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "staging"
       },
@@ -29,7 +29,7 @@
     "production": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/categories",
+      "launchUrl": "api/catalog/categories",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "production"
       },

@@ -16,7 +16,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         private readonly UrlsConfig _urls;
         private readonly IRestClient _client;
 
-        public CategoriesConsumer(IOptions<UrlsConfig> config)
+        public CategoriesConsumer(IOptionsSnapshot<UrlsConfig> config)
         {
             _urls = config.Value;
             _client = new RestClient(_urls.Catalog);

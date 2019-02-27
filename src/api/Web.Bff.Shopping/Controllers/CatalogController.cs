@@ -19,8 +19,8 @@ namespace Web.Bff.Shopping.Controllers
 
         #region Categories
         #region CRUD
-        // GET api/categories
-        [HttpGet]
+        // GET api/catalog/categories
+        [HttpGet("categories")]
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
             var categories = await _categoriesService.GetAllCategories();
@@ -28,8 +28,8 @@ namespace Web.Bff.Shopping.Controllers
             return categories;
         }
 
-        // GET api/categories/5
-        [HttpGet("{id}")]
+        // GET api/catalog/categories/5
+        [HttpGet("categories/{id}")]
         public async Task<Category> GetCategoryAsync(int id)
         {
             var category = await _categoriesService.GetCategory(id);
@@ -37,8 +37,8 @@ namespace Web.Bff.Shopping.Controllers
             return category;
         }
 
-        // POST api/categories
-        [HttpPost]
+        // POST api/catalog/categories
+        [HttpPost("categories")]
         public async Task<int> AddCategoryAsync([FromBody] Category category)
         {
             var success = await _categoriesService.AddCategory(category);
@@ -46,8 +46,8 @@ namespace Web.Bff.Shopping.Controllers
             return success;
         }
 
-        // PUT api/categories/5
-        [HttpPut]
+        // PUT api/catalog/categories/5
+        [HttpPut("categories")]
         public async Task<bool> EditCategoryAsync([FromBody] Category category)
         {
             var success = await _categoriesService.EditCategory(category);
@@ -55,8 +55,8 @@ namespace Web.Bff.Shopping.Controllers
             return success;
         }
 
-        // DELETE api/categories/5
-        [HttpDelete("{id}")]
+        // DELETE api/catalog/categories/5
+        [HttpDelete("categories/{id}")]
         public async Task<bool> DeleteCategoryAsync(int id)
         {
             var success = await _categoriesService.DeleteCategory(id);
