@@ -1,9 +1,9 @@
-﻿using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Common.Models.Categories;
+﻿using Common.Models.Categories;
 using Common.Validatiors;
 using FluentValidation;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
 
 namespace Web.Bff.Shopping.Services.Catalog
 {
@@ -22,7 +22,7 @@ namespace Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAllCategories()
         {
-            var categories = await _categoryConsumer.GetAllAsync();
+            IEnumerable<Category> categories = await _categoryConsumer.GetAllAsync();
 
             return categories;
         }
@@ -34,10 +34,10 @@ namespace Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with specified Category</returns>
         public async Task<Category> GetCategory(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            var category = await _categoryConsumer.GetAsync(id);
+            Category category = await _categoryConsumer.GetAsync(id);
 
             return category;
         }
@@ -49,10 +49,10 @@ namespace Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with Category id</returns>
         public async Task<int> AddCategory(Category category)
         {
-            var validator = new EntityNameValidator();
+            EntityNameValidator validator = new EntityNameValidator();
             validator.ValidateAndThrow(category.Name);
 
-            var id = await _categoryConsumer.AddAsync(category);
+            int id = await _categoryConsumer.AddAsync(category);
 
             return id;
         }
@@ -64,10 +64,10 @@ namespace Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with success flag</returns>
         public async Task<bool> EditCategory(Category category)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(category.Id);
 
-            var success = await _categoryConsumer.EditAsync(category);
+            bool success = await _categoryConsumer.EditAsync(category);
 
             return success;
         }
@@ -79,10 +79,10 @@ namespace Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with success flag</returns>
         public async Task<bool> DeleteCategory(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            var success = await _categoryConsumer.DeleteAsync(id);
+            bool success = await _categoryConsumer.DeleteAsync(id);
 
             return success;
         }

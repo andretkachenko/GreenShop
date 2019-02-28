@@ -1,13 +1,14 @@
-﻿using Web.Bff.Shopping.Services.Catalog;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
-using Microsoft.AspNetCore.Http;
-using Common.Models.Categories;
+using Web.Bff.Shopping.Services.Catalog;
 using Web.Bff.Shopping.Services.Catalog.Consumers;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
 
 namespace Web.Bff.Shopping.Extensions
 {
@@ -61,7 +62,9 @@ namespace Web.Bff.Shopping.Extensions
         private static void RegisterTransient(this IServiceCollection services)
         {
             services.AddTransient<IConsumer<Category>, CategoriesConsumer>();
+            services.AddTransient<IConsumer<Product>, ProductsConsumer>();
             services.AddTransient<ICategoriesService, CategoriesService>();
+            services.AddTransient<IProductsService, ProductsService>();
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
