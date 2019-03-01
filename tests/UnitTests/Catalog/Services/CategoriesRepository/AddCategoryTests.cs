@@ -1,10 +1,11 @@
-﻿using Target = Catalog.Services.Categories.CategoriesRepository;
-using Common.Interfaces;
+﻿using Common.Interfaces;
 using Common.Models.Categories;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Threading.Tasks;
+using Target = Catalog.Services.Categories.CategoriesRepository;
 
 namespace UnitTests.Catalog.Services.CategoriesRepository
 {
@@ -24,11 +25,11 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void ValidCategory_ReturnsExpectedId()
         {
             // Arrange
-            var id = 1;
-            var name = "TestCategory";
-            var parentId = 3;
+            int id = 1;
+            string name = "TestCategory";
+            int parentId = 3;
 
-            var category = new Category
+            Category category = new Category
             {
                 Id = id,
                 Name = name,
@@ -40,7 +41,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
                 .Returns(Task.FromResult(id));
 
             // Act
-            var result = CategoriesRepository.AddCategory(category);
+            Task<int> result = CategoriesRepository.AddCategory(category);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
@@ -48,17 +49,35 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         }
 
         [TestMethod]
-        public void CategoryWithoutName_ThrowsValidationException()
+        public void CategoryWithEmptyName_ThrowsValidationException()
         {
             // Arrange
-            var invalidCategory = new Category { };
+            string emptyName = string.Empty;
+            Category invalidCategory = new Category
+            {
+                Name = emptyName
+            };
 
             // Act
-            var result = CategoriesRepository.AddCategory(invalidCategory);
+            Task<int> result = CategoriesRepository.AddCategory(invalidCategory);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
             Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
+        }
+
+        [TestMethod]
+        public void CategoryWithoutName_ThrowsArgumentNullException()
+        {
+            // Arrange
+            Category invalidCategory = new Category {  };
+
+            // Act
+            Task<int> result = CategoriesRepository.AddCategory(invalidCategory);
+
+            // Assert
+            Assert.AreEqual(result.Status, TaskStatus.Faulted);
+            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ArgumentNullException));
         }
     }
 }
