@@ -14,6 +14,8 @@ namespace Web.Bff.Shopping.Services.Catalog.Interfaces
 
         Task<bool> EditComment(int id, string message);
 
+        Task<bool> EditComment(Comment comment);
+
         Task<bool> DeleteComment(int id);
     }
 }

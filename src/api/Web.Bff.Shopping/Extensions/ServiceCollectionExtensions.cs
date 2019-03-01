@@ -65,6 +65,8 @@ namespace Web.Bff.Shopping.Extensions
             services.AddTransient<IConsumer<Product>, ProductsConsumer>();
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IProductsService, ProductsService>();
+            services.AddTransient<ICommentConsumer, CommentConsumer>();
+            services.AddTransient<ICommentService, CommentService>();
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()

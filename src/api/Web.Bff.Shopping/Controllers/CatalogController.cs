@@ -18,11 +18,11 @@ namespace Web.Bff.Shopping.Controllers
 
         public CatalogController(ICategoriesService categoriesService,
                                  IProductsService productsService,
-                                 ICommentService _commentService)
+                                 ICommentService commentService)
         {
             _categoriesService = categoriesService;
             _productsService = productsService;
-
+            _commentService = commentService;
         }
 
         #region Categories
