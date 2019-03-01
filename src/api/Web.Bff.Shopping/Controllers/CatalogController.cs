@@ -153,6 +153,10 @@ namespace Web.Bff.Shopping.Controllers
             return result;
         }
 
+        // PUT api/catalog/comments/1
+        [HttpPut("comments/{id}")]
+        public async Task<bool> EditComment(int id, [FromBody] Comment comment) => await EditComment(id, comment.Message);
+
         //Delete api/catalog/comments/1
         [HttpDelete("comments/{id}")]
         public async Task<bool> DeleteComment(int id)

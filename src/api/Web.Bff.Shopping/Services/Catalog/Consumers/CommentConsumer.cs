@@ -41,7 +41,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         /// <returns>Task with boolean result</returns>
         public async Task<bool> DeleteAsync(int id)
         {
-            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.DeleteComment(id), Method.GET);
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.DeleteComment(id), Method.DELETE);
             IRestResponse<bool> response = await ExecuteAsync<bool>(request);
             bool result = response.Data;
 
