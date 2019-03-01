@@ -1,19 +1,22 @@
-﻿using ApiGateway.Services.Catalog;
-using ApiGateway.Services.Catalog.Interfaces;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
-using Microsoft.AspNetCore.Http;
+using Web.Bff.Shopping.Services.Catalog;
+using Web.Bff.Shopping.Services.Catalog.Consumers;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
 
-namespace ApiGateway.Extensions
+namespace Web.Bff.Shopping.Extensions
 {
     internal static class ServiceCollectionExtensions
     {
         internal static IServiceCollection RegisterHttpServices(this IServiceCollection services)
         {
-            services.AddHttpClient<ICatalogService, CatalogService>()
+            services.AddHttpClient<ICategoriesService, CategoriesService>()
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
@@ -51,7 +54,6 @@ namespace ApiGateway.Extensions
         {
         }
 
-
         /// <summary>
         /// Method that registers all Transient-type dependencies.
         /// <para>Transient objects are provided as a new instance to every controller and every service.</para>
@@ -59,6 +61,10 @@ namespace ApiGateway.Extensions
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private static void RegisterTransient(this IServiceCollection services)
         {
+            services.AddTransient<IConsumer<Category>, CategoriesConsumer>();
+            services.AddTransient<IConsumer<Product>, ProductsConsumer>();
+            services.AddTransient<ICategoriesService, CategoriesService>();
+            services.AddTransient<IProductsService, ProductsService>();
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()

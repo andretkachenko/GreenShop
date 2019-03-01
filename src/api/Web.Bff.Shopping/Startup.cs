@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiGateway.Extensions;
+using Web.Bff.Shopping.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,8 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Web.Bff.Shopping.Config;
 
-namespace ApiGateway
+namespace Web.Bff.Shopping
 {
     public class Startup
     {
@@ -28,6 +29,7 @@ namespace ApiGateway
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton(Configuration);
+            services.Configure<UrlsConfig>(options => Configuration.GetSection("urls").Bind(options));
 
             services.RegisterHttpServices();
             services.InjectDependencies();
