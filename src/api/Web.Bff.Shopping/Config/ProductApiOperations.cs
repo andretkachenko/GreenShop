@@ -10,5 +10,6 @@
             public static string DeleteProduct(int id) => $"api/products/{id}";
             public static string EditProduct => $"api/products";
         }
+        
     }
 }

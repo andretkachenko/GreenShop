@@ -1,9 +1,10 @@
-﻿using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Common.Models.Categories;
+﻿using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.Products;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
 
 namespace Web.Bff.Shopping.Controllers
 {
@@ -13,9 +14,11 @@ namespace Web.Bff.Shopping.Controllers
     {
         private readonly ICategoriesService _categoriesService;
         private readonly IProductsService _productsService;
+        private readonly ICommentService _commentService;
 
-        public CatalogController(ICategoriesService categoriesService, 
-                                 IProductsService productsService)
+        public CatalogController(ICategoriesService categoriesService,
+                                 IProductsService productsService,
+                                 ICommentService _commentService)
         {
             _categoriesService = categoriesService;
             _productsService = productsService;
@@ -118,6 +121,58 @@ namespace Web.Bff.Shopping.Controllers
             return success;
         }
         #endregion
+        #endregion
+
+        #region Comments
+
+        #region CRUD
+        // GET api/catalog/comments/1
+        [HttpGet("comments/{id}")]
+        public async Task<Comment> GetComment(int id)
+        {
+            var result = await _commentService.GetComment(id);
+
+            return result;
+        }
+
+        // GET api/catalog/comments/products/2
+        [HttpGet("comments/products/{id}")]
+        public async Task<IEnumerable<Comment>> GetProductRelatedComment(int id)
+        {
+            var result = await _commentService.GetAllProductComments(id);
+
+            return result;
+        }
+
+        // PUT api/catalog/comments/1
+        [HttpPut("comments/{id}")]
+        public async Task<bool> EditComment(int id, [FromBody] string message)
+        {
+            var result = await _commentService.EditComment(id, message);
+
+            return result;
+        }
+
+        //Delete api/catalog/comments/1
+        [HttpDelete("comments/{id}")]
+        public async Task<bool> DeleteComment(int id)
+        {
+            var result = await _commentService.DeleteComment(id);
+
+            return result;
+        }
+
+        //Post api/catalog/comments/1
+        [HttpPost("comments")]
+        public async Task<int> AddComment([FromBody] Comment comment)
+        {
+            var result = await _commentService.AddComment(comment);
+
+            return result;
+        }
+
+        #endregion
+
         #endregion
     }
 }
