@@ -21,55 +21,44 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         }
 
         [TestMethod]
-        public void ValidCategory_ReturnsTrue()
+        public void ValidCategory_ReturnsExpectedId()
         {
             // Arrange
             var id = 1;
-            var expectedResult = true;
+            var name = "TestCategory";
+            var parentId = 3;
+
+            var category = new Category
+            {
+                Id = id,
+                Name = name,
+                ParentCategoryId = parentId
+            };
 
             CategoriesAccessorStub
-                .Setup(categories => categories.Delete(id))
-                .Returns(Task.FromResult(1));
+                .Setup(categories => categories.Add(category))
+                .Returns(Task.FromResult(id));
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            var result = CategoriesRepository.AddCategory(category);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<bool>));
-            Assert.AreEqual(expectedResult, result.Result);
+            Assert.IsInstanceOfType(result, typeof(Task<int>));
+            Assert.AreEqual(id, result.Result);
         }
 
         [TestMethod]
-        public void NegativeCategoryId_ThrowsValidationException()
+        public void CategoryWithoutName_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            var invalidCategory = new Category { };
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            var result = CategoriesRepository.AddCategory(invalidCategory);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
             Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
-        }
-
-        [TestMethod]
-        public void InvalidCategoryId_ReturnsFalse()
-        {
-            // Arrange
-            var id = 99999;
-            var expectedResult = false;
-
-            CategoriesAccessorStub
-                .Setup(categories => categories.Delete(id))
-                .Returns(Task.FromResult(0));
-
-            // Act
-            var result = CategoriesRepository.DeleteCategory(id);
-
-            // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<bool>));
-            Assert.AreEqual(expectedResult, result.Result);
         }
     }
 }
