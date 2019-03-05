@@ -1,10 +1,11 @@
-﻿using Target = Catalog.Services.Categories.CategoriesRepository;
-using Common.Interfaces;
+﻿using Common.Interfaces;
 using Common.Models.Categories;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Threading.Tasks;
+using Target = Catalog.Services.Categories.CategoriesRepository;
 
 namespace UnitTests.Catalog.Services.CategoriesRepository
 {
@@ -21,32 +22,44 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         }
 
         [TestMethod]
-        public void ValidCategory_ReturnsTrue()
+        public void ValidCategory_ReturnsExpectedId()
         {
             // Arrange
-            var id = 1;
-            var expectedResult = true;
+            int id = 1;
+            string name = "TestCategory";
+            int parentId = 3;
+
+            Category category = new Category
+            {
+                Id = id,
+                Name = name,
+                ParentCategoryId = parentId
+            };
 
             CategoriesAccessorStub
-                .Setup(categories => categories.Delete(id))
-                .Returns(Task.FromResult(1));
+                .Setup(categories => categories.Add(category))
+                .Returns(Task.FromResult(id));
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            Task<int> result = CategoriesRepository.AddCategory(category);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<bool>));
-            Assert.AreEqual(expectedResult, result.Result);
+            Assert.IsInstanceOfType(result, typeof(Task<int>));
+            Assert.AreEqual(id, result.Result);
         }
 
         [TestMethod]
-        public void NegativeCategoryId_ThrowsValidationException()
+        public void CategoryWithEmptyName_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            string emptyName = string.Empty;
+            Category invalidCategory = new Category
+            {
+                Name = emptyName
+            };
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            Task<int> result = CategoriesRepository.AddCategory(invalidCategory);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -54,22 +67,17 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         }
 
         [TestMethod]
-        public void InvalidCategoryId_ReturnsFalse()
+        public void CategoryWithoutName_ThrowsArgumentNullException()
         {
             // Arrange
-            var id = 99999;
-            var expectedResult = false;
-
-            CategoriesAccessorStub
-                .Setup(categories => categories.Delete(id))
-                .Returns(Task.FromResult(0));
+            Category invalidCategory = new Category {  };
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            Task<int> result = CategoriesRepository.AddCategory(invalidCategory);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Task<bool>));
-            Assert.AreEqual(expectedResult, result.Result);
+            Assert.AreEqual(result.Status, TaskStatus.Faulted);
+            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ArgumentNullException));
         }
     }
 }
