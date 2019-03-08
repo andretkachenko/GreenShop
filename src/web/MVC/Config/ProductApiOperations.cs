@@ -6,11 +6,11 @@
         {
             public class ProductApiOperations
             {
-                public static string GetAllProducts() => $"/api/products";
-                public static string GetProduct(int id) => $"/api/products/{id}";
-                public static string AddProduct() => $"/api/products";
-                public static string DeleteProduct(int id) => $"/api/products/{id}";
-                public static string EditProduct() => $"/api/products";
+                public static string GetAllProducts = $"api/catalog/products";
+                public static string GetProduct(int id) => $"api/catalog/products/{id}";
+                public static string AddProduct = $"api/catalog/products";
+                public static string DeleteProduct(int id) => $"api/catalog/products/{id}";
+                public static string EditProduct = $"api/catalog/products";
             }
         }
     }

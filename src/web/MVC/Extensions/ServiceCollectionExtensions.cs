@@ -4,6 +4,7 @@ using MvcWebApp.Services;
 using MvcWebApp.Services.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
+using RestSharp;
 using System;
 using System.Net.Http;
 
@@ -59,6 +60,7 @@ namespace MvcWebApp.Extensions
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private static void RegisterTransient(this IServiceCollection services)
         {
+            services.AddTransient<IRestClient, RestClient>();
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()

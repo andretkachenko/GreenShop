@@ -1,0 +1,27 @@
+﻿@using Common.Models.Categories;
+@using Common.Models.Products;
+@{
+    var category = (Category)ViewData["category"];
+    var products = (List<Product>)ViewData["products"];
+    ViewData["Title"] = category.Name;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <div class="row">
+            @foreach (var product in products)
+            {
+            <h3>
+                @product.Name
+            </h3>
+            <h4>
+                @product.Description
+            </h4>
+            <h5>
+                Rating: @product.Rating
+                Base Price: @product.BasePrice
+            </h5>
+            }
+        </div>
+</div>
