@@ -1,23 +1,26 @@
-﻿using Target = Web.Bff.Shopping.Services.Catalog.CategoriesService;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
+using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Common.Models.Categories;
 using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using FluentValidation;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class AddCategoryTests
+    public class AddCategoryAsyncTests
     {
         private Mock<IConsumer<Category>> CategoriesConsumerStub;
-        private Target CategoriesService;
+        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private Target CatalogService;
 
-        public AddCategoryTests()
+        public AddCategoryAsyncTests()
         {
             CategoriesConsumerStub = new Mock<IConsumer<Category>>();
-            CategoriesService = new Target(CategoriesConsumerStub.Object);
+            ProductsConsumerStub = new Mock<IConsumer<Product>>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -40,7 +43,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
                 .Returns(Task.FromResult(id));
 
             // Act
-            Task<int> result = CategoriesService.AddCategory(expectedCategory);
+            Task<int> result = CatalogService.AddCategoryAsync(expectedCategory);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
@@ -58,7 +61,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
             };
 
             // Act
-            Task<int> result = CategoriesService.AddCategory(invalidCategory);
+            Task<int> result = CatalogService.AddCategoryAsync(invalidCategory);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

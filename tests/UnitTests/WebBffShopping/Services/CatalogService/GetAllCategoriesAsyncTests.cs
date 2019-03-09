@@ -1,24 +1,27 @@
-﻿using Target = Web.Bff.Shopping.Services.Catalog.CategoriesService;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Common.Models.Categories;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class GetAllCategoriesTests
+    public class GetAllCategoriesAsyncTests
     {
         private Mock<IConsumer<Category>> CategoriesConsumerStub;
-        private Target CategoriesService;
+        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private readonly Target CatalogService;
 
-        public GetAllCategoriesTests()
+        public GetAllCategoriesAsyncTests()
         {
             CategoriesConsumerStub = new Mock<IConsumer<Category>>();
-            CategoriesService = new Target(CategoriesConsumerStub.Object);
+            ProductsConsumerStub = new Mock<IConsumer<Product>>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -30,7 +33,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
                 .Returns(Task.FromResult(ExpectedCategoryList));
 
             // Act
-            Task<IEnumerable<Category>> result = CategoriesService.GetAllCategories();
+            Task<IEnumerable<Category>> result = CatalogService.GetAllCategoriesAsync();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<IEnumerable<Category>>));
@@ -45,7 +48,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
                 .Returns(Task.FromResult(ExpectedCategoryList));
 
             // Act
-            Task<IEnumerable<Category>> result = CategoriesService.GetAllCategories();
+            Task<IEnumerable<Category>> result = CatalogService.GetAllCategoriesAsync();
             Category actualCategory = result.GetAwaiter().GetResult().First();
             Category expectedCategory = ExpectedCategoryList.First();
 
@@ -60,11 +63,11 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
         {
             get
             {
-                var id = 1;
-                var name = "TestCategory";
-                var parentId = 2;
+                int id = 1;
+                string name = "TestCategory";
+                int parentId = 2;
 
-                var categoriesList = new List<Category>()
+                List<Category> categoriesList = new List<Category>()
                     {
                         new Category
                         {

@@ -1,23 +1,26 @@
-﻿using Target = Web.Bff.Shopping.Services.Catalog.CategoriesService;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
+using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Common.Models.Categories;
 using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using FluentValidation;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class GetCategoryTests
-    {        
-        private Mock<IConsumer<Category>> CategoriesAccessorStub;
-        private Target CategoriesService;
+    public class GetCategoryAsyncTests
+    {
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
+        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private readonly Target CatalogService;
 
-        public GetCategoryTests()
+        public GetCategoryAsyncTests()
         {
-            CategoriesAccessorStub = new Mock<IConsumer<Category>>();
-            CategoriesService = new Target(CategoriesAccessorStub.Object);
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
+            ProductsConsumerStub = new Mock<IConsumer<Product>>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -26,12 +29,12 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
             // Arrange
             int id = 1;
 
-            CategoriesAccessorStub
+            CategoriesConsumerStub
                 .Setup(categories => categories.GetAsync(id))
                 .Returns(Task.FromResult(ExpectedValidCategory));
 
             // Act
-            Task<Category> result = CategoriesService.GetCategory(id);
+            Task<Category> result = CatalogService.GetCategoryAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Category>));
@@ -43,12 +46,12 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
             // Arrange
             int id = 1;
 
-            CategoriesAccessorStub
+            CategoriesConsumerStub
                 .Setup(categories => categories.GetAsync(id))
                 .Returns(Task.FromResult(ExpectedValidCategory));
 
             // Act
-            Task<Category> result = CategoriesService.GetCategory(id);
+            Task<Category> result = CatalogService.GetCategoryAsync(id);
             Category actualCategory = result.GetAwaiter().GetResult();
 
             // Assert
@@ -63,12 +66,12 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
             // Arrange
             int id = 99999;
 
-            CategoriesAccessorStub
+            CategoriesConsumerStub
                 .Setup(categories => categories.GetAsync(id))
                 .Returns(Task.FromResult(ExpectedInvalidCategory));
 
             // Act
-            Task<Category> result = CategoriesService.GetCategory(id);
+            Task<Category> result = CatalogService.GetCategoryAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Category>));
@@ -82,7 +85,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
             int id = -1;
 
             // Act
-            Task<Category> result = CategoriesService.GetCategory(id);
+            Task<Category> result = CatalogService.GetCategoryAsync(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

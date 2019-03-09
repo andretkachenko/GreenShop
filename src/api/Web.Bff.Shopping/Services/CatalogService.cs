@@ -77,7 +77,7 @@ namespace Web.Bff.Shopping.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            bool success = await _categoriesConsumer.DeleteAsync(id);
+            bool success = await _productsConsumer.DeleteAsync(id);
 
             return success;
         }

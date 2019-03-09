@@ -1,27 +1,29 @@
-﻿using Common.Models.Products;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
 using Common.Models.Specifications;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Target = Web.Bff.Shopping.Services.Catalog.ProductsService;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class GetProductsTests
+    public class GetProductAsyncTests
     {
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
         private Mock<IConsumer<Product>> ProductsConsumerStub;
-        private Target ProductsService;
+        private Target CatalogService;
 
-        public GetProductsTests()
+        public GetProductAsyncTests()
         {
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
             ProductsConsumerStub = new Mock<IConsumer<Product>>();
-            ProductsService = new Target(ProductsConsumerStub.Object);
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -35,7 +37,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
                 .Returns(Task.FromResult(ExpectedValidProduct));
 
             // Act
-            Task<Product> result = ProductsService.GetProduct(id);
+            Task<Product> result = CatalogService.GetProductAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Product>));
@@ -52,7 +54,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
                 .Returns(Task.FromResult(ExpectedValidProduct));
 
             // Act
-            Product result = ProductsService.GetProduct(id).Result;
+            Product result = CatalogService.GetProductAsync(id).Result;
 
             // Assert
             Assert.AreEqual(ExpectedValidProduct.Id, result.Id);
@@ -67,7 +69,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
             Assert.AreEqual(ExpectedValidProduct.Specifications.First().Options.Count(), result.Specifications.First().Options.Count());
             Assert.AreEqual(ExpectedValidProduct.Specifications.First().Options.First(), result.Specifications.First().Options.First());
         }
-        
+
         [TestMethod]
         public void InvalidId_ReturnsNull()
         {
@@ -79,7 +81,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
                 .Returns(Task.FromResult(ExpectedInvalidProduct));
 
             // Act
-            Product result = ProductsService.GetProduct(id).GetAwaiter().GetResult();
+            Product result = CatalogService.GetProductAsync(id).GetAwaiter().GetResult();
 
             // Assert
             Assert.IsNull(result);
@@ -92,7 +94,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
             int id = -1;
 
             // Act
-            Task<Product> result = ProductsService.GetProduct(id);
+            Task<Product> result = CatalogService.GetProductAsync(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
