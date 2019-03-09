@@ -1,0 +1,54 @@
+﻿@using Common.Models.Products;
+@using Common.Models.Categories;
+@{
+    var product = (Product)ViewData["product"];
+    var category = (Category)ViewData["category"];
+    ViewData["Title"] = product.Name;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<ul>
+    <li>
+        @product.Description
+    </li>
+    <li>
+        Rating: @product.Rating
+    </li>
+    <li>
+        Base Price: @product.BasePrice
+    </li>
+    <li>
+        Category: @category.Name
+    </li>
+    @if (product.Specifications != null && product.Specifications.Any())
+    {
+        <li> Specifications:
+            <ul>
+                @foreach (var specification in product.Specifications)
+                {
+                    <li>
+                        @specification.Name
+                    </li>
+                    <li>
+                        Max allowed: @specification.MaxSelectionAvailable
+                    </li>
+                    @if (specification.Options != null && specification.Options.Any())
+                    {
+                        <li> Possible options:<br />
+                            <ul>
+                                @foreach(var option in specification.Options)
+                                {
+                                    <li>
+                                        @option
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+            </ul>
+        </li>
+    }
+</ul>
+

@@ -53,5 +53,35 @@ namespace MVC.Controllers
 
             return View();
         }
+
+        public IActionResult AllProducts()
+        {
+            RestRequest request = new RestRequest(UrlsConfig.WebShoppingApiOperations.ProductApiOperations.GetAllProducts, Method.GET);
+            request.AddHeader("Cache-Control", "no-cache");
+            IRestResponse response = _restClient.Execute(request);
+            List<Product> products = JsonConvert.DeserializeObject<List<Product>>(response.Content);
+
+            ViewData["products"] = products;
+
+            return View("Products");
+        }
+
+        public IActionResult Product(int id)
+        {
+            RestRequest request = new RestRequest(UrlsConfig.WebShoppingApiOperations.ProductApiOperations.GetProduct(id), Method.GET);
+            request.AddHeader("Cache-Control", "no-cache");
+            IRestResponse response = _restClient.Execute(request);
+            Product product = JsonConvert.DeserializeObject<Product>(response.Content);
+
+            RestRequest request2 = new RestRequest(UrlsConfig.WebShoppingApiOperations.CategoryApiOperations.GetCategory(product.CategoryId), Method.GET);
+            request2.AddHeader("Cache-Control", "no-cache");
+            IRestResponse response2 = _restClient.Execute(request);
+            Category Category = JsonConvert.DeserializeObject<Category>(response2.Content);
+
+            ViewData["product"] = product;
+            ViewData["category"] = Category;
+
+            return View();
+        }
     }
 }
