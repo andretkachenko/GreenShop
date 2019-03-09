@@ -1,23 +1,22 @@
-﻿using Common.Interfaces;
-using Common.Models.Comments;
-using FluentValidation;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Comments.CommentsRepository;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.Catalog.CommentService;
 
-namespace UnitTests.Catalog.Services.CommentsRepository
+namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
 {
     [TestClass]
     public class DeleteCommentTests
     {
-        private Mock<ISqlChildDataAccessor<Comment>> CommentsAccessorStub;
-        private Target Service;
+        private Mock<ICommentConsumer> CommentsAccessorStub;
+        private Target CommentService;
 
         public DeleteCommentTests()
         {
-            CommentsAccessorStub = new Mock<ISqlChildDataAccessor<Comment>>();
-            Service = new Target(CommentsAccessorStub.Object);
+            CommentsAccessorStub = new Mock<ICommentConsumer>();
+            CommentService = new Target(CommentsAccessorStub.Object);
         }
 
         [TestMethod]
@@ -28,11 +27,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var expectedResult = true;
 
             CommentsAccessorStub
-                .Setup(Comment => Comment.Delete(id))
-                .Returns(Task.FromResult(1));
+                .Setup(Comment => Comment.DeleteAsync(id))
+                .Returns(Task.FromResult(true));
 
             // Act
-            var result = Service.DeleteComment(id);
+            var result = CommentService.DeleteComment(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -46,7 +45,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var id = -1;
 
             // Act
-            var result = Service.DeleteComment(id);
+            var result = CommentService.DeleteComment(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -61,11 +60,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var expectedResult = false;
 
             CommentsAccessorStub
-                .Setup(comments => comments.Delete(id))
-                .Returns(Task.FromResult(0));
+                .Setup(comments => comments.DeleteAsync(id))
+                .Returns(Task.FromResult(false));
 
             // Act
-            var result = Service.DeleteComment(id);
+            var result = CommentService.DeleteComment(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
