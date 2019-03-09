@@ -1,7 +1,7 @@
 ﻿using Common.Models.Comments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Target = Web.Bff.Shopping.Services.Catalog.CommentService;

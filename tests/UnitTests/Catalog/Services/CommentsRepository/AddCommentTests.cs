@@ -72,27 +72,27 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         }
 
         //TODO: Repair
-        //[TestMethod]
-        //public void EmptyMessage_ThrowsValidationException()
-        //{
-        //    //Arrange
-        //    var authorId = 1;
-        //    var message = string.Empty;
-        //    var productId = 1;
+        [TestMethod]
+        public void EmptyMessage_ThrowsValidationException()
+        {
+            //Arrange
+            var authorId = 1;
+            var message = string.Empty;
+            var productId = 1;
 
-        //    var comment = new Comment
-        //    {
-        //        AuthorId = authorId,
-        //        Message = message,
-        //        ProductId = productId
-        //    };
+            var comment = new Comment
+            {
+                AuthorId = authorId,
+                Message = message,
+                ProductId = productId
+            };
 
-        //    //Act
-        //    var result = CommentRepository.AddComment(comment);
+            //Act
+            Task<int> result = CommentRepository.AddComment(comment);
 
-        //    //Assert
-        //    Assert.AreEqual(result.Status, TaskStatus.RanToCompletion);
-        //    //Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
-        //}
+            //Assert
+            Assert.AreEqual(result.Status, TaskStatus.Faulted);
+            //Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
+        }
     }
 }
