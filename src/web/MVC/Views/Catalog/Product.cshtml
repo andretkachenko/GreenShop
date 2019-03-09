@@ -2,7 +2,6 @@
 @using Common.Models.Categories;
 @{
     var product = (Product)ViewData["product"];
-    var category = (Category)ViewData["category"];
     ViewData["Title"] = product.Name;
 }
 
@@ -18,12 +17,16 @@
     <li>
         Base Price: @product.BasePrice
     </li>
+    @if (product.Category != null && !string.IsNullOrWhiteSpace(product.Category.Name))
+    {
     <li>
-        Category: @category.Name
+        Category: @Html.ActionLink(product.Category.Name, "Category", "Catalog", new { id = product.CategoryId }, null)
     </li>
+    }
     @if (product.Specifications != null && product.Specifications.Any())
     {
-        <li> Specifications:
+        <li>
+            Specifications:
             <ul>
                 @foreach (var specification in product.Specifications)
                 {
@@ -35,9 +38,10 @@
                     </li>
                     @if (specification.Options != null && specification.Options.Any())
                     {
-                        <li> Possible options:<br />
+                        <li>
+                            Possible options:<br />
                             <ul>
-                                @foreach(var option in specification.Options)
+                                @foreach (var option in specification.Options)
                                 {
                                     <li>
                                         @option

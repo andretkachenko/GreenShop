@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GreenShop.MVC.Services.Interfaces
 {
-    public interface ICatalogService
+    public interface ICatalogConsumer
     {
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
         Task<Category> GetCategoryAsync(int id);

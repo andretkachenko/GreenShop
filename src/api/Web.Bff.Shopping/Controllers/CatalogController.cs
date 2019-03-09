@@ -1,9 +1,10 @@
-﻿using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Common.Models.Categories;
+﻿using Common.Models.Categories;
+using Common.Models.DTO;
 using Common.Models.Products;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Web.Bff.Shopping.Services.Interfaces;
 
 namespace Web.Bff.Shopping.Controllers
 {
@@ -11,24 +12,20 @@ namespace Web.Bff.Shopping.Controllers
     [ApiController]
     public class CatalogController : ControllerBase
     {
-        private readonly ICategoriesService _categoriesService;
-        private readonly IProductsService _productsService;
+        private readonly ICatalogService _catalogService;
 
-        public CatalogController(ICategoriesService categoriesService, 
-                                 IProductsService productsService)
+        public CatalogController(ICatalogService catalogService)
         {
-            _categoriesService = categoriesService;
-            _productsService = productsService;
+            _catalogService = catalogService;
 
         }
 
-        #region Categories
-        #region CRUD
+        #region Categories CRUD
         // GET api/catalog/categories
         [HttpGet("categories")]
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            var categories = await _categoriesService.GetAllCategories();
+            IEnumerable<Category> categories = await _catalogService.GetAllCategoriesAsync();
 
             return categories;
         }
@@ -37,7 +34,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpGet("categories/{id}")]
         public async Task<Category> GetCategoryAsync(int id)
         {
-            var category = await _categoriesService.GetCategory(id);
+            Category category = await _catalogService.GetCategoryAsync(id);
 
             return category;
         }
@@ -46,7 +43,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpPost("categories")]
         public async Task<int> AddCategoryAsync([FromBody] Category category)
         {
-            var success = await _categoriesService.AddCategory(category);
+            int success = await _catalogService.AddCategoryAsync(category);
 
             return success;
         }
@@ -55,7 +52,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpPut("categories")]
         public async Task<bool> EditCategoryAsync([FromBody] Category category)
         {
-            var success = await _categoriesService.EditCategory(category);
+            bool success = await _catalogService.EditCategoryAsync(category);
 
             return success;
         }
@@ -64,20 +61,18 @@ namespace Web.Bff.Shopping.Controllers
         [HttpDelete("categories/{id}")]
         public async Task<bool> DeleteCategoryAsync(int id)
         {
-            var success = await _categoriesService.DeleteCategory(id);
+            bool success = await _catalogService.DeleteCategoryAsync(id);
 
             return success;
         }
         #endregion
-        #endregion
 
-        #region Products
-        #region CRUD
+        #region Products CRUD
         // GET api/catalog/products
         [HttpGet("products")]
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            var products = await _productsService.GetAllProducts();
+            IEnumerable<Product> products = await _catalogService.GetAllProductsAsync();
 
             return products;
         }
@@ -86,7 +81,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpGet("products/{id}")]
         public async Task<Product> GetProductAsync(int id)
         {
-            var product = await _productsService.GetProduct(id);
+            Product product = await _catalogService.GetProductAsync(id);
 
             return product;
         }
@@ -95,7 +90,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpPost("products")]
         public async Task<int> AddProductAsync([FromBody] Product product)
         {
-            var success = await _productsService.AddProduct(product);
+            int success = await _catalogService.AddProductAsync(product);
 
             return success;
         }
@@ -104,7 +99,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpPut("products")]
         public async Task<bool> EditProductAsync([FromBody] Product product)
         {
-            var success = await _productsService.EditProduct(product);
+            bool success = await _catalogService.EditProductAsync(product);
 
             return success;
         }
@@ -113,11 +108,27 @@ namespace Web.Bff.Shopping.Controllers
         [HttpDelete("products/{id}")]
         public async Task<bool> DeleteProductAsync(int id)
         {
-            var success = await _productsService.DeleteProduct(id);
+            bool success = await _catalogService.DeleteProductAsync(id);
 
             return success;
         }
         #endregion
-        #endregion
+
+        // GET api/catalog/categories/5/products
+        [HttpGet("categories/{id}/products")]
+        public async Task<CategoryProductsDTO> GetCategoryWithRelatedProducts(int id)
+        {
+            CategoryProductsDTO result = await _catalogService.GetCategoryWithProductsAsync(id);
+
+            return result;
+        }
+
+        [HttpGet("products/{id}/category")]
+        public async Task<Product> GetProductWithCategoryAsync(int id)
+        {
+            Product product = await _catalogService.GetProductWithCategoryAsync(id);
+
+            return product;
+        }
     }
 }

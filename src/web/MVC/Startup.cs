@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MvcWebApp.Config;
-using MvcWebApp.Extensions;
+using GreenShop.MVC.Config;
+using GreenShop.MVC.Extensions;
 
-namespace MvcWebApp
+namespace GreenShop.MVC
 {
     public class Startup
     {

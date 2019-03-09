@@ -12,9 +12,9 @@
     <div class="row">
             @foreach (var product in products)
             {
-            <h3>
-                @product.Name
-            </h3>
+        <h3>
+            @Html.ActionLink(product.Name, "Product", "Catalog", new { id = product.Id }, null)
+        </h3>
             <h4>
                 @product.Description
             </h4>

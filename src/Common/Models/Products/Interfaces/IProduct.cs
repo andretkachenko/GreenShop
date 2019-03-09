@@ -1,4 +1,5 @@
-﻿using Common.Models.Categories.Interfaces;
+﻿using Common.Models.Categories;
+using Common.Models.Categories.Interfaces;
 using Common.Models.Comments.Interfaces;
 using Common.Models.Entity.Interfaces;
 using Common.Models.Specifications;
@@ -15,7 +16,7 @@ namespace Common.Models.Products.Interfaces
         float Rating { get; set; }
         int CategoryId { get; set; }
 
-        ICategory Category { get; set; }
+        Category Category { get; set; }
         IEnumerable<IComment> Comments { get; set; }
         IEnumerable<Specification> Specifications { get; set; }
     }

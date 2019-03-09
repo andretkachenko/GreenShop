@@ -1,85 +1,61 @@
 ﻿using Common.Models.Categories;
+using Common.Models.DTO;
 using Common.Models.Products;
+using GreenShop.MVC.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using MvcWebApp.Config;
-using Newtonsoft.Json;
-using RestSharp;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
-namespace MVC.Controllers
+namespace GreenShop.MVC.Controllers
 {
     public class CatalogController : Controller
     {
-        private readonly UrlsConfig _urls;
-        private readonly IRestClient _restClient;
+        private readonly ICatalogService _catalogService;
 
-        public CatalogController(IRestClient restClient,
-                                 IOptionsSnapshot<UrlsConfig> config)
+        public CatalogController(ICatalogService catalogService)
         {
-            _urls = config.Value;
-            _restClient = restClient;
-            _restClient.BaseUrl = new System.Uri(_urls.WebShoppingApi);
+            _catalogService = catalogService;
+
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            RestRequest request = new RestRequest(UrlsConfig.WebShoppingApiOperations.CategoryApiOperations.GetAllCategories, Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            IRestResponse response = _restClient.Execute(request);
-            List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(response.Content);
+            IEnumerable<Category> categories = await _catalogService.GetAllCategoriesAsync();
+            if (categories == null) return NotFound();
 
             ViewData["categories"] = categories;
 
             return View();
         }
 
-        public IActionResult Category(int id)
+        public async Task<IActionResult> Category(int id)
         {
-            RestRequest request = new RestRequest(UrlsConfig.WebShoppingApiOperations.CategoryApiOperations.GetCategory(id), Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            IRestResponse response = _restClient.Execute(request);
-            Category Category = JsonConvert.DeserializeObject<Category>(response.Content);
+            CategoryProductsDTO categoryWithProducts = await _catalogService.GetCategoryWithProductsAsync(id);
+            if (categoryWithProducts.Category == null) return NotFound();
 
-            request = new RestRequest(UrlsConfig.WebShoppingApiOperations.ProductApiOperations.GetAllProducts, Method.GET);
-            response = _restClient.Execute(request);
-            List<Product> products = JsonConvert.DeserializeObject<List<Product>>(response.Content);
-
-            products = products?.Where(p => p.CategoryId == id).ToList() ?? new List<Product>();
-
-            ViewData["category"] = Category;
-            ViewData["products"] = products;
+            ViewData["category"] = categoryWithProducts.Category;
+            ViewData["products"] = categoryWithProducts.Products;
 
             return View();
         }
 
-        public IActionResult AllProducts()
+        public async Task<IActionResult> AllProducts()
         {
-            RestRequest request = new RestRequest(UrlsConfig.WebShoppingApiOperations.ProductApiOperations.GetAllProducts, Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            IRestResponse response = _restClient.Execute(request);
-            List<Product> products = JsonConvert.DeserializeObject<List<Product>>(response.Content);
+            IEnumerable<Product> products = await _catalogService.GetAllProductsAsync();
+            if (products == null) return NotFound();
 
             ViewData["products"] = products;
 
             return View("Products");
         }
 
-        public IActionResult Product(int id)
+        public async Task<IActionResult> Product(int id)
         {
-            RestRequest request = new RestRequest(UrlsConfig.WebShoppingApiOperations.ProductApiOperations.GetProduct(id), Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            IRestResponse response = _restClient.Execute(request);
-            Product product = JsonConvert.DeserializeObject<Product>(response.Content);
+            Product product = await _catalogService.GetProductWithCategoryAsync(id);
 
-            RestRequest request2 = new RestRequest(UrlsConfig.WebShoppingApiOperations.CategoryApiOperations.GetCategory(product.CategoryId), Method.GET);
-            request2.AddHeader("Cache-Control", "no-cache");
-            IRestResponse response2 = _restClient.Execute(request);
-            Category Category = JsonConvert.DeserializeObject<Category>(response2.Content);
+            if (product == null) return NotFound();
 
             ViewData["product"] = product;
-            ViewData["category"] = Category;
 
             return View();
         }

@@ -3,19 +3,24 @@ using Common.Models.DTO;
 using Common.Models.Products;
 using Common.Validatiors;
 using FluentValidation;
-using GreenShop.MVC.Services.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Web.Bff.Shopping.Services.Interfaces;
 
-namespace GreenShop.MVC.Services
+namespace Web.Bff.Shopping.Services
 {
     public class CatalogService : ICatalogService
     {
-        private readonly ICatalogConsumer _catalogConsumer;
+        private readonly IConsumer<Category> _categoriesConsumer;
+        private readonly IConsumer<Product> _productsConsumer;
 
-        public CatalogService(ICatalogConsumer catalogConsumer)
+        public CatalogService(IConsumer<Category> categoriesConsumer,
+                              IConsumer<Product> productsConsumer)
         {
-            _catalogConsumer = catalogConsumer;
+            _categoriesConsumer = categoriesConsumer;
+            _productsConsumer = productsConsumer;
         }
 
         /// <summary>
@@ -28,7 +33,7 @@ namespace GreenShop.MVC.Services
             EntityNameValidator validator = new EntityNameValidator();
             validator.ValidateAndThrow(category.Name);
 
-            int id = await _catalogConsumer.AddCategoryAsync(category);
+            int id = await _categoriesConsumer.AddAsync(category);
 
             return id;
         }
@@ -43,7 +48,7 @@ namespace GreenShop.MVC.Services
             EntityNameValidator validator = new EntityNameValidator();
             validator.ValidateAndThrow(product.Name);
 
-            int id = await _catalogConsumer.AddProductAsync(product);
+            int id = await _productsConsumer.AddAsync(product);
             return id;
         }
 
@@ -57,7 +62,7 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            bool success = await _catalogConsumer.DeleteCategoryAsync(id);
+            bool success = await _categoriesConsumer.DeleteAsync(id);
 
             return success;
         }
@@ -72,7 +77,7 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            bool success = await _catalogConsumer.DeleteProductAsync(id);
+            bool success = await _categoriesConsumer.DeleteAsync(id);
 
             return success;
         }
@@ -87,7 +92,7 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(category.Id);
 
-            bool success = await _catalogConsumer.EditCategoryAsync(category);
+            bool success = await _categoriesConsumer.EditAsync(category);
 
             return success;
         }
@@ -102,7 +107,7 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(product.Id);
 
-            bool success = await _catalogConsumer.EditProductAsync(product);
+            bool success = await _productsConsumer.EditAsync(product);
 
             return success;
         }
@@ -113,7 +118,7 @@ namespace GreenShop.MVC.Services
         /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            IEnumerable<Category> categories = await _catalogConsumer.GetAllCategoriesAsync();
+            IEnumerable<Category> categories = await _categoriesConsumer.GetAllAsync();
 
             return categories;
         }
@@ -124,7 +129,7 @@ namespace GreenShop.MVC.Services
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            IEnumerable<Product> products = await _catalogConsumer.GetAllProductsAsync();
+            IEnumerable<Product> products = await _productsConsumer.GetAllAsync();
 
             return products;
         }
@@ -139,7 +144,7 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            Category category = await _catalogConsumer.GetCategoryAsync(id);
+            Category category = await _categoriesConsumer.GetAsync(id);
 
             return category;
         }
@@ -154,9 +159,26 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            CategoryProductsDTO result = await _catalogConsumer.GetCategoryWithProductsAsync(id);
+            Task<Category> getCategoryTask = _categoriesConsumer.GetAsync(id);
+            Task<IEnumerable<Product>> getAllProductsTask = _productsConsumer.GetAllAsync();
+            List<Task> taskList = new List<Task>
+            {
+                getCategoryTask,
+                getAllProductsTask
+            };
 
-            return result;
+            await Task.WhenAll(taskList);
+
+            Category category = getCategoryTask.Result;
+            List<Product> relatedProducts = getAllProductsTask.Result.Where(product => product.CategoryId == id).ToList();
+
+            CategoryProductsDTO dto = new CategoryProductsDTO
+            {
+                Category = category,
+                Products = relatedProducts
+            };
+
+            return dto;
         }
 
         /// <summary>
@@ -169,7 +191,7 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            Product product = await _catalogConsumer.GetProductAsync(id);
+            Product product = await _productsConsumer.GetAsync(id);
 
             return product;
         }
@@ -184,9 +206,10 @@ namespace GreenShop.MVC.Services
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            Product result = await _catalogConsumer.GetProductWithCategoryAsync(id);
+            Product product = await _productsConsumer.GetAsync(id);
+            product.Category = await _categoriesConsumer.GetAsync(product.CategoryId);
 
-            return result;
+            return product;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MvcWebApp.Config
+﻿namespace GreenShop.MVC.Config
 {
     public partial class UrlsConfig
     {

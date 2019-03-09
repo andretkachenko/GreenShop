@@ -4,7 +4,7 @@ using Common.Models.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GreenShop.MVC.Services.Interfaces
+namespace Web.Bff.Shopping.Services.Interfaces
 {
     public interface ICatalogService
     {
