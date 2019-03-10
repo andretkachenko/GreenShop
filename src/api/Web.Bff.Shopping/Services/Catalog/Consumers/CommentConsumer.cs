@@ -78,7 +78,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         /// <returns>Task with list of comments</returns>
         public async Task<IEnumerable<Comment>> GetAllProductRelatedCommentsAsync(int productId)
         {
-            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.GetAllPruductComments(productId), Method.GET);
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.GetAllProductComments(productId), Method.GET);
             IRestResponse<List<Comment>> response = await ExecuteAsync<List<Comment>>(request);
             List<Comment> comment = response.Data;
 
