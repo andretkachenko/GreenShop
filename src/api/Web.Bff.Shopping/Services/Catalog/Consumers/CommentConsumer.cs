@@ -28,7 +28,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         /// <returns>Task with Comment Id</returns>
         public async Task<int> AddAsync(Comment comment)
         {
-            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.AddComment(), Method.POST, comment);
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.AddComment, Method.POST, comment);
             IRestResponse<int> response = await ExecuteAsync<int>(request);
             int id = response.Data;
             return id;

@@ -71,7 +71,6 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
 
-        //TODO: Repair
         [TestMethod]
         public void EmptyMessage_ThrowsValidationException()
         {
@@ -92,7 +91,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
-            //Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
+            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
     }
 }
