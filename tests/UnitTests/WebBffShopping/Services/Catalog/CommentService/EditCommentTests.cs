@@ -1,25 +1,24 @@
-﻿using Common.Interfaces;
-using Common.Models.Comments;
+﻿using Common.Models.Comments;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Comments.CommentsRepository;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.Catalog.CommentService;
 
-namespace UnitTests.Catalog.Services.CommentsRepository
+namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
 {
     [TestClass]
     public class EditCommentTests
     {
-        private Mock<ISqlChildDataAccessor<Comment>> CommentsAccessorStub;
-        private Target CommentRepository;
+        private Mock<ICommentConsumer> CommentsAccessorStub;
+        private Target CommentService;
 
         public EditCommentTests()
         {
-            CommentsAccessorStub = new Mock<ISqlChildDataAccessor<Comment>>();
-            CommentRepository = new Target(CommentsAccessorStub.Object);
+            CommentsAccessorStub = new Mock<ICommentConsumer>();
+            CommentService = new Target(CommentsAccessorStub.Object);
         }
-
 
         [TestMethod]
         public void ValidComment_ReturnsTrue()
@@ -39,11 +38,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             };
 
             CommentsAccessorStub
-                .Setup(comments => comments.Edit(id, message))
-                .Returns(Task.FromResult(1));
+                .Setup(comments => comments.EditAsync(id, message))
+                .Returns(Task.FromResult(true));
 
             // Act
-            var result = CommentRepository.EditComment(id, message);
+            var result = CommentService.EditComment(id, message);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -58,7 +57,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var message = "TetsCommentMessage";
 
             //Act
-            var result = CommentRepository.EditComment(id, message);
+            var result = CommentService.EditComment(id, message);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -73,7 +72,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var message = "";
 
             //Act
-            var result = CommentRepository.EditComment(id, message);
+            var result = CommentService.EditComment(id, message);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

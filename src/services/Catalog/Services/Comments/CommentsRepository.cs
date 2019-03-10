@@ -28,6 +28,9 @@ namespace Catalog.Services.Comments
             var validator = new CommentValidator();
             validator.ValidateAndThrow(comment);
 
+            EntityNameValidator stringValidator = new EntityNameValidator();
+            stringValidator.ValidateAndThrow(comment.Message);
+
             var id = await Comments.Add(comment);
             return id;
         }

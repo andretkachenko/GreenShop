@@ -1,23 +1,23 @@
-﻿using Common.Interfaces;
-using Common.Models.Comments;
-using FluentValidation;
+﻿using Common.Models.Comments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using FluentValidation;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Comments.CommentsRepository;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.Catalog.CommentService;
 
-namespace UnitTests.Catalog.Services.CommentsRepository
+namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
 {
     [TestClass]
     public class AddCommentTests
     {
-        private Mock<ISqlChildDataAccessor<Comment>> CommentsAccessorStub;
-        private Target CommentRepository;
+        private Mock<ICommentConsumer> CommentsAccessorStub;
+        private Target CommentService;
 
         public AddCommentTests()
         {
-            CommentsAccessorStub = new Mock<ISqlChildDataAccessor<Comment>>();
-            CommentRepository = new Target(CommentsAccessorStub.Object);
+            CommentsAccessorStub = new Mock<ICommentConsumer>();
+            CommentService = new Target(CommentsAccessorStub.Object);
         }
 
         [TestMethod]
@@ -37,11 +37,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             };
 
             CommentsAccessorStub
-                .Setup(comments => comments.Add(comment))
+                .Setup(comments => comments.AddAsync(comment))
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = CommentRepository.AddComment(comment);
+            var result = CommentService.AddComment(comment);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
@@ -64,7 +64,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             };
 
             //Act
-            var result = CommentRepository.AddComment(comment);
+            var result = CommentService.AddComment(comment);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -76,7 +76,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         {
             //Arrange
             var authorId = 1;
-            var message = string.Empty;
+            var message = "";
             var productId = 1;
 
             var comment = new Comment
@@ -87,7 +87,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             };
 
             //Act
-            Task<int> result = CommentRepository.AddComment(comment);
+            var result = CommentService.AddComment(comment);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

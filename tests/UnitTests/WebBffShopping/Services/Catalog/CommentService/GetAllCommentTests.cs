@@ -1,25 +1,25 @@
-﻿using Target = Catalog.Services.Comments.CommentsRepository;
-using Common.Interfaces;
-using Common.Models.Comments;
+﻿using Common.Models.Comments;
+using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using FluentValidation;
+using System.Threading.Tasks;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.Catalog.CommentService;
 
-namespace UnitTests.Catalog.Services.CommentsRepository
+namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
 {
     [TestClass]
-    public class GetAllCommentsTests
+    public class GetAllCommentTests
     {
-        private Mock<ISqlChildDataAccessor<Comment>> CommentsAccessorStub;
-        private Target CommentRepository;
+        private Mock<ICommentConsumer> CommentsAccessorStub;
+        private Target CommentService;
 
-        public GetAllCommentsTests()
+        public GetAllCommentTests()
         {
-            CommentsAccessorStub = new Mock<ISqlChildDataAccessor<Comment>>();
-            CommentRepository = new Target(CommentsAccessorStub.Object);
+            CommentsAccessorStub = new Mock<ICommentConsumer>();
+            CommentService = new Target(CommentsAccessorStub.Object);
         }
 
         [TestMethod]
@@ -29,7 +29,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             var productId = -1;
 
             //Act
-            var result = CommentRepository.GetAllProductComments(productId);
+            var result = CommentService.GetAllProductComments(productId);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -42,11 +42,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             //Arrange
             var id = 1;
             CommentsAccessorStub
-                .Setup(comments => comments.GetAllParentRelated(id))
+                .Setup(comments => comments.GetAllProductRelatedCommentsAsync(id))
                 .Returns(Task.FromResult(ExpectedCommentsList));
 
             //Act 
-            var result = CommentRepository.GetAllProductComments(id);
+            var result = CommentService.GetAllProductComments(id);
             var comment = result.GetAwaiter().GetResult().First();
             var expectedComment = ExpectedCommentsList.First();
 
@@ -81,4 +81,3 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         }
     }
 }
-
