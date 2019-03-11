@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalog.Services.Products.Interfaces;
 using Common.Models.Products;
@@ -28,11 +29,18 @@ namespace Catalog.Controllers
 
         // GET api/products/5
         [HttpGet("{id}")]
-        public async Task<Product> GetProductAsync(int id)
+        public async Task<ActionResult<Product>> GetProductAsync(int id)
         {
-            var product = await _productsService.GetProduct(id);
-
-            return product;
+            try
+            {
+                Product product = await _productsService.GetProduct(id);
+                if (product == null) throw new ArgumentNullException();
+                return Ok(product);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
         }
 
         // POST api/products
