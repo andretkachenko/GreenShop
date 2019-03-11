@@ -1,26 +1,23 @@
 ﻿using Common.Models.Categories;
-using Common.Models.Products;
 using FluentValidation;
+using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Target = Web.Bff.Shopping.Services.CatalogService;
+using Target = GreenShop.MVC.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.CatalogService
+namespace UnitTests.MVC.Services.CatalogService
 {
     [TestClass]
     public class AddCategoryAsyncTests
     {
-        private Mock<IConsumer<Category>> CatalogConsumerStub;
-        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private Mock<ICatalogConsumer> CatalogConsumerStub;
         private Target CatalogService;
 
         public AddCategoryAsyncTests()
         {
-            CatalogConsumerStub = new Mock<IConsumer<Category>>();
-            ProductsConsumerStub = new Mock<IConsumer<Product>>();
-            CatalogService = new Target(CatalogConsumerStub.Object, ProductsConsumerStub.Object);
+            CatalogConsumerStub = new Mock<ICatalogConsumer>();
+            CatalogService = new Target(CatalogConsumerStub.Object);
         }
 
         [TestMethod]
@@ -39,7 +36,7 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             };
 
             CatalogConsumerStub
-                .Setup(categories => categories.AddAsync(expectedCategory))
+                .Setup(catalog => catalog.AddCategoryAsync(expectedCategory))
                 .Returns(Task.FromResult(id));
 
             // Act
