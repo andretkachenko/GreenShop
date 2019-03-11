@@ -14,13 +14,15 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
     {
         private Mock<IConsumer<Category>> CategoriesConsumerStub;
         private Mock<IConsumer<Product>> ProductsConsumerStub;
-        private readonly Target CatalogService;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
+        private Target CatalogService;
 
         public EditCategoryAsyncTests()
         {
             CategoriesConsumerStub = new Mock<IConsumer<Category>>();
             ProductsConsumerStub = new Mock<IConsumer<Product>>();
-            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object);
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]

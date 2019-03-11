@@ -12,15 +12,17 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
     [TestClass]
     public class AddCategoryAsyncTests
     {
-        private Mock<IConsumer<Category>> CatalogConsumerStub;
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
         private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
         private Target CatalogService;
 
         public AddCategoryAsyncTests()
         {
-            CatalogConsumerStub = new Mock<IConsumer<Category>>();
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
             ProductsConsumerStub = new Mock<IConsumer<Product>>();
-            CatalogService = new Target(CatalogConsumerStub.Object, ProductsConsumerStub.Object);
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -38,7 +40,7 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
                 ParentCategoryId = parentCategoryId
             };
 
-            CatalogConsumerStub
+            CategoriesConsumerStub
                 .Setup(categories => categories.AddAsync(expectedCategory))
                 .Returns(Task.FromResult(id));
 

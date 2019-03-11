@@ -1,25 +1,31 @@
-﻿using Common.Interfaces;
+﻿using Common.Models.Categories;
 using Common.Models.Comments;
+using Common.Models.Products;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Comments.CommentsRepository;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.Catalog.Services.CommentsRepository
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class GetAllCommentsTests
+    public class GetAllCommentAsyncTests
     {
-        private Mock<ISqlChildDataAccessor<Comment>> CommentsAccessorStub;
-        private Target CommentRepository;
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
+        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
+        private Target CatalogService;
 
-        public GetAllCommentsTests()
+        public GetAllCommentAsyncTests()
         {
-            CommentsAccessorStub = new Mock<ISqlChildDataAccessor<Comment>>();
-            CommentRepository = new Target(CommentsAccessorStub.Object);
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
+            ProductsConsumerStub = new Mock<IConsumer<Product>>();
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -29,7 +35,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             int productId = -1;
 
             //Act
-            Task<IEnumerable<Comment>> result = CommentRepository.GetAllProductComments(productId);
+            Task<IEnumerable<Comment>> result = CatalogService.GetAllProductCommentsAsync(productId);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -41,12 +47,12 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         {
             //Arrange
             int id = 1;
-            CommentsAccessorStub
-                .Setup(comments => comments.GetAllParentRelated(id))
+            CommentsConsumerStub
+                .Setup(comments => comments.GetAllProductRelatedCommentsAsync(id))
                 .Returns(Task.FromResult(ExpectedCommentsList));
 
             //Act 
-            Task<IEnumerable<Comment>> result = CommentRepository.GetAllProductComments(id);
+            Task<IEnumerable<Comment>> result = CatalogService.GetAllProductCommentsAsync(id);
             Comment comment = result.GetAwaiter().GetResult().First();
             Comment expectedComment = ExpectedCommentsList.First();
 
@@ -81,4 +87,3 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         }
     }
 }
-

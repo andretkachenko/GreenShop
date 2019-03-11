@@ -1,23 +1,29 @@
-﻿using Common.Interfaces;
+﻿using Common.Models.Categories;
 using Common.Models.Comments;
+using Common.Models.Products;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Comments.CommentsRepository;
+using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.Catalog.Services.CommentsRepository
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class AddCommentTests
+    public class AddCommentAsyncTests
     {
-        private Mock<ISqlChildDataAccessor<Comment>> CommentsAccessorStub;
-        private Target CommentRepository;
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
+        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
+        private Target CatalogService;
 
-        public AddCommentTests()
+        public AddCommentAsyncTests()
         {
-            CommentsAccessorStub = new Mock<ISqlChildDataAccessor<Comment>>();
-            CommentRepository = new Target(CommentsAccessorStub.Object);
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
+            ProductsConsumerStub = new Mock<IConsumer<Product>>();
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -36,12 +42,12 @@ namespace UnitTests.Catalog.Services.CommentsRepository
                 ProductId = parentId
             };
 
-            CommentsAccessorStub
-                .Setup(comments => comments.Add(comment))
+            CommentsConsumerStub
+                .Setup(comments => comments.AddAsync(comment))
                 .Returns(Task.FromResult(1));
 
             // Act
-            Task<int> result = CommentRepository.AddComment(comment);
+            Task<int> result = CatalogService.AddCommentAsync(comment);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
@@ -64,7 +70,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             };
 
             //Act
-            Task<int> result = CommentRepository.AddComment(comment);
+            Task<int> result = CatalogService.AddCommentAsync(comment);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -76,7 +82,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         {
             //Arrange
             int authorId = 1;
-            string message = string.Empty;
+            string message = "";
             int productId = 1;
 
             Comment comment = new Comment
@@ -87,7 +93,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             };
 
             //Act
-            Task<int> result = CommentRepository.AddComment(comment);
+            Task<int> result = CatalogService.AddCommentAsync(comment);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

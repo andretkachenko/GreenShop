@@ -1,4 +1,5 @@
 ﻿using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.DTO;
 using Common.Models.Products;
 using Common.Validatiors;
@@ -15,14 +16,18 @@ namespace Web.Bff.Shopping.Services
     {
         private readonly IConsumer<Category> _categoriesConsumer;
         private readonly IConsumer<Product> _productsConsumer;
+        private readonly ICommentsConsumer _commentsConsumer;
 
         public CatalogService(IConsumer<Category> categoriesConsumer,
-                              IConsumer<Product> productsConsumer)
+                              IConsumer<Product> productsConsumer,
+                              ICommentsConsumer commentsConsumer)
         {
             _categoriesConsumer = categoriesConsumer;
             _productsConsumer = productsConsumer;
+            _commentsConsumer = commentsConsumer;
         }
 
+        #region Categories
         /// <summary>
         /// Asynchronously adds Category
         /// </summary>
@@ -39,20 +44,6 @@ namespace Web.Bff.Shopping.Services
         }
 
         /// <summary>
-        /// Asynchronously add Product
-        /// </summary>
-        /// <param name="Product">Product to add</param>
-        /// <returns>Task with Product id</returns>
-        public async Task<int> AddProductAsync(Product product)
-        {
-            EntityNameValidator validator = new EntityNameValidator();
-            validator.ValidateAndThrow(product.Name);
-
-            int id = await _productsConsumer.AddAsync(product);
-            return id;
-        }
-
-        /// <summary>
         /// Asynchronously removed Category with specified id
         /// </summary>
         /// <param name="id">Id of the Category to delete</param>
@@ -63,21 +54,6 @@ namespace Web.Bff.Shopping.Services
             validator.ValidateAndThrow(id);
 
             bool success = await _categoriesConsumer.DeleteAsync(id);
-
-            return success;
-        }
-
-        /// <summary>
-        /// Asynchronously remove Product with specified id
-        /// </summary>
-        /// <param name="id">Id of the Product to delete</param>
-        /// <returns>Task with success flag</returns>
-        public async Task<bool> DeleteProductAsync(int id)
-        {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
-            bool success = await _productsConsumer.DeleteAsync(id);
 
             return success;
         }
@@ -98,21 +74,6 @@ namespace Web.Bff.Shopping.Services
         }
 
         /// <summary>
-        /// Asynchronously edit specified Product
-        /// </summary>
-        /// <param name="Product">Product, that contains id of entity that should be changed, and all changed values</param>
-        /// <returns>Task with success flag</returns>
-        public async Task<bool> EditProductAsync(Product product)
-        {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(product.Id);
-
-            bool success = await _productsConsumer.EditAsync(product);
-
-            return success;
-        }
-
-        /// <summary>
         /// Asynchronously gets all Categories
         /// </summary>
         /// <returns>Task with list of all Categories</returns>
@@ -121,17 +82,6 @@ namespace Web.Bff.Shopping.Services
             IEnumerable<Category> categories = await _categoriesConsumer.GetAllAsync();
 
             return categories;
-        }
-
-        /// <summary>
-        /// Asynchronously get all Products
-        /// </summary>
-        /// <returns>Task with list of all Products</returns>
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            IEnumerable<Product> products = await _productsConsumer.GetAllAsync();
-
-            return products;
         }
 
         /// <summary>
@@ -180,6 +130,63 @@ namespace Web.Bff.Shopping.Services
 
             return dto;
         }
+        #endregion
+
+        #region Products
+        /// <summary>
+        /// Asynchronously add Product
+        /// </summary>
+        /// <param name="Product">Product to add</param>
+        /// <returns>Task with Product id</returns>
+        public async Task<int> AddProductAsync(Product product)
+        {
+            EntityNameValidator validator = new EntityNameValidator();
+            validator.ValidateAndThrow(product.Name);
+
+            int id = await _productsConsumer.AddAsync(product);
+            return id;
+        }
+
+        /// <summary>
+        /// Asynchronously remove Product with specified id
+        /// </summary>
+        /// <param name="id">Id of the Product to delete</param>
+        /// <returns>Task with success flag</returns>
+        public async Task<bool> DeleteProductAsync(int id)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(id);
+
+            bool success = await _productsConsumer.DeleteAsync(id);
+
+            return success;
+        }
+
+        /// <summary>
+        /// Asynchronously edit specified Product
+        /// </summary>
+        /// <param name="Product">Product, that contains id of entity that should be changed, and all changed values</param>
+        /// <returns>Task with success flag</returns>
+        public async Task<bool> EditProductAsync(Product product)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(product.Id);
+
+            bool success = await _productsConsumer.EditAsync(product);
+
+            return success;
+        }
+
+        /// <summary>
+        /// Asynchronously get all Products
+        /// </summary>
+        /// <returns>Task with list of all Products</returns>
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            IEnumerable<Product> products = await _productsConsumer.GetAllAsync();
+
+            return products;
+        }
 
         /// <summary>
         /// Asynchronously get Product with the specific id
@@ -212,5 +219,97 @@ namespace Web.Bff.Shopping.Services
 
             return product;
         }
+        #endregion
+
+        #region Comments
+        /// <summary>
+        ///Asynchronously Add Comment 
+        /// </summary>
+        /// <param name="comment">Comment to Add</param>
+        /// <returns>Task with Comment Id</returns>
+        public async Task<int> AddCommentAsync(Comment comment)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(comment.ProductId);
+
+            EntityNameValidator stringValidator = new EntityNameValidator();
+            stringValidator.ValidateAndThrow(comment.Message);
+
+            int result = await _commentsConsumer.AddAsync(comment);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously Delete Comment 
+        /// </summary>
+        /// <param name="id">Id of Comment to Delete</param>
+        /// <returns>Task with boolean result</returns>
+        public async Task<bool> DeleteCommentAsync(int id)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(id);
+
+            bool result = await _commentsConsumer.DeleteAsync(id);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously Edit comment's message
+        /// <para>This method calls Edit(int, string) using Id and Message from the Comment</para>
+        /// </summary>
+        /// <param name="comment">Comment to edit</param>
+        /// <returns>True if succeeded</returns>
+        public async Task<bool> EditCommentAsync(int id, string message)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(id);
+
+            EntityNameValidator validationRules = new EntityNameValidator();
+            validationRules.ValidateAndThrow(message);
+            var result = await _commentsConsumer.EditAsync(id, message);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously Edit comment's message
+        /// <para>This method calls EditComment(int, string) using Id and Message from the Comment</para>
+        /// </summary>
+        /// <param name="comment">Comment to edit</param>
+        /// <returns>True if succeeded</returns>
+        public Task<bool> EditCommentAsync(Comment comment) => EditCommentAsync(comment.Id, comment.Message);
+
+        /// <summary>
+        /// Asynchronously Get all comments for requested product 
+        /// </summary>
+        /// <param name="productId">Product Id for product</param>
+        /// <returns>Task with list of comments</returns>
+        public async Task<IEnumerable<Comment>> GetAllProductCommentsAsync(int productID)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(productID);
+
+            IEnumerable<Comment> comments = await _commentsConsumer.GetAllProductRelatedCommentsAsync(productID);
+
+            return comments;
+        }
+
+        /// <summary>
+        /// Asynchronously get Comment by Id
+        /// </summary>
+        /// <param name="id">Id for requested Comment</param>
+        /// <returns>Task with Comment</returns>
+        public async Task<Comment> GetCommentAsync(int id)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(id);
+
+            Comment comment = await _commentsConsumer.GetAsync(id);
+
+            return comment;
+        }
+        #endregion
     }
 }

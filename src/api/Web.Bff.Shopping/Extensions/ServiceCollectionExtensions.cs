@@ -64,6 +64,7 @@ namespace Web.Bff.Shopping.Extensions
         {
             services.AddTransient<IConsumer<Category>, CategoriesConsumer>();
             services.AddTransient<IConsumer<Product>, ProductsConsumer>();
+            services.AddTransient<ICommentsConsumer, CommentsConsumer>();
             services.AddTransient<ICatalogService, CatalogService>();
         }
 

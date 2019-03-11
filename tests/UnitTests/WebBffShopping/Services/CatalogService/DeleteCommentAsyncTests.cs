@@ -10,14 +10,14 @@ using Target = Web.Bff.Shopping.Services.CatalogService;
 namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class DeleteProductAsyncTests
+    public class DeleteCommentAsyncTests
     {
         private Mock<IConsumer<Category>> CategoriesConsumerStub;
         private Mock<IConsumer<Product>> ProductsConsumerStub;
         private Mock<ICommentsConsumer> CommentsConsumerStub;
         private Target CatalogService;
 
-        public DeleteProductAsyncTests()
+        public DeleteCommentAsyncTests()
         {
             CategoriesConsumerStub = new Mock<IConsumer<Category>>();
             ProductsConsumerStub = new Mock<IConsumer<Product>>();
@@ -26,18 +26,18 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
         }
 
         [TestMethod]
-        public void ValidId_ReturnsTrue()
+        public void ValidComment_ReturnsTrue()
         {
             // Arrange
             int id = 1;
             bool expectedResult = true;
 
-            ProductsConsumerStub
-                .Setup(products => products.DeleteAsync(id))
+            CommentsConsumerStub
+                .Setup(Comment => Comment.DeleteAsync(id))
                 .Returns(Task.FromResult(true));
 
             // Act
-            Task<bool> result = CatalogService.DeleteProductAsync(id);
+            Task<bool> result = CatalogService.DeleteCommentAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -45,13 +45,13 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
         }
 
         [TestMethod]
-        public void NegativeId_ThrowsValidationException()
+        public void NegativeCommentId_ThrowsValidationException()
         {
             // Arrange
             int id = -1;
 
             // Act
-            Task<bool> result = CatalogService.DeleteProductAsync(id);
+            Task<bool> result = CatalogService.DeleteCommentAsync(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -59,23 +59,22 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
         }
 
         [TestMethod]
-        public void InvalidId_ReturnsFalse()
+        public void InvalidCommentId_ReturnsFalse()
         {
-            // Arrange
+            // Arrange 
             int id = 99999;
             bool expectedResult = false;
 
-            ProductsConsumerStub
-                .Setup(products => products.DeleteAsync(id))
+            CommentsConsumerStub
+                .Setup(comments => comments.DeleteAsync(id))
                 .Returns(Task.FromResult(false));
 
             // Act
-            Task<bool> result = CatalogService.DeleteProductAsync(id);
+            Task<bool> result = CatalogService.DeleteCommentAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
             Assert.AreEqual(expectedResult, result.Result);
-
         }
     }
 }
