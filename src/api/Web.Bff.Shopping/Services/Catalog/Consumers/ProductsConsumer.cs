@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Web.Bff.Shopping.Config;
 using Web.Bff.Shopping.Helpers;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Web.Bff.Shopping.Extensions;
 
 namespace Web.Bff.Shopping.Services.Catalog.Consumers
 {
@@ -27,7 +28,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.ProductApiOperations.GetAllProducts, Method.GET);
-            IRestResponse<List<Product>> response = await ExecuteAsync<List<Product>>(request);
+            IRestResponse<List<Product>> response = await _client.ExecuteAsync<List<Product>>(request);
             List<Product> products = response.Data;
             return products;
         }
@@ -40,7 +41,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         public async Task<Product> GetAsync(int id)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.ProductApiOperations.GetProduct(id), Method.GET);
-            IRestResponse<Product> response = await ExecuteAsync<Product>(request);
+            IRestResponse<Product> response = await _client.ExecuteAsync<Product>(request);
             Product product = response.Data;
             return product;
         }
@@ -53,7 +54,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         public async Task<int> AddAsync(Product Product)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.ProductApiOperations.AddProduct, Method.POST, Product);
-            IRestResponse<int> response = await ExecuteAsync<int>(request);
+            IRestResponse<int> response = await _client.ExecuteAsync<int>(request);
             int id = response.Data;
             return id;
         }
@@ -66,7 +67,7 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         public async Task<bool> EditAsync(Product Product)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.ProductApiOperations.EditProduct, Method.PUT, Product);
-            IRestResponse<bool> response = await ExecuteAsync<bool>(request);
+            IRestResponse<bool> response = await _client.ExecuteAsync<bool>(request);
             bool result = response.Data;
             return result;
         }
@@ -79,26 +80,9 @@ namespace Web.Bff.Shopping.Services.Catalog.Consumers
         public async Task<bool> DeleteAsync(int id)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.ProductApiOperations.DeleteProduct(id), Method.DELETE);
-            IRestResponse<bool> response = await ExecuteAsync<bool>(request);
+            IRestResponse<bool> response = await _client.ExecuteAsync<bool>(request);
             bool result = response.Data;
             return result;
-        }
-
-        /// <summary>
-        /// Asynchronously execute request using the consumer's client
-        /// </summary>
-        /// <typeparam name="T">Response object type</typeparam>
-        /// <param name="request">Request to execute</param>
-        /// <returns>Response, returned by API</returns>
-        private async Task<IRestResponse<T>> ExecuteAsync<T>(RestRequest request) where T : new()
-        {
-            TaskCompletionSource<IRestResponse<T>> taskCompletionSource = new TaskCompletionSource<IRestResponse<T>>();
-            _client.ExecuteAsync<T>(request, restResponse =>
-            {
-                taskCompletionSource.SetResult(restResponse);
-            });
-
-            return await taskCompletionSource.Task;
         }
     }
 }
