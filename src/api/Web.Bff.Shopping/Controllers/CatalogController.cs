@@ -123,6 +123,7 @@ namespace Web.Bff.Shopping.Controllers
             return result;
         }
 
+        // GET api/catalog/products/5/category
         [HttpGet("products/{id}/category")]
         public async Task<Product> GetProductWithCategoryAsync(int id)
         {

@@ -170,7 +170,7 @@ namespace Web.Bff.Shopping.Services
             await Task.WhenAll(taskList);
 
             Category category = getCategoryTask.Result;
-            List<Product> relatedProducts = getAllProductsTask.Result.Where(product => product.CategoryId == id).ToList();
+            List<Product> relatedProducts = getAllProductsTask.Result?.Where(product => product.CategoryId == id).ToList();
 
             CategoryProductsDTO dto = new CategoryProductsDTO
             {
@@ -207,6 +207,7 @@ namespace Web.Bff.Shopping.Services
             validator.ValidateAndThrow(id);
 
             Product product = await _productsConsumer.GetAsync(id);
+            if (product == null) return product;
             product.Category = await _categoriesConsumer.GetAsync(product.CategoryId);
 
             return product;
