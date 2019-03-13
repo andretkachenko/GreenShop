@@ -1,12 +1,12 @@
-﻿using Target = Catalog.Services.Comments.CommentsRepository;
-using Common.Interfaces;
+﻿using Common.Interfaces;
 using Common.Models.Comments;
+using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using FluentValidation;
+using System.Threading.Tasks;
+using Target = Catalog.Services.Comments.CommentsRepository;
 
 namespace UnitTests.Catalog.Services.CommentsRepository
 {
@@ -26,10 +26,10 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void NegativeCommentsProductId_ThrowsValidationException()
         {
             //Arrange
-            var productId = -1;
+            int productId = -1;
 
             //Act
-            var result = CommentRepository.GetAllProductComments(productId);
+            Task<IEnumerable<Comment>> result = CommentRepository.GetAllProductComments(productId);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -40,15 +40,15 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void ReturnExpectedComment()
         {
             //Arrange
-            var id = 1;
+            int id = 1;
             CommentsAccessorStub
                 .Setup(comments => comments.GetAllParentRelated(id))
                 .Returns(Task.FromResult(ExpectedCommentsList));
 
             //Act 
-            var result = CommentRepository.GetAllProductComments(id);
-            var comment = result.GetAwaiter().GetResult().First();
-            var expectedComment = ExpectedCommentsList.First();
+            Task<IEnumerable<Comment>> result = CommentRepository.GetAllProductComments(id);
+            Comment comment = result.GetAwaiter().GetResult().First();
+            Comment expectedComment = ExpectedCommentsList.First();
 
             //Assert
             Assert.AreEqual(comment.Id, expectedComment.Id);
@@ -60,12 +60,12 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         {
             get
             {
-                var id = 1;
-                var parentId = 1;
-                var authorId = 1;
-                var message = "TestMessage";
+                int id = 1;
+                int parentId = 1;
+                int authorId = 1;
+                string message = "TestMessage";
 
-                var commentsList = new List<Comment>
+                List<Comment> commentsList = new List<Comment>
                 {
                     new Comment
                     {

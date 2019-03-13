@@ -1,37 +1,37 @@
 ﻿using Common.Models.Products;
 using Common.Models.Specifications;
+using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Target = Web.Bff.Shopping.Services.Catalog.ProductsService;
+using Target = GreenShop.MVC.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
+namespace UnitTests.MVC.Services.CatalogService
 {
     [TestClass]
-    public class GetAllProductsTests
+    public class GetAllProductsAsyncTests
     {
-        private Mock<IConsumer<Product>> ProductsConsumerStub;
-        private Target ProductsService;
+        private Mock<ICatalogConsumer> CatalogConsumerStub;
+        private Target CatalogService;
 
-        public GetAllProductsTests()
+        public GetAllProductsAsyncTests()
         {
-            ProductsConsumerStub = new Mock<IConsumer<Product>>();
-            ProductsService = new Target(ProductsConsumerStub.Object);
+            CatalogConsumerStub = new Mock<ICatalogConsumer>();
+            CatalogService = new Target(CatalogConsumerStub.Object);
         }
 
         [TestMethod]
         public void ReturnsExpectedType()
         {
             // Arrange
-            ProductsConsumerStub
-                .Setup(products => products.GetAllAsync())
+            CatalogConsumerStub
+                .Setup(catalog => catalog.GetAllProductsAsync())
                 .Returns(Task.FromResult(ExpectedProductList));
 
             // Act
-            Task<IEnumerable<Product>> result = ProductsService.GetAllProducts();
+            Task<IEnumerable<Product>> result = CatalogService.GetAllProductsAsync();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<IEnumerable<Product>>));
@@ -42,12 +42,12 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
         {
             // Arrange
             Product expectedProduct = ExpectedProductList.First();
-            ProductsConsumerStub
-                .Setup(products => products.GetAllAsync())
+            CatalogConsumerStub
+                .Setup(catalog => catalog.GetAllProductsAsync())
                 .Returns(Task.FromResult(ExpectedProductList));
 
             // Act
-            Task<IEnumerable<Product>> result = ProductsService.GetAllProducts();
+            Task<IEnumerable<Product>> result = CatalogService.GetAllProductsAsync();
             Product actualProduct = result.Result.First();
 
             // Assert

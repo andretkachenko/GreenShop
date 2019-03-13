@@ -1,23 +1,28 @@
-﻿using Common.Models.Products;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Target = Web.Bff.Shopping.Services.Catalog.ProductsService;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class AddProductTests
+    public class AddProductAsyncTests
     {
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
         private Mock<IConsumer<Product>> ProductsConsumerStub;
-        private Target ProductsService;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
+        private Target CatalogService;
 
-        public AddProductTests()
+        public AddProductAsyncTests()
         {
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
             ProductsConsumerStub = new Mock<IConsumer<Product>>();
-            ProductsService = new Target(ProductsConsumerStub.Object);
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -45,7 +50,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
                 .Returns(Task.FromResult(expectedId));
 
             // Act
-            Task<int> result = ProductsService.AddProduct(product);
+            Task<int> result = CatalogService.AddProductAsync(product);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
@@ -64,7 +69,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
             };
 
             // Act
-            Task<int> result = ProductsService.AddProduct(product);
+            Task<int> result = CatalogService.AddProductAsync(product);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

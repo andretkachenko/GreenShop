@@ -1,23 +1,28 @@
-﻿using Common.Models.Products;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Target = Web.Bff.Shopping.Services.Catalog.ProductsService;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class DeleteProductTests
+    public class DeleteProductAsyncTests
     {
+        private Mock<IConsumer<Category>> CategoriesConsumerStub;
         private Mock<IConsumer<Product>> ProductsConsumerStub;
-        private Target ProductsService;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
+        private Target CatalogService;
 
-        public DeleteProductTests()
+        public DeleteProductAsyncTests()
         {
+            CategoriesConsumerStub = new Mock<IConsumer<Category>>();
             ProductsConsumerStub = new Mock<IConsumer<Product>>();
-            ProductsService = new Target(ProductsConsumerStub.Object);
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]
@@ -32,7 +37,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
                 .Returns(Task.FromResult(true));
 
             // Act
-            Task<bool> result = ProductsService.DeleteProduct(id);
+            Task<bool> result = CatalogService.DeleteProductAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -46,7 +51,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
             int id = -1;
 
             // Act
-            Task<Product> result = ProductsService.GetProduct(id);
+            Task<bool> result = CatalogService.DeleteProductAsync(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -65,7 +70,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.ProductsService
                 .Returns(Task.FromResult(false));
 
             // Act
-            Task<bool> result = ProductsService.DeleteProduct(id);
+            Task<bool> result = CatalogService.DeleteProductAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

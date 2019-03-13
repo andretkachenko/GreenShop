@@ -1,19 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GreenShop.MVC.Services;
+using GreenShop.MVC.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using MvcWebApp.Services;
-using MvcWebApp.Services.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
+using RestSharp;
 using System;
 using System.Net.Http;
 
-namespace MvcWebApp.Extensions
+namespace GreenShop.MVC.Extensions
 {
     internal static class ServiceCollectionExtensions
     {
         internal static IServiceCollection RegisterHttpServices(this IServiceCollection services)
         {
-            services.AddHttpClient<ICatalogService, CatalogService>()
+            services.AddHttpClient<ICatalogConsumer, CatalogConsumer>()
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
@@ -59,6 +60,9 @@ namespace MvcWebApp.Extensions
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private static void RegisterTransient(this IServiceCollection services)
         {
+            services.AddTransient<IRestClient, RestClient>();
+            services.AddTransient<ICatalogService, CatalogService>();
+            services.AddTransient<ICatalogConsumer, CatalogConsumer>();
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()

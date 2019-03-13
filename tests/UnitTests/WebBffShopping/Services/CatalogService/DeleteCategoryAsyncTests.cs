@@ -1,38 +1,43 @@
-﻿using Target = Web.Bff.Shopping.Services.Catalog.CategoriesService;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
+using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Common.Models.Categories;
 using System.Threading.Tasks;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using FluentValidation;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class DeleteCategoryTests
+    public class DeleteCategoryAsyncTests
     {
         private Mock<IConsumer<Category>> CategoriesConsumerStub;
-        private Target CategoriesRepository;
+        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
+        private Target CatalogService;
 
-        public DeleteCategoryTests()
+        public DeleteCategoryAsyncTests()
         {
             CategoriesConsumerStub = new Mock<IConsumer<Category>>();
-            CategoriesRepository = new Target(CategoriesConsumerStub.Object);
+            ProductsConsumerStub = new Mock<IConsumer<Product>>();
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]
         public void ValidId_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var expectedResult = true;
+            int id = 1;
+            bool expectedResult = true;
 
             CategoriesConsumerStub
                 .Setup(categories => categories.DeleteAsync(id))
                 .Returns(Task.FromResult(true));
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            var result = CatalogService.DeleteCategoryAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -43,10 +48,10 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
         public void NegativeId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            int id = -1;
 
             // Act
-            var result = CategoriesRepository.GetCategory(id);
+            var result = CatalogService.DeleteCategoryAsync(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -57,15 +62,15 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
         public void InvalidId_ReturnsFalse()
         {
             // Arrange
-            var id = 99999;
-            var expectedResult = false;
+            int id = 99999;
+            bool expectedResult = false;
 
             CategoriesConsumerStub
                 .Setup(categories => categories.DeleteAsync(id))
                 .Returns(Task.FromResult(false));
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            var result = CatalogService.DeleteCategoryAsync(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

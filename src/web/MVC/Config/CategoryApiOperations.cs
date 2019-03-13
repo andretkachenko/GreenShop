@@ -1,4 +1,4 @@
-﻿namespace MvcWebApp.Config
+﻿namespace GreenShop.MVC.Config
 {
     public partial class UrlsConfig
     {
@@ -6,11 +6,12 @@
         {
             public class CategoryApiOperations
             {
-                public static string GetAllCategories() => $"/api/categories";
-                public static string GetCategory(int id) => $"/api/categories/{id}";
-                public static string AddCategory() => $"/api/categories";
-                public static string DeleteCategory(int id) => $"/api/categories/{id}";
-                public static string EditCategory() => $"/api/categories";
+                public static string GetAllCategories = $"api/catalog/categories";
+                public static string GetCategory(int id) => $"api/catalog/categories/{id}";
+                public static string GetCategoryWithRelatedProducts(int id) => $"api/catalog/categories/{id}/products";
+                public static string AddCategory = $"api/catalog/categories";
+                public static string DeleteCategory(int id) => $"api/catalog/categories/{id}";
+                public static string EditCategory = $"api/catalog/categories";
             }
         }
     }

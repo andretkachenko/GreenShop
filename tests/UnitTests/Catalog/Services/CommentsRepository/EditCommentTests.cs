@@ -25,13 +25,13 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void ValidComment_ReturnsTrue()
         {
             //Arrange
-            var id = 1;
-            var authorId = 1;
-            var message = "EditedCommentMessage";
-            var parentId = 1;
-            var expectedResult = true;
+            int id = 1;
+            int authorId = 1;
+            string message = "EditedCommentMessage";
+            int parentId = 1;
+            bool expectedResult = true;
 
-            var comment = new Comment
+            Comment comment = new Comment
             {
                 Id = id,
                 AuthorId = authorId,
@@ -43,7 +43,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = CommentRepository.EditComment(id, message);
+            Task<bool> result = CommentRepository.EditComment(id, message);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -54,11 +54,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void NegativeCommentId_ThrowsValidationException()
         {
             //Arrange
-            var id = -1;
-            var message = "TetsCommentMessage";
+            int id = -1;
+            string message = "TetsCommentMessage";
 
             //Act
-            var result = CommentRepository.EditComment(id, message);
+            Task<bool> result = CommentRepository.EditComment(id, message);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -69,11 +69,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void EmptyMessage_ThrowsValidationException()
         {
             //Arrange
-            var id = 1;
-            var message = "";
+            int id = 1;
+            string message = "";
 
             //Act
-            var result = CommentRepository.EditComment(id, message);
+            Task<bool> result = CommentRepository.EditComment(id, message);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

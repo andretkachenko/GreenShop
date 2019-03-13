@@ -6,9 +6,10 @@ using Polly;
 using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
-using Web.Bff.Shopping.Services.Catalog;
+using Web.Bff.Shopping.Services;
 using Web.Bff.Shopping.Services.Catalog.Consumers;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Web.Bff.Shopping.Services.Interfaces;
 
 namespace Web.Bff.Shopping.Extensions
 {
@@ -16,7 +17,7 @@ namespace Web.Bff.Shopping.Extensions
     {
         internal static IServiceCollection RegisterHttpServices(this IServiceCollection services)
         {
-            services.AddHttpClient<ICategoriesService, CategoriesService>()
+            services.AddHttpClient<ICatalogService, CatalogService>()
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
@@ -63,10 +64,8 @@ namespace Web.Bff.Shopping.Extensions
         {
             services.AddTransient<IConsumer<Category>, CategoriesConsumer>();
             services.AddTransient<IConsumer<Product>, ProductsConsumer>();
-            services.AddTransient<ICategoriesService, CategoriesService>();
-            services.AddTransient<IProductsService, ProductsService>();
-            services.AddTransient<ICommentConsumer, CommentConsumer>();
-            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<ICommentsConsumer, CommentsConsumer>();
+            services.AddTransient<ICatalogService, CatalogService>();
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()

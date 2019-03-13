@@ -24,12 +24,12 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void ValidComment_ReturnsId()
         {
             //Arrange
-            var authorId = 1;
-            var message = "TetsCommentMessage";
-            var parentId = 1;
-            var expectedResult = 1;
+            int authorId = 1;
+            string message = "TetsCommentMessage";
+            int parentId = 1;
+            int expectedResult = 1;
 
-            var comment = new Comment
+            Comment comment = new Comment
             {
                 AuthorId = authorId,
                 Message = message,
@@ -41,7 +41,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = CommentRepository.AddComment(comment);
+            Task<int> result = CommentRepository.AddComment(comment);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
@@ -52,11 +52,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void NegativeCommentsProductId_ThrowsValidationException()
         {
             //Arrange
-            var authorId = 1;
-            var message = "TetsCommentMessage";
-            var productId = -1;
+            int authorId = 1;
+            string message = "TetsCommentMessage";
+            int productId = -1;
 
-            var comment = new Comment
+            Comment comment = new Comment
             {
                 AuthorId = authorId,
                 Message = message,
@@ -64,7 +64,7 @@ namespace UnitTests.Catalog.Services.CommentsRepository
             };
 
             //Act
-            var result = CommentRepository.AddComment(comment);
+            Task<int> result = CommentRepository.AddComment(comment);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -75,11 +75,11 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void EmptyMessage_ThrowsValidationException()
         {
             //Arrange
-            var authorId = 1;
-            var message = string.Empty;
-            var productId = 1;
+            int authorId = 1;
+            string message = string.Empty;
+            int productId = 1;
 
-            var comment = new Comment
+            Comment comment = new Comment
             {
                 AuthorId = authorId,
                 Message = message,

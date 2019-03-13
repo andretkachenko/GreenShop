@@ -7,6 +7,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Common.Models.Categories;
 
 namespace Common.Models.Products
 {
@@ -31,8 +32,8 @@ namespace Common.Models.Products
         [BsonIgnore]
         public int CategoryId { get; set; }
         
-        [Write(false), JsonIgnore, BsonIgnore]
-        public ICategory Category { get; set; }
+        [Write(false), BsonIgnore]
+        public Category Category { get; set; }
         [Write(false), JsonIgnore, BsonIgnore]
         public IEnumerable<IComment> Comments { get; set; }
         [BsonElement("specifications"), Write(false)]

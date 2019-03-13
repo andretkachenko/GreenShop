@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MvcWebApp.ViewModels;
+using GreenShop.MVC.ViewModels;
 
-namespace MvcWebApp.Controllers
+namespace GreenShop.MVC.Controllers
 {
     public class HomeController : Controller
     {

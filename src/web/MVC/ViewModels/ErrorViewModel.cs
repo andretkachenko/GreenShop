@@ -1,6 +1,4 @@
-using System;
-
-namespace MvcWebApp.ViewModels
+namespace GreenShop.MVC.ViewModels
 {
     public class ErrorViewModel
     {

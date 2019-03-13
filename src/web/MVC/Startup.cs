@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MvcWebApp.Extensions;
+using GreenShop.MVC.Config;
+using GreenShop.MVC.Extensions;
 
-namespace MvcWebApp
+namespace GreenShop.MVC
 {
     public class Startup
     {
@@ -31,6 +32,7 @@ namespace MvcWebApp
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.Configure<UrlsConfig>(options => Configuration.GetSection("urls").Bind(options));
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

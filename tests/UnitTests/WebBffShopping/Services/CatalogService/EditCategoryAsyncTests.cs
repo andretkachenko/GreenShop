@@ -1,39 +1,40 @@
-﻿using Target = Web.Bff.Shopping.Services.Catalog.CategoriesService;
-using Common.Interfaces;
-using Common.Models.Categories;
+﻿using Common.Models.Categories;
+using Common.Models.Products;
 using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Services.Catalog.Consumers;
-using Web.Bff.Shopping.Config;
-using Microsoft.Extensions.Options;
 using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = Web.Bff.Shopping.Services.CatalogService;
 
-namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
+namespace UnitTests.WebBffShopping.Services.CatalogService
 {
     [TestClass]
-    public class EditCategoryTests
+    public class EditCategoryAsyncTests
     {
         private Mock<IConsumer<Category>> CategoriesConsumerStub;
-        private Target Service;
+        private Mock<IConsumer<Product>> ProductsConsumerStub;
+        private Mock<ICommentsConsumer> CommentsConsumerStub;
+        private Target CatalogService;
 
-        public EditCategoryTests()
+        public EditCategoryAsyncTests()
         {
             CategoriesConsumerStub = new Mock<IConsumer<Category>>();
-            Service = new Target(CategoriesConsumerStub.Object);
+            ProductsConsumerStub = new Mock<IConsumer<Product>>();
+            CommentsConsumerStub = new Mock<ICommentsConsumer>();
+            CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
         }
 
         [TestMethod]
         public void ValidCategory_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var name = "RenamedTestCategory";
-            var parentId = 3;
-            var expectedResult = true;
+            int id = 1;
+            string name = "RenamedTestCategory";
+            int parentId = 3;
+            bool expectedResult = true;
 
-            var category = new Category
+            Category category = new Category
             {
                 Id = id,
                 Name = name,
@@ -45,7 +46,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
                 .Returns(Task.FromResult(true));
 
             // Act
-            var result = Service.EditCategory(category);
+            Task<bool> result = CatalogService.EditCategoryAsync(category);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -56,11 +57,11 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
         public void NegativeCategoryId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
-            var name = "RenamedTestCategory";
-            var parentId = 3;
+            int id = -1;
+            string name = "RenamedTestCategory";
+            int parentId = 3;
 
-            var category = new Category
+            Category category = new Category
             {
                 Id = id,
                 Name = name,
@@ -68,7 +69,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
             };
 
             // Act
-            var result = Service.EditCategory(category);
+            Task<bool> result = CatalogService.EditCategoryAsync(category);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -79,12 +80,12 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
         public void InvalidCategoryId_ReturnsFalse()
         {
             // Arrange
-            var id = 99999;
-            var name = "NonExistingCategory";
-            var parentId = 3;
-            var expectedResult = false;
+            int id = 99999;
+            string name = "NonExistingCategory";
+            int parentId = 3;
+            bool expectedResult = false;
 
-            var category = new Category
+            Category category = new Category
             {
                 Id = id,
                 Name = name,
@@ -96,7 +97,7 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CategoriesService
                 .Returns(Task.FromResult(false));
 
             // Act
-            var result = Service.EditCategory(category);
+            Task<bool> result = CatalogService.EditCategoryAsync(category);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

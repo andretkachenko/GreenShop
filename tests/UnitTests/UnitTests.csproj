@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\src\web\MVC\MVC.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WebBffShopping\Services\Catalog\CommentService\" />
+  </ItemGroup>
+
 </Project>

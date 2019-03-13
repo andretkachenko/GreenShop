@@ -24,15 +24,15 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void ValidComment_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var expectedResult = true;
+            int id = 1;
+            bool expectedResult = true;
 
             CommentsAccessorStub
                 .Setup(Comment => Comment.Delete(id))
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = Service.DeleteComment(id);
+            Task<bool> result = Service.DeleteComment(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -43,10 +43,10 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void NegativeCommentId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            int id = -1;
 
             // Act
-            var result = Service.DeleteComment(id);
+            Task<bool> result = Service.DeleteComment(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -57,15 +57,15 @@ namespace UnitTests.Catalog.Services.CommentsRepository
         public void InvalidCommentId_ReturnsFalse()
         {
             // Arrange 
-            var id = 99999;
-            var expectedResult = false;
+            int id = 99999;
+            bool expectedResult = false;
 
             CommentsAccessorStub
                 .Setup(comments => comments.Delete(id))
                 .Returns(Task.FromResult(0));
 
             // Act
-            var result = Service.DeleteComment(id);
+            Task<bool> result = Service.DeleteComment(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
