@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Catalog.Services.Comments.Interfaces;
 using Common.Models.Comments;
-using Catalog.Services.Comments.Interfaces;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Catalog.Controllers
 {
+    [ApiVersion("1")]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentsController : ControllerBase
@@ -21,7 +23,7 @@ namespace Catalog.Controllers
         [HttpGet("product/{productId}")]
         public async Task<IEnumerable<Comment>> GetAllProductComments(int productId)
         {
-            var comments = await _commentServices.GetAllProductComments(productId);
+            IEnumerable<Comment> comments = await _commentServices.GetAllProductComments(productId);
 
             return comments;
         }
@@ -30,7 +32,7 @@ namespace Catalog.Controllers
         [HttpGet("{id}")]
         public async Task<Comment> GetComment(int id)
         {
-            var comment = await _commentServices.GetComment(id);
+            Comment comment = await _commentServices.GetComment(id);
 
             return comment;
         }
@@ -39,7 +41,7 @@ namespace Catalog.Controllers
         [HttpPut("{id}")]
         public async Task<bool> EditComment(int id, [FromBody] string message)
         {
-            var success = await _commentServices.EditComment(id, message);
+            bool success = await _commentServices.EditComment(id, message);
 
             return success;
         }
@@ -48,7 +50,7 @@ namespace Catalog.Controllers
         [HttpDelete("{id}")]
         public async Task<bool> DeleteComment(int id)
         {
-            var success = await _commentServices.DeleteComment(id);
+            bool success = await _commentServices.DeleteComment(id);
 
             return success;
         }
@@ -57,7 +59,7 @@ namespace Catalog.Controllers
         [HttpPost]
         public async Task<int> AddComment([FromBody] Comment comment)
         {
-            var id = await _commentServices.AddComment(comment);
+            int id = await _commentServices.AddComment(comment);
 
             return id;
         }

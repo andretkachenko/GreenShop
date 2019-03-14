@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Catalog.Services.Products.Interfaces;
+﻿using Catalog.Services.Products.Interfaces;
 using Common.Models.Products;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Catalog.Controllers
 {
+    [ApiVersion("1")]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -22,7 +24,7 @@ namespace Catalog.Controllers
         [HttpGet]
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            var products = await _productsService.GetAllProducts();
+            IEnumerable<Product> products = await _productsService.GetAllProducts();
 
             return products;
         }
@@ -47,7 +49,7 @@ namespace Catalog.Controllers
         [HttpPost]
         public async Task<int> AddProductAsync([FromBody] Product product)
         {
-            var success = await _productsService.AddProduct(product);
+            int success = await _productsService.AddProduct(product);
 
             return success;
         }
@@ -56,7 +58,7 @@ namespace Catalog.Controllers
         [HttpPut]
         public async Task<bool> EditProductAsync([FromBody] Product product)
         {
-            var success = await _productsService.EditProduct(product);
+            bool success = await _productsService.EditProduct(product);
 
             return success;
         }
@@ -65,7 +67,7 @@ namespace Catalog.Controllers
         [HttpDelete("{id}")]
         public async Task<bool> DeleteProductAsync(int id)
         {
-            var success = await _productsService.DeleteProduct(id);
+            bool success = await _productsService.DeleteProduct(id);
 
             return success;
         }
