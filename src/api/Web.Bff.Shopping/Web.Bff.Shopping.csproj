@@ -4,6 +4,14 @@
   <PropertyGroup>
     <Version>1.2.0.1</Version>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Bledhard; alexars</Authors>
+    <Company>GreenShop</Company>
+    <Description>API Gateway for the Web application of the GreenShop project.</Description>
+    <PackageProjectUrl>https://github.com/Bledhard/GreenShop</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Bledhard/GreenShop</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/Bledhard/GreenShop/blob/dev/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright (c) 2018 Andrey Tkachenko</Copyright>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

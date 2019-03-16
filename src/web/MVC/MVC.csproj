@@ -5,6 +5,14 @@
     <Version>1.2.0.1</Version>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>GreenShop.MVC</RootNamespace>
+    <Authors>Bledhard; alexars</Authors>
+    <Company>GreenShop</Company>
+    <Description>ASP.Net MVC Web application of the GreenShop project.</Description>
+    <Copyright>Copyright (c) 2018 Andrey Tkachenko</Copyright>
+    <PackageLicenseUrl>https://github.com/Bledhard/GreenShop/blob/dev/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Bledhard/GreenShop</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Bledhard/GreenShop</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
