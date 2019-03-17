@@ -1,6 +1,6 @@
 ﻿using Common.Models.Categories;
-using Common.Models.DTO;
 using Common.Models.Comments;
+using Common.Models.DTO;
 using Common.Models.Products;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -9,6 +9,8 @@ using Web.Bff.Shopping.Services.Interfaces;
 
 namespace Web.Bff.Shopping.Controllers
 {
+    [ApiVersion("1")]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class CatalogController : ControllerBase
@@ -119,7 +121,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpGet("comments/{id}")]
         public async Task<Comment> GetComment(int id)
         {
-            var result = await _catalogService.GetCommentAsync(id);
+            Comment result = await _catalogService.GetCommentAsync(id);
 
             return result;
         }
@@ -128,7 +130,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpGet("comments/products/{id}")]
         public async Task<IEnumerable<Comment>> GetProductRelatedComment(int id)
         {
-            var result = await _catalogService.GetAllProductCommentsAsync(id);
+            IEnumerable<Comment> result = await _catalogService.GetAllProductCommentsAsync(id);
 
             return result;
         }
@@ -137,7 +139,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpPut("comments/{id}")]
         public async Task<bool> EditComment(int id, [FromBody] string message)
         {
-            var result = await _catalogService.EditCommentAsync(id, message);
+            bool result = await _catalogService.EditCommentAsync(id, message);
 
             return result;
         }
@@ -150,7 +152,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpDelete("comments/{id}")]
         public async Task<bool> DeleteComment(int id)
         {
-            var result = await _catalogService.DeleteCommentAsync(id);
+            bool result = await _catalogService.DeleteCommentAsync(id);
 
             return result;
         }
@@ -159,7 +161,7 @@ namespace Web.Bff.Shopping.Controllers
         [HttpPost("comments")]
         public async Task<int> AddComment([FromBody] Comment comment)
         {
-            var result = await _catalogService.AddCommentAsync(comment);
+            int result = await _catalogService.AddCommentAsync(comment);
 
             return result;
         }

@@ -14,6 +14,7 @@ namespace Web.Bff.Shopping.Helpers
         public static RestRequest AssembleRestRequest(string resource, Method httpMethod, object jsonBody = null)
         {
             IRestRequest request = new RestRequest(resource, httpMethod);
+            request.AddHeader("api-version", "1");
             if (jsonBody != null) request.AddJsonBody(jsonBody);
             return request as RestRequest;
         }
