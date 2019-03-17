@@ -1,4 +1,5 @@
 ﻿using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.DTO;
 using Common.Models.Products;
 using System.Collections.Generic;
@@ -21,5 +22,11 @@ namespace GreenShop.MVC.Services.Interfaces
         Task<int> AddProductAsync(Product product);
         Task<bool> DeleteProductAsync(int id);
         Task<bool> EditProductAsync(Product product);
+
+        Task<IEnumerable<Comment>> GetAllProductComments(int productId);
+        Task<Comment> GetComment(int id);
+        Task<int> AddComment(Comment comment);
+        Task<bool> EditComment(Comment comment);
+        Task<bool> DeleteComment(int id);
     }
 }
