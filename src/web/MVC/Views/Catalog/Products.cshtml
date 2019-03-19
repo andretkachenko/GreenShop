@@ -1,16 +1,16 @@
-﻿@using Common.Models.Products;
+﻿@using GreenShop.MVC.ViewModels.Catalog
+@model ProductsViewModel
 @{
-    var products = (List<Product>)ViewData["Products"];
     ViewData["Title"] = "Products";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <ul>
-    @foreach(var product in products)
+    @foreach (var product in Model.Products)
     {
-    <li>
-        @Html.ActionLink(product.Name, "Product", "Catalog", new { id = product.Id }, null)
-    </li>
+        <li>
+            @Html.ActionLink(product.Name, "Product", "Catalog", new { id = product.Id }, null)
+        </li>
     }
 </ul>

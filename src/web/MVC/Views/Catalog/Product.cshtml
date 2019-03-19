@@ -1,34 +1,33 @@
-﻿@using Common.Models.Products;
-@using Common.Models.Categories;
+﻿@using GreenShop.MVC.ViewModels.Catalog
+@model ProductViewModel
 @{
-    var product = (Product)ViewData["product"];
-    ViewData["Title"] = product.Name;
+    ViewData["Title"] = Model.Product.Name;
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <ul>
     <li>
-        @product.Description
+        @Model.Product.Description
     </li>
     <li>
-        Rating: @product.Rating
+        Rating: @Model.Product.Rating
     </li>
     <li>
-        Base Price: @product.BasePrice
+        Base Price: @Model.Product.BasePrice
     </li>
-    @if (product.Category != null && !string.IsNullOrWhiteSpace(product.Category.Name))
+    @if (Model.Product.Category != null && !string.IsNullOrWhiteSpace(Model.Product.Category.Name))
     {
-    <li>
-        Category: @Html.ActionLink(product.Category.Name, "Category", "Catalog", new { id = product.CategoryId }, null)
-    </li>
+        <li>
+            Category: @Html.ActionLink(Model.Product.Category.Name, "Category", "Catalog", new { id = Model.Product.CategoryId }, null)
+        </li>
     }
-    @if (product.Specifications != null && product.Specifications.Any())
+    @if (Model.Product.Specifications != null && Model.Product.Specifications.Any())
     {
         <li>
             Specifications:
             <ul>
-                @foreach (var specification in product.Specifications)
+                @foreach (var specification in Model.Product.Specifications)
                 {
                     <li>
                         @specification.Name
