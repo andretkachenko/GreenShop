@@ -1,12 +1,10 @@
 ﻿using Common.Models.Comments;
-using Common.Models.Products;
 using System.Collections.Generic;
 
 namespace GreenShop.MVC.ViewModels.Catalog
 {
-    public class ProductViewModel
+    public class CommentsViewModel
     {
-        public Product Product { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
     }
 }

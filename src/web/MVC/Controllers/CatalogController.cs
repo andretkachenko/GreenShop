@@ -1,10 +1,12 @@
 ﻿using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.DTO;
 using Common.Models.Products;
 using GreenShop.MVC.Services.Interfaces;
 using GreenShop.MVC.ViewModels.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GreenShop.MVC.Controllers
@@ -16,7 +18,6 @@ namespace GreenShop.MVC.Controllers
         public CatalogController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
-
         }
 
         public async Task<IActionResult> Index()
@@ -67,6 +68,42 @@ namespace GreenShop.MVC.Controllers
             ProductViewModel model = new ProductViewModel
             {
                 Product = product
+            };
+
+            return View(model);
+        }
+
+        /// <summary>
+        /// Asynchronously get Comment by specified id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Comment</returns>
+        public async Task<IActionResult> Comment(int id)
+        {
+            Comment comment = await _catalogService.GetComment(id);
+
+            if (comment == null) return NotFound();
+
+            CommentViewModel model = new CommentViewModel
+            {
+                Comment = comment
+            };
+            return View(model);
+        }
+
+        /// <summary>
+        /// Asynchronously get all product related comments by product Id 
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>Collection of comments</returns>
+        public async Task<IActionResult> ProductComments(int productId)
+        {
+            IEnumerable<Comment> comments = await _catalogService.GetAllProductComments(productId);
+            if (!comments.Any()) return NotFound();
+
+            CommentsViewModel model = new CommentsViewModel
+            {
+                Comments = comments
             };
 
             return View(model);
