@@ -2,6 +2,7 @@
 using Common.Models.DTO;
 using Common.Models.Products;
 using GreenShop.MVC.Services.Interfaces;
+using GreenShop.MVC.ViewModels.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,9 +24,12 @@ namespace GreenShop.MVC.Controllers
             IEnumerable<Category> categories = await _catalogService.GetAllCategoriesAsync();
             if (categories == null) return NotFound();
 
-            ViewData["categories"] = categories;
+            IndexViewModel model = new IndexViewModel
+            {
+                Categories = categories
+            };
 
-            return View();
+            return View(model);
         }
 
         public async Task<IActionResult> Category(int id)
@@ -33,10 +37,13 @@ namespace GreenShop.MVC.Controllers
             CategoryProductsDTO categoryWithProducts = await _catalogService.GetCategoryWithProductsAsync(id);
             if (categoryWithProducts.Category == null) return NotFound();
 
-            ViewData["category"] = categoryWithProducts.Category;
-            ViewData["products"] = categoryWithProducts.Products;
+            CategoryViewModel model = new CategoryViewModel
+            {
+                Category = categoryWithProducts.Category,
+                Products = categoryWithProducts.Products
+            };
 
-            return View();
+            return View(model);
         }
 
         public async Task<IActionResult> AllProducts()
@@ -44,20 +51,25 @@ namespace GreenShop.MVC.Controllers
             IEnumerable<Product> products = await _catalogService.GetAllProductsAsync();
             if (products == null) return NotFound();
 
-            ViewData["products"] = products;
+            ProductsViewModel model = new ProductsViewModel
+            {
+                Products = products
+            };
 
-            return View("Products");
+            return View("Products", model);
         }
 
         public async Task<IActionResult> Product(int id)
         {
             Product product = await _catalogService.GetProductWithCategoryAsync(id);
-
             if (product == null) return NotFound();
 
-            ViewData["product"] = product;
+            ProductViewModel model = new ProductViewModel
+            {
+                Product = product
+            };
 
-            return View();
+            return View(model);
         }
     }
 }
