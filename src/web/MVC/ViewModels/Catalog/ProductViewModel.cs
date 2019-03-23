@@ -7,6 +7,5 @@ namespace GreenShop.MVC.ViewModels.Catalog
     public class ProductViewModel
     {
         public Product Product { get; set; }
-        public IEnumerable<Comment> Comments { get; set; }
     }
 }

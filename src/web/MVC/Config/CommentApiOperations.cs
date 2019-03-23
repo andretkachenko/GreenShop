@@ -7,7 +7,7 @@
             public class CommentApiOperations
             {
                 public static string AddComment => $"api/catalog/comments/";
-                public static string GetAllProductComments(int productId) => $"api/catalog/comments/product/{productId}";
+                public static string GetAllProductComments(int productId) => $"api/catalog/comments/products/{productId}";
                 public static string GetComment(int id) => $"api/catalog/comments/{id}";
                 public static string EditComment(int id) => $"api/catalog/comments/{id}";
                 public static string DeleteComment(int id) => $"api/catalog/comments/{id}";

@@ -64,46 +64,11 @@ namespace GreenShop.MVC.Controllers
         {
             Product product = await _catalogService.GetProductWithCategoryAsync(id);
             if (product == null) return NotFound();
-
+            IEnumerable<Comment> comment = await _catalogService.GetAllProductComments(id);
+            product.Comments = comment;
             ProductViewModel model = new ProductViewModel
             {
                 Product = product
-            };
-
-            return View(model);
-        }
-
-        /// <summary>
-        /// Asynchronously get Comment by specified id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Comment</returns>
-        public async Task<IActionResult> Comment(int id)
-        {
-            Comment comment = await _catalogService.GetComment(id);
-
-            if (comment == null) return NotFound();
-
-            CommentViewModel model = new CommentViewModel
-            {
-                Comment = comment
-            };
-            return View(model);
-        }
-
-        /// <summary>
-        /// Asynchronously get all product related comments by product Id 
-        /// </summary>
-        /// <param name="productId"></param>
-        /// <returns>Collection of comments</returns>
-        public async Task<IActionResult> ProductComments(int productId)
-        {
-            IEnumerable<Comment> comments = await _catalogService.GetAllProductComments(productId);
-            if (!comments.Any()) return NotFound();
-
-            CommentsViewModel model = new CommentsViewModel
-            {
-                Comments = comments
             };
 
             return View(model);
