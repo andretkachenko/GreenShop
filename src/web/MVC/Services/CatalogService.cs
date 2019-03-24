@@ -212,7 +212,7 @@ namespace GreenShop.MVC.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Comment</returns>
-        public async Task<Comment> GetComment(int id)
+        public async Task<Comment> GetCommentAsync(int id)
         {
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
@@ -227,7 +227,7 @@ namespace GreenShop.MVC.Services
         /// </summary>
         /// <param name="comment"></param>
         /// <returns>Comment id</returns>
-        public async Task<int> AddComment(Comment comment)
+        public async Task<int> AddCommentAsync(Comment comment)
         {
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(comment.ProductId);
@@ -244,7 +244,7 @@ namespace GreenShop.MVC.Services
         /// </summary>
         /// <param name="comment"></param>
         /// <returns>Boolean result</returns>
-        public async Task<bool> EditComment(Comment comment)
+        public async Task<bool> EditCommentAsync(Comment comment)
         {
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(comment.Id);
@@ -261,7 +261,7 @@ namespace GreenShop.MVC.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Boolean result</returns>
-        public async Task<bool> DeleteComment(int id)
+        public async Task<bool> DeleteCommentAsync(int id)
         {
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);

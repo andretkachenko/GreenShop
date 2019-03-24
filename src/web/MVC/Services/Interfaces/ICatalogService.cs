@@ -24,9 +24,9 @@ namespace GreenShop.MVC.Services.Interfaces
         Task<bool> EditProductAsync(Product product);
 
         Task<IEnumerable<Comment>> GetAllProductComments(int productId);
-        Task<Comment> GetComment(int id);
-        Task<int> AddComment(Comment comment);
-        Task<bool> EditComment(Comment comment);
-        Task<bool> DeleteComment(int id);
+        Task<Comment> GetCommentAsync(int id);
+        Task<int> AddCommentAsync(Comment comment);
+        Task<bool> EditCommentAsync(Comment comment);
+        Task<bool> DeleteCommentAsync(int id);
     }
 }
