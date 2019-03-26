@@ -53,5 +53,17 @@
             </ul>
         </li>
     }
+    <li>
+        Comments:
+        <ul>
+            @foreach (var comment in Model.Product.Comments)
+            {
+                <il>
+                    Message: @comment.Message
+                </il>
+            }
+
+        </ul>
+    </li>
 </ul>
 

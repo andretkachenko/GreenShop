@@ -4,8 +4,8 @@ namespace Common.Models.Comments.Interfaces
 {
     public interface IComment : IIdentifiable
     {
+        int ProductId { get; set; }
         int AuthorId { get; set; }
-
         string Message { get; set; }
     }
 }

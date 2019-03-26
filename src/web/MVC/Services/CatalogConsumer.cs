@@ -1,4 +1,5 @@
 ﻿using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.DTO;
 using Common.Models.Products;
 using GreenShop.MVC.Config;
@@ -172,6 +173,76 @@ namespace GreenShop.MVC.Services
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.WebShoppingApiOperations.ProductApiOperations.GetProductWithCategory(id), Method.GET);
             IRestResponse<Product> response = await _client.ExecuteAsync<Product>(request);
             Product result = response.Data;
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously get all product related comments by specified product Id 
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>Collection of comments</returns>
+        public async Task<IEnumerable<Comment>> GetallProductCommentsAsync(int productId)
+        {
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.WebShoppingApiOperations.CommentApiOperations.GetAllProductComments(productId), Method.GET);
+            IRestResponse<List<Comment>> response = await _client.ExecuteAsync<List<Comment>>(request);
+
+            List<Comment> comment = response.Data;
+            return comment;
+        }
+
+        /// <summary>
+        /// Asynchronously get Comment by specified id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Comment</returns>
+        public async Task<Comment> GetCommentAsync(int id)
+        {
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.WebShoppingApiOperations.CommentApiOperations.GetComment(id), Method.GET);
+            IRestResponse<Comment> response = await _client.ExecuteAsync<Comment>(request);
+
+            Comment comment = response.Data;
+            return comment;
+        }
+
+        /// <summary>
+        /// Asynchronously add Comment
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns>Comment id</returns>
+        public async Task<int> AddCommentAsync(Comment comment)
+        {
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.WebShoppingApiOperations.CommentApiOperations.AddComment, Method.POST, comment);
+            IRestResponse<int> response = await _client.ExecuteAsync<int>(request);
+
+            int result = response.Data;
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously edit specified Comment
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns>Boolean result</returns>
+        public async Task<bool> EditCommentAsync(int id, string message)
+        {
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.WebShoppingApiOperations.CommentApiOperations.EditComment(id), Method.PUT, message);
+            IRestResponse<bool> response = await _client.ExecuteAsync<bool>(request);
+
+            bool result = response.Data;
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously delete Comment by specified id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Boolean result</returns>
+        public async Task<bool> DeleteCommentAsync(int id)
+        {
+            RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.WebShoppingApiOperations.CommentApiOperations.DeleteComment(id), Method.POST);
+            IRestResponse<bool> response = await _client.ExecuteAsync<bool>(request);
+
+            bool result = response.Data;
             return result;
         }
     }

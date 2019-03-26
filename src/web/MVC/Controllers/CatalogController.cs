@@ -1,10 +1,12 @@
 ﻿using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.DTO;
 using Common.Models.Products;
 using GreenShop.MVC.Services.Interfaces;
 using GreenShop.MVC.ViewModels.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GreenShop.MVC.Controllers
@@ -16,7 +18,6 @@ namespace GreenShop.MVC.Controllers
         public CatalogController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
-
         }
 
         public async Task<IActionResult> Index()
@@ -63,7 +64,8 @@ namespace GreenShop.MVC.Controllers
         {
             Product product = await _catalogService.GetProductWithCategoryAsync(id);
             if (product == null) return NotFound();
-
+            IEnumerable<Comment> comment = await _catalogService.GetAllProductComments(id);
+            product.Comments = comment;
             ProductViewModel model = new ProductViewModel
             {
                 Product = product

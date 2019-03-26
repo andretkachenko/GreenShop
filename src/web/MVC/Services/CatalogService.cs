@@ -1,4 +1,5 @@
 ﻿using Common.Models.Categories;
+using Common.Models.Comments;
 using Common.Models.DTO;
 using Common.Models.Products;
 using Common.Validatiors;
@@ -188,5 +189,88 @@ namespace GreenShop.MVC.Services
 
             return result;
         }
+
+        #region Comment
+
+        /// <summary>
+        /// Asynchronously get all product related comments by product Id 
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>Collection of comments</returns>
+        public async Task<IEnumerable<Comment>> GetAllProductComments(int productId)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(productId);
+
+            IEnumerable<Comment> comments = await _catalogConsumer.GetallProductCommentsAsync(productId);
+
+            return comments;
+        }
+
+        /// <summary>
+        /// Asynchronously get Comment by specified id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Comment</returns>
+        public async Task<Comment> GetCommentAsync(int id)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(id);
+
+            Comment comment = await _catalogConsumer.GetCommentAsync(id);
+
+            return comment;
+        }
+
+        /// <summary>
+        /// Asynchronously add Comment
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns>Comment id</returns>
+        public async Task<int> AddCommentAsync(Comment comment)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(comment.ProductId);
+            EntityNameValidator stringValidator = new EntityNameValidator();
+            stringValidator.ValidateAndThrow(comment.Message);
+
+            int id = await _catalogConsumer.AddCommentAsync(comment);
+
+            return id;
+        }
+
+        /// <summary>
+        /// Asynchronously edit specified Comment
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns>Boolean result</returns>
+        public async Task<bool> EditCommentAsync(Comment comment)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(comment.Id);
+            EntityNameValidator stringValidator = new EntityNameValidator();
+            stringValidator.ValidateAndThrow(comment.Message);
+
+            bool result = await _catalogConsumer.EditCommentAsync(comment.Id, comment.Message);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously delete Comment by specified id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Boolean result</returns>
+        public async Task<bool> DeleteCommentAsync(int id)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(id);
+
+            bool result = await _catalogConsumer.DeleteCommentAsync(id);
+
+            return result;
+        }
+
+        #endregion
     }
 }
