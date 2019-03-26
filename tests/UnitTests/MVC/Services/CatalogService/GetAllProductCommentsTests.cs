@@ -10,11 +10,12 @@ using Target = GreenShop.MVC.Services.CatalogService;
 
 namespace UnitTests.MVC.Services.CatalogService
 {
-    public class GetAllCommentAsyncTest
+    [TestClass]
+    public class GetAllProductCommentsTests
     {
         private Mock<ICatalogConsumer> _catalogConsumer;
         private Target _catalogService;
-        public GetAllCommentAsyncTest()
+        public GetAllProductCommentsTests()
         {
             _catalogConsumer = new Mock<ICatalogConsumer>();
             _catalogService = new Target(_catalogConsumer.Object);
