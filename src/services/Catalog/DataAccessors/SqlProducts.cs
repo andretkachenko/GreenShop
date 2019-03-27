@@ -6,7 +6,7 @@ using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catalog.DataAccessors
+namespace GreenShop.Catalog.DataAccessors
 {
     public class SqlProducts : ISqlDataAccessor<Product>
     {

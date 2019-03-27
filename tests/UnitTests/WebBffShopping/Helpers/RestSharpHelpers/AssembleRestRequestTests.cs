@@ -1,4 +1,4 @@
-﻿using Target = Web.Bff.Shopping.Helpers.RestSharpHelpers;
+﻿using Target = GreenShop.Web.Bff.Shopping.Helpers.RestSharpHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RestSharp;
 using System.Linq;

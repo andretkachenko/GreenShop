@@ -6,7 +6,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Comments.CommentsRepository;
+using Target = GreenShop.Catalog.Services.Comments.CommentsRepository;
 
 namespace UnitTests.Catalog.Services.CommentsRepository
 {

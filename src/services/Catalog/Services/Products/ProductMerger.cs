@@ -1,5 +1,5 @@
-﻿using Catalog.Properties;
-using Catalog.Services.Products.Interfaces;
+﻿using GreenShop.Catalog.Properties;
+using GreenShop.Catalog.Services.Products.Interfaces;
 using Common.Configuration.SQL;
 using Common.Models.Products;
 using Dapper;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Catalog.Services.Products
+namespace GreenShop.Catalog.Services.Products
 {
     public class ProductMerger : IProductMerger
     {

@@ -1,4 +1,4 @@
-﻿using Target = Catalog.Services.Products.ProductMerger;
+﻿using Target = GreenShop.Catalog.Services.Products.ProductMerger;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Common.Configuration.SQL;

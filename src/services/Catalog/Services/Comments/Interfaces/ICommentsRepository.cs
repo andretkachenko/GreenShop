@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Common.Models.Comments;
 
-namespace Catalog.Services.Comments.Interfaces
+namespace GreenShop.Catalog.Services.Comments.Interfaces
 {
     public interface ICommentsRepository
     {

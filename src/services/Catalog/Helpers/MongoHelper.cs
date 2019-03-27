@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace Catalog.Helpers
+namespace GreenShop.Catalog.Helpers
 {
     public static class MongoHelper
     {

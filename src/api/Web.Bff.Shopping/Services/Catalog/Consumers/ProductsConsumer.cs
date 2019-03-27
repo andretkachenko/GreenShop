@@ -3,12 +3,12 @@ using Microsoft.Extensions.Options;
 using RestSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Config;
-using Web.Bff.Shopping.Helpers;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Web.Bff.Shopping.Extensions;
+using GreenShop.Web.Bff.Shopping.Config;
+using GreenShop.Web.Bff.Shopping.Helpers;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
+using GreenShop.Web.Bff.Shopping.Extensions;
 
-namespace Web.Bff.Shopping.Services.Catalog.Consumers
+namespace GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers
 {
     public class ProductsConsumer : IConsumer<Product>
     {

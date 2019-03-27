@@ -1,10 +1,10 @@
-﻿using Catalog.Properties;
+﻿using GreenShop.Catalog.Properties;
 using Common.Configuration.MongoDB;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System;
 
-namespace Catalog.Utils
+namespace GreenShop.Catalog.Utils
 {
     internal class MongoContext : IMongoContext
     {

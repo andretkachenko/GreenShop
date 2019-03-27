@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Categories.CategoriesRepository;
+using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
 
 namespace UnitTests.Catalog.Services.CategoriesRepository
 {

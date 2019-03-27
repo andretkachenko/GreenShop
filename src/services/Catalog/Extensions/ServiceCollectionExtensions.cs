@@ -1,12 +1,12 @@
-﻿using Catalog.DataAccessor;
-using Catalog.DataAccessors;
-using Catalog.Services.Categories;
-using Catalog.Services.Categories.Interfaces;
-using Catalog.Services.Comments;
-using Catalog.Services.Comments.Interfaces;
-using Catalog.Services.Products;
-using Catalog.Services.Products.Interfaces;
-using Catalog.Utils;
+﻿using GreenShop.Catalog.DataAccessor;
+using GreenShop.Catalog.DataAccessors;
+using GreenShop.Catalog.Services.Categories;
+using GreenShop.Catalog.Services.Categories.Interfaces;
+using GreenShop.Catalog.Services.Comments;
+using GreenShop.Catalog.Services.Comments.Interfaces;
+using GreenShop.Catalog.Services.Products;
+using GreenShop.Catalog.Services.Products.Interfaces;
+using GreenShop.Catalog.Utils;
 using Common.Configuration.MongoDB;
 using Common.Configuration.SQL;
 using Common.Interfaces;
@@ -15,7 +15,7 @@ using Common.Models.Comments;
 using Common.Models.Products;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Catalog.Extensions
+namespace GreenShop.Catalog.Extensions
 {
     internal static class ServiceCollectionExtensions
     {

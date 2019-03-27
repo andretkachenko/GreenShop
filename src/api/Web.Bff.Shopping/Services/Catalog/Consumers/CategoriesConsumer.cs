@@ -1,14 +1,14 @@
-﻿using Web.Bff.Shopping.Services.Catalog.Interfaces;
+﻿using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Common.Models.Categories;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
-using Web.Bff.Shopping.Config;
+using GreenShop.Web.Bff.Shopping.Config;
 using RestSharp;
-using Web.Bff.Shopping.Helpers;
+using GreenShop.Web.Bff.Shopping.Helpers;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Extensions;
+using GreenShop.Web.Bff.Shopping.Extensions;
 
-namespace Web.Bff.Shopping.Services.Catalog.Consumers
+namespace GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers
 {
     public class CategoriesConsumer : IConsumer<Category>
     {

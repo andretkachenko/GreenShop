@@ -1,10 +1,10 @@
-﻿using Catalog.Services.Categories.Interfaces;
+﻿using GreenShop.Catalog.Services.Categories.Interfaces;
 using Common.Models.Categories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catalog.Controllers
+namespace GreenShop.Catalog.Controllers
 {
     [ApiVersion("1")]
     [Produces("application/json")]

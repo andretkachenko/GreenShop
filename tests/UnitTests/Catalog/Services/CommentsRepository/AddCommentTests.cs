@@ -4,7 +4,7 @@ using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using Target = Catalog.Services.Comments.CommentsRepository;
+using Target = GreenShop.Catalog.Services.Comments.CommentsRepository;
 
 namespace UnitTests.Catalog.Services.CommentsRepository
 {

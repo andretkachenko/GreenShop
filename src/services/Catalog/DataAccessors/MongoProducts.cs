@@ -4,9 +4,9 @@ using Common.Models.Products;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalog.Properties;
+using GreenShop.Catalog.Properties;
 
-namespace Catalog.DataAccessors
+namespace GreenShop.Catalog.DataAccessors
 {
     public class MongoProducts : IMongoDataAccessor<Product>
     {

@@ -1,5 +1,5 @@
-﻿using Catalog;
-using Common.Models.Products;
+﻿using Common.Models.Products;
+using GreenShop.Catalog;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System.Net;
@@ -17,6 +17,7 @@ namespace IntegrationTests.Catalog.ProductsController
         public void Initialize()
         {
             _client = new CustomWebApplicationFactory<Startup>().CreateClient();
+            _client.DefaultRequestHeaders.Add("api-version", "1");
         }
 
         [TestMethod]

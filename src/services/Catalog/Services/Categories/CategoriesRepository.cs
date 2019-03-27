@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Categories.Interfaces;
+﻿using GreenShop.Catalog.Services.Categories.Interfaces;
 using Common.Interfaces;
 using Common.Models.Categories;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Common.Validatiors;
 
-namespace Catalog.Services.Categories
+namespace GreenShop.Catalog.Services.Categories
 {
     public class CategoriesRepository : ICategoriesRepository
     {

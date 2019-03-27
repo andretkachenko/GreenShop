@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Web.Bff.Shopping.Services.Catalog.Interfaces
+namespace GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces
 {
     public interface IConsumer<T> where T: IIdentifiable
     {

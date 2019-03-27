@@ -3,8 +3,8 @@ using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Target = Web.Bff.Shopping.Services.Catalog.CommentService;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Target = GreenShop.Web.Bff.Shopping.Services.Catalog.CommentService;
 
 namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
 {

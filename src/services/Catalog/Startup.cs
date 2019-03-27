@@ -1,4 +1,4 @@
-﻿using Catalog.Extensions;
+﻿using GreenShop.Catalog.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Catalog
+namespace GreenShop.Catalog
 {
     public class Startup
     {

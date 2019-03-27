@@ -4,9 +4,9 @@ using Common.Validatiors.Comments;
 using FluentValidation;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 
-namespace Web.Bff.Shopping.Services.Catalog
+namespace GreenShop.Web.Bff.Shopping.Services.Catalog
 {
     public class CommentService : ICommentService
     {

@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <Version>1.2.0.8</Version>
+    <Version>1.2.0.11</Version>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Authors>Bledhard; alexars</Authors>
     <Company>GreenShop</Company>
@@ -12,6 +12,7 @@
     <PackageLicenseUrl>https://github.com/Bledhard/GreenShop/blob/dev/LICENSE</PackageLicenseUrl>
     <Copyright>Copyright (c) 2018 Andrey Tkachenko</Copyright>
     <RepositoryType>Git</RepositoryType>
+    <RootNamespace>GreenShop.Web.Bff.Shopping</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

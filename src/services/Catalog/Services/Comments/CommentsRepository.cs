@@ -1,4 +1,4 @@
-﻿using Catalog.Services.Comments.Interfaces;
+﻿using GreenShop.Catalog.Services.Comments.Interfaces;
 using Common.Interfaces;
 using Common.Models.Comments;
 using Common.Validatiors;
@@ -7,7 +7,7 @@ using FluentValidation;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catalog.Services.Comments
+namespace GreenShop.Catalog.Services.Comments
 {
     public class CommentsRepository : ICommentsRepository
     {

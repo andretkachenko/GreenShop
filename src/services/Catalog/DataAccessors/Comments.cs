@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catalog.DataAccessors
+namespace GreenShop.Catalog.DataAccessors
 {
     public class Comments : ISqlChildDataAccessor<Comment>
     {

@@ -1,4 +1,4 @@
-﻿using Target = Catalog.Services.Categories.CategoriesRepository;
+﻿using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
 using Common.Interfaces;
 using Common.Models.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

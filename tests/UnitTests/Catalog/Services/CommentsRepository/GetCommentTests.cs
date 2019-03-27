@@ -1,4 +1,4 @@
-﻿using Target = Catalog.Services.Comments.CommentsRepository;
+﻿using Target = GreenShop.Catalog.Services.Comments.CommentsRepository;
 using Common.Interfaces;
 using Common.Models.Comments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

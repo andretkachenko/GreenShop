@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Web.Bff.Shopping.Config;
-using Web.Bff.Shopping.Extensions;
+using GreenShop.Web.Bff.Shopping.Config;
+using GreenShop.Web.Bff.Shopping.Extensions;
 
-namespace Web.Bff.Shopping
+namespace GreenShop.Web.Bff.Shopping
 {
     public class Startup
     {

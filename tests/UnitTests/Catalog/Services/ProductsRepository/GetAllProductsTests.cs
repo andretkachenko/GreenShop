@@ -1,5 +1,5 @@
-﻿using Target = Catalog.Services.Products.ProductsRepository;
-using Catalog.Services.Products.Interfaces;
+﻿using Target = GreenShop.Catalog.Services.Products.ProductsRepository;
+using GreenShop.Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

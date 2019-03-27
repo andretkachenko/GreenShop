@@ -1,4 +1,4 @@
-﻿using Catalog.Extensions;
+﻿using GreenShop.Catalog.Extensions;
 using Common.Models.Products;
 using Common.Models.Specifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

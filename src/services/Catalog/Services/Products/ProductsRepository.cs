@@ -1,6 +1,6 @@
-﻿using Catalog.Extensions;
-using Catalog.Helpers;
-using Catalog.Services.Products.Interfaces;
+﻿using GreenShop.Catalog.Extensions;
+using GreenShop.Catalog.Helpers;
+using GreenShop.Catalog.Services.Products.Interfaces;
 using Common.Interfaces;
 using Common.Models.Products;
 using Common.Validatiors;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Catalog.Services.Products
+namespace GreenShop.Catalog.Services.Products
 {
     public class ProductsRepository : IProductsRepository
     {

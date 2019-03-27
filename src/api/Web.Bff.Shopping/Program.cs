@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Web.Bff.Shopping
+namespace GreenShop.Web.Bff.Shopping
 {
     public class Program
     {

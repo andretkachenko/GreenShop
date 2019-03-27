@@ -1,7 +1,7 @@
 ﻿using Common.Models.Products;
 using System.Collections.Generic;
 
-namespace Catalog.Services.Products.Interfaces
+namespace GreenShop.Catalog.Services.Products.Interfaces
 {
     public interface IProductMerger
     {

@@ -7,10 +7,10 @@ using FluentValidation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Web.Bff.Shopping.Services.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 
-namespace Web.Bff.Shopping.Services
+namespace GreenShop.Web.Bff.Shopping.Services
 {
     public class CatalogService : ICatalogService
     {

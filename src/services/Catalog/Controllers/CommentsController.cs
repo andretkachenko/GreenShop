@@ -1,10 +1,10 @@
-﻿using Catalog.Services.Comments.Interfaces;
+﻿using GreenShop.Catalog.Services.Comments.Interfaces;
 using Common.Models.Comments;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catalog.Controllers
+namespace GreenShop.Catalog.Controllers
 {
     [ApiVersion("1")]
     [Produces("application/json")]

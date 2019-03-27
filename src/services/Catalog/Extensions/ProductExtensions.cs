@@ -1,7 +1,7 @@
 ﻿using Common.Models.Products;
 using System.Linq;
 
-namespace Catalog.Extensions
+namespace GreenShop.Catalog.Extensions
 {
     public static class ProductExtensions
     {

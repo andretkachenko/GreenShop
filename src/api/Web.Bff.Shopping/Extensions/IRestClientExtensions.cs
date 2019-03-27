@@ -1,7 +1,7 @@
 ﻿using RestSharp;
 using System.Threading.Tasks;
 
-namespace Web.Bff.Shopping.Extensions
+namespace GreenShop.Web.Bff.Shopping.Extensions
 {
     public static class IRestClientExtensions
     {

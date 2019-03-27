@@ -6,12 +6,12 @@ using Polly;
 using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
-using Web.Bff.Shopping.Services;
-using Web.Bff.Shopping.Services.Catalog.Consumers;
-using Web.Bff.Shopping.Services.Catalog.Interfaces;
-using Web.Bff.Shopping.Services.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 
-namespace Web.Bff.Shopping.Extensions
+namespace GreenShop.Web.Bff.Shopping.Extensions
 {
     internal static class ServiceCollectionExtensions
     {

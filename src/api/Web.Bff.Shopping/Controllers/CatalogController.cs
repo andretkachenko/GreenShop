@@ -5,9 +5,9 @@ using Common.Models.Products;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Web.Bff.Shopping.Services.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 
-namespace Web.Bff.Shopping.Controllers
+namespace GreenShop.Web.Bff.Shopping.Controllers
 {
     [ApiVersion("1")]
     [Produces("application/json")]

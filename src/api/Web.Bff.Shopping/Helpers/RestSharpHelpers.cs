@@ -1,6 +1,6 @@
 ﻿using RestSharp;
 
-namespace Web.Bff.Shopping.Helpers
+namespace GreenShop.Web.Bff.Shopping.Helpers
 {
     public static class RestSharpHelpers
     {

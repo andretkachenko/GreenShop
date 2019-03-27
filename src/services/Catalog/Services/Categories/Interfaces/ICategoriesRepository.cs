@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catalog.Services.Categories.Interfaces
+namespace GreenShop.Catalog.Services.Categories.Interfaces
 {
     public interface ICategoriesRepository
     {

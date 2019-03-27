@@ -1,10 +1,10 @@
-﻿using Catalog.Properties;
+﻿using GreenShop.Catalog.Properties;
 using Common.Configuration.SQL;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Data.SqlClient;
 
-namespace Catalog.Utils
+namespace GreenShop.Catalog.Utils
 {
     internal sealed class SqlContext : BaseSqlContext, ISqlContext
     {
