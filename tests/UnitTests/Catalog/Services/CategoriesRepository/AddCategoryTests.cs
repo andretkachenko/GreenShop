@@ -1,6 +1,6 @@
-﻿using Common.Interfaces;
-using Common.Models.Categories;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;

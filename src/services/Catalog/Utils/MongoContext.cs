@@ -1,8 +1,7 @@
-﻿using GreenShop.Catalog.Properties;
-using Common.Configuration.MongoDB;
+﻿using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.Properties;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using System;
 
 namespace GreenShop.Catalog.Utils
 {

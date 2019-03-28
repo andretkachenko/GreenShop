@@ -1,13 +1,12 @@
-﻿using Common.Models.Specifications;
-using Common.Models.Categories.Interfaces;
+﻿using Common.Models.Categories;
 using Common.Models.Comments.Interfaces;
 using Common.Models.Products.Interfaces;
+using Common.Models.Specifications;
 using Dapper.Contrib.Extensions;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using Common.Models.Categories;
 
 namespace Common.Models.Products
 {
@@ -31,7 +30,7 @@ namespace Common.Models.Products
 
         [BsonIgnore]
         public int CategoryId { get; set; }
-        
+
         [Write(false), BsonIgnore]
         public Category Category { get; set; }
         [Write(false), JsonIgnore, BsonIgnore]

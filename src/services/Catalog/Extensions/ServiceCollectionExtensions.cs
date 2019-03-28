@@ -1,5 +1,10 @@
-﻿using GreenShop.Catalog.DataAccessor;
+﻿using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.DataAccessor;
 using GreenShop.Catalog.DataAccessors;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
+using GreenShop.Catalog.Models.Comments;
+using GreenShop.Catalog.Models.Products;
 using GreenShop.Catalog.Services.Categories;
 using GreenShop.Catalog.Services.Categories.Interfaces;
 using GreenShop.Catalog.Services.Comments;
@@ -7,12 +12,6 @@ using GreenShop.Catalog.Services.Comments.Interfaces;
 using GreenShop.Catalog.Services.Products;
 using GreenShop.Catalog.Services.Products.Interfaces;
 using GreenShop.Catalog.Utils;
-using Common.Configuration.MongoDB;
-using Common.Configuration.SQL;
-using Common.Interfaces;
-using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.Products;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenShop.Catalog.Extensions

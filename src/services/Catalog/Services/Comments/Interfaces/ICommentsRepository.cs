@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GreenShop.Catalog.Models.Comments;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Models.Comments;
 
 namespace GreenShop.Catalog.Services.Comments.Interfaces
 {
@@ -14,8 +14,8 @@ namespace GreenShop.Catalog.Services.Comments.Interfaces
 
         Task<bool> EditComment(Comment comment);
 
-        Task<bool> EditComment(int id,string message);
-        
+        Task<bool> EditComment(int id, string message);
+
         Task<bool> DeleteComment(int id);
     }
 }

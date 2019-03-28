@@ -1,10 +1,10 @@
-﻿using Common.Configuration.MongoDB;
-using Common.Interfaces;
-using Common.Models.Products;
+﻿using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Properties;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenShop.Catalog.Properties;
 
 namespace GreenShop.Catalog.DataAccessors
 {
@@ -28,7 +28,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAll()
         {
-            var products = await MongoCollection.Find(_ => true).ToListAsync();
+            List<Product> products = await MongoCollection.Find(_ => true).ToListAsync();
 
             return products;
         }
@@ -40,7 +40,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with specified Product</returns>
         public async Task<Product> Get(string id)
         {
-            var product = await MongoCollection.Find(x => x.MongoId == id).FirstOrDefaultAsync();
+            Product product = await MongoCollection.Find(x => x.MongoId == id).FirstOrDefaultAsync();
 
             return product;
         }
@@ -72,7 +72,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Number of rows affected</returns>
         public async Task Edit(Product product)
         {
-            var filter = Builders<Product>.Filter.Eq(x => x.MongoId, product.MongoId);
+            FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(x => x.MongoId, product.MongoId);
             await MongoCollection.FindOneAndReplaceAsync(filter, product);
         }
     }

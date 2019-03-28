@@ -1,11 +1,11 @@
-﻿using Target = GreenShop.Catalog.Services.Products.ProductsRepository;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Products;
 using GreenShop.Catalog.Services.Products.Interfaces;
-using Common.Interfaces;
-using Common.Models.Products;
-using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using Target = GreenShop.Catalog.Services.Products.ProductsRepository;
 
 namespace UnitTests.Catalog.Services.ProductsRepository
 {
@@ -29,9 +29,9 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         public void ValidId_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var mongoId = "TestMongoId";
-            var expectedResult = true;
+            int id = 1;
+            string mongoId = "TestMongoId";
+            bool expectedResult = true;
 
             ProductsSqlAccessorStub
                 .Setup(products => products.Delete(id))
@@ -44,7 +44,7 @@ namespace UnitTests.Catalog.Services.ProductsRepository
                 .Returns(mongoId);
 
             // Act
-            var result = ProductsRepository.DeleteProduct(id);
+            Task<bool> result = ProductsRepository.DeleteProduct(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -55,10 +55,10 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         public void NegativeId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            int id = -1;
 
             // Act
-            var result = ProductsRepository.GetProduct(id);
+            Task<GreenShop.Catalog.Models.Products.Product> result = ProductsRepository.GetProduct(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -69,9 +69,9 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         public void InvalidId_ReturnsFalse()
         {
             // Arrange
-            var id = 99999;
-            var mongoId = "TestMongoId";
-            var expectedResult = false;
+            int id = 99999;
+            string mongoId = "TestMongoId";
+            bool expectedResult = false;
 
             ProductsSqlAccessorStub
                 .Setup(products => products.Delete(id))
@@ -84,7 +84,7 @@ namespace UnitTests.Catalog.Services.ProductsRepository
                 .Returns(mongoId);
 
             // Act
-            var result = ProductsRepository.DeleteProduct(id);
+            Task<bool> result = ProductsRepository.DeleteProduct(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

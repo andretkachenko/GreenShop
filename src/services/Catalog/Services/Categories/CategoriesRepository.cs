@@ -1,10 +1,10 @@
-﻿using GreenShop.Catalog.Services.Categories.Interfaces;
-using Common.Interfaces;
-using Common.Models.Categories;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
+using GreenShop.Catalog.Services.Categories.Interfaces;
+using GreenShop.Catalog.Validators;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentValidation;
-using Common.Validatiors;
 
 namespace GreenShop.Catalog.Services.Categories
 {
@@ -23,7 +23,7 @@ namespace GreenShop.Catalog.Services.Categories
         /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAllCategories()
         {
-            var categories = await Categories.GetAll();
+            IEnumerable<Category> categories = await Categories.GetAll();
 
             return categories;
         }
@@ -35,10 +35,10 @@ namespace GreenShop.Catalog.Services.Categories
         /// <returns>Task with specified Category</returns>
         public async Task<Category> GetCategory(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            var category = await Categories.Get(id);
+            Category category = await Categories.Get(id);
 
             return category;
         }
@@ -50,10 +50,10 @@ namespace GreenShop.Catalog.Services.Categories
         /// <returns>Category id</returns>
         public async Task<int> AddCategory(Category category)
         {
-            var validator = new EntityNameValidator();
+            EntityNameValidator validator = new EntityNameValidator();
             validator.ValidateAndThrow(category.Name);
 
-            var id = await Categories.Add(category);
+            int id = await Categories.Add(category);
 
             return id;
         }
@@ -65,12 +65,12 @@ namespace GreenShop.Catalog.Services.Categories
         /// <returns>Number of rows affected</returns>
         public async Task<bool> EditCategory(Category category)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(category.Id);
 
-            var rowsAffected = await Categories.Edit(category);
+            int rowsAffected = await Categories.Edit(category);
 
-            var success = rowsAffected == 1;
+            bool success = rowsAffected == 1;
 
             return success;
         }
@@ -82,12 +82,12 @@ namespace GreenShop.Catalog.Services.Categories
         /// <returns>Number of rows affected</returns>
         public async Task<bool> DeleteCategory(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            var rowsAffected = await Categories.Delete(id);
+            int rowsAffected = await Categories.Delete(id);
 
-            var success = rowsAffected == 1;
+            bool success = rowsAffected == 1;
 
             return success;
         }

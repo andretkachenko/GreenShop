@@ -1,11 +1,11 @@
-﻿using Target = GreenShop.Catalog.Services.Products.ProductsRepository;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Products;
 using GreenShop.Catalog.Services.Products.Interfaces;
-using Common.Interfaces;
-using Common.Models.Products;
-using FluentValidation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using Target = GreenShop.Catalog.Services.Products.ProductsRepository;
 
 namespace UnitTests.Catalog.Services.ProductsRepository
 {
@@ -29,14 +29,14 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         public void ValidProduct_ReturnsTrue()
         {
             // Arrange
-            var expectedId = 1;
-            var name = "RenamedTestProduct";
-            var parentId = 3;
-            var description = "TestDescription";
-            var basePrice = 12m;
-            var rating = 4.5f;
+            int expectedId = 1;
+            string name = "RenamedTestProduct";
+            int parentId = 3;
+            string description = "TestDescription";
+            decimal basePrice = 12m;
+            float rating = 4.5f;
 
-            var product = new Product
+            Product product = new Product
             {
                 Name = name,
                 CategoryId = parentId,
@@ -53,7 +53,7 @@ namespace UnitTests.Catalog.Services.ProductsRepository
                 .Returns(Task.CompletedTask);
 
             // Act
-            var result = ProductsRepository.AddProduct(product);
+            Task<int> result = ProductsRepository.AddProduct(product);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
@@ -64,15 +64,15 @@ namespace UnitTests.Catalog.Services.ProductsRepository
         public void EmptyName_ThrowsValidationException()
         {
             // Arrange
-            var name = "";
+            string name = "";
 
-            var product = new Product
+            Product product = new Product
             {
                 Name = name
             };
 
             // Act
-            var result = ProductsRepository.AddProduct(product);
+            Task<int> result = ProductsRepository.AddProduct(product);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

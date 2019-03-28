@@ -1,10 +1,10 @@
-﻿using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
-using Common.Interfaces;
-using Common.Models.Categories;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
 
 namespace UnitTests.Catalog.Services.CategoriesRepository
 {
@@ -24,12 +24,12 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void ValidCategory_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var name = "RenamedTestCategory";
-            var parentId = 3;
-            var expectedResult = true;
+            int id = 1;
+            string name = "RenamedTestCategory";
+            int parentId = 3;
+            bool expectedResult = true;
 
-            var category = new Category
+            Category category = new Category
             {
                 Id = id,
                 Name = name,
@@ -41,7 +41,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = Service.EditCategory(category);
+            Task<bool> result = Service.EditCategory(category);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -52,11 +52,11 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void NegativeCategoryId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
-            var name = "RenamedTestCategory";
-            var parentId = 3;
+            int id = -1;
+            string name = "RenamedTestCategory";
+            int parentId = 3;
 
-            var category = new Category
+            Category category = new Category
             {
                 Id = id,
                 Name = name,
@@ -64,7 +64,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
             };
 
             // Act
-            var result = Service.EditCategory(category);
+            Task<bool> result = Service.EditCategory(category);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -75,12 +75,12 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void InvalidCategoryId_ReturnsFalse()
         {
             // Arrange
-            var id = 99999;
-            var name = "NonExistingCategory";
-            var parentId = 3;
-            var expectedResult = false;
+            int id = 99999;
+            string name = "NonExistingCategory";
+            int parentId = 3;
+            bool expectedResult = false;
 
-            var category = new Category
+            Category category = new Category
             {
                 Id = id,
                 Name = name,
@@ -92,7 +92,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
                 .Returns(Task.FromResult(0));
 
             // Act
-            var result = Service.EditCategory(category);
+            Task<bool> result = Service.EditCategory(category);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

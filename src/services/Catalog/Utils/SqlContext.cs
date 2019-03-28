@@ -1,7 +1,6 @@
-﻿using GreenShop.Catalog.Properties;
-using Common.Configuration.SQL;
+﻿using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.Properties;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Data.SqlClient;
 
 namespace GreenShop.Catalog.Utils
@@ -22,10 +21,10 @@ namespace GreenShop.Catalog.Utils
         {
             get
             {
-                var section = _configuration.GetSection($"{Resources.Connection}:{Resources.SqlSection}");
-                var dataSource = section.GetSection($"{Resources.DataSource}").Value;
-                var initialCatalog = section.GetSection($"{Resources.InitialCatalog}").Value;
-                var connectionString = AssembleConnectionString(dataSource, initialCatalog);
+                IConfigurationSection section = _configuration.GetSection($"{Resources.Connection}:{Resources.SqlSection}");
+                string dataSource = section.GetSection($"{Resources.DataSource}").Value;
+                string initialCatalog = section.GetSection($"{Resources.InitialCatalog}").Value;
+                string connectionString = AssembleConnectionString(dataSource, initialCatalog);
                 return new SqlConnection(connectionString);
             }
         }

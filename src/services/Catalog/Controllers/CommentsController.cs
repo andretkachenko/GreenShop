@@ -1,5 +1,5 @@
-﻿using GreenShop.Catalog.Services.Comments.Interfaces;
-using Common.Models.Comments;
+﻿using GreenShop.Catalog.Models.Comments;
+using GreenShop.Catalog.Services.Comments.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

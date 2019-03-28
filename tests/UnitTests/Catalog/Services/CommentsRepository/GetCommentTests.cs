@@ -1,10 +1,10 @@
 ﻿using Target = GreenShop.Catalog.Services.Comments.CommentsRepository;
-using Common.Interfaces;
-using Common.Models.Comments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 using FluentValidation;
+using GreenShop.Catalog.Models.Comments;
+using GreenShop.Catalog.DataAccessors.Interfaces;
 
 namespace UnitTests.Catalog.Services.CommentsRepository
 {

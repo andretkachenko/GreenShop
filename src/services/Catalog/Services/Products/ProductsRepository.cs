@@ -1,10 +1,10 @@
-﻿using GreenShop.Catalog.Extensions;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Extensions;
 using GreenShop.Catalog.Helpers;
+using GreenShop.Catalog.Models.Products;
 using GreenShop.Catalog.Services.Products.Interfaces;
-using Common.Interfaces;
-using Common.Models.Products;
-using Common.Validatiors;
-using FluentValidation;
+using GreenShop.Catalog.Validators;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,16 +30,16 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            var sqlGetAllTask = SqlProducts.GetAll();
-            var mongoGetAllTask = MongoProducts.GetAll();
-            var taskList = new List<Task>
+            Task<IEnumerable<Product>> sqlGetAllTask = SqlProducts.GetAll();
+            Task<IEnumerable<Product>> mongoGetAllTask = MongoProducts.GetAll();
+            List<Task> taskList = new List<Task>
             {
                 sqlGetAllTask,
                 mongoGetAllTask
             };
             await Task.WhenAll(taskList);
 
-            var products = ProductMerger.MergeProducts(sqlGetAllTask.Result, mongoGetAllTask.Result);
+            IEnumerable<Product> products = ProductMerger.MergeProducts(sqlGetAllTask.Result, mongoGetAllTask.Result);
             return products;
         }
 
@@ -50,20 +50,20 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>Task with specified Product</returns>
         public async Task<Product> GetProduct(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            var sqlGetTask = SqlProducts.Get(id);
-            var mongoId = ProductMerger.GetMongoId(id);
-            var mongoGetTask = MongoProducts.Get(mongoId);
-            var taskList = new List<Task>
+            Task<Product> sqlGetTask = SqlProducts.Get(id);
+            string mongoId = ProductMerger.GetMongoId(id);
+            Task<Product> mongoGetTask = MongoProducts.Get(mongoId);
+            List<Task> taskList = new List<Task>
             {
                 sqlGetTask,
                 mongoGetTask
             };
             await Task.WhenAll(taskList);
 
-            var product = ProductMerger.MergeProduct(sqlGetTask.Result, mongoGetTask.Result);
+            Product product = ProductMerger.MergeProduct(sqlGetTask.Result, mongoGetTask.Result);
             return product;
         }
 
@@ -74,19 +74,19 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>Product id</returns>
         public async Task<int> AddProduct(Product product)
         {
-            var validator = new EntityNameValidator();
+            EntityNameValidator validator = new EntityNameValidator();
             validator.ValidateAndThrow(product.Name);
-            
+
             product.MongoId = MongoHelper.GenerateMongoId();
-            var sqlAddTask = SqlProducts.Add(product);
-            var taskList = new List<Task> { sqlAddTask };
+            Task<int> sqlAddTask = SqlProducts.Add(product);
+            List<Task> taskList = new List<Task> { sqlAddTask };
             if (product.HasMongoProperties())
             {
                 taskList.Add(MongoProducts.Add(product));
             }
             await Task.WhenAll(taskList);
 
-            var id = sqlAddTask.Result;
+            int id = sqlAddTask.Result;
             return id;
         }
 
@@ -97,12 +97,12 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>Operation success flag</returns>
         public async Task<bool> EditProduct(Product product)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(product.Id);
 
-            var sqlTaskNeeded = product.HasSqlProperties();
-            var mongoTaskNeeded = product.HasMongoProperties();
-            var taskList = new List<Task>();
+            bool sqlTaskNeeded = product.HasSqlProperties();
+            bool mongoTaskNeeded = product.HasMongoProperties();
+            List<Task> taskList = new List<Task>();
             if (sqlTaskNeeded)
             {
                 taskList.Add(SqlProducts.Edit(product));
@@ -119,13 +119,13 @@ namespace GreenShop.Catalog.Services.Products
 
             if (sqlTaskNeeded)
             {
-                var sqlTask = taskList.First(x => x is Task<int>) as Task<int>;
-                var rowsAffected = sqlTask.Result;
+                Task<int> sqlTask = taskList.First(x => x is Task<int>) as Task<int>;
+                int rowsAffected = sqlTask.Result;
                 return rowsAffected == 1;
             }
             if (mongoTaskNeeded)
             {
-                var mongoProduct = await MongoProducts.Get(product.MongoId);
+                Product mongoProduct = await MongoProducts.Get(product.MongoId);
                 return CheckProductUpdated(product, mongoProduct);
             }
             else
@@ -141,34 +141,34 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>Number of rows affected</returns>
         public async Task<bool> DeleteProduct(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            var sqlDeleteTask = SqlProducts.Delete(id);
-            var mongoId = ProductMerger.GetMongoId(id);
-            var mongoDeleteTask = MongoProducts.Delete(mongoId);
-            var taskList = new List<Task>
+            Task<int> sqlDeleteTask = SqlProducts.Delete(id);
+            string mongoId = ProductMerger.GetMongoId(id);
+            Task mongoDeleteTask = MongoProducts.Delete(mongoId);
+            List<Task> taskList = new List<Task>
             {
                 sqlDeleteTask,
                 mongoDeleteTask
             };
             await Task.WhenAll(taskList);
 
-            var rowsAffected = sqlDeleteTask.Result;
-            var success = rowsAffected == 1;
+            int rowsAffected = sqlDeleteTask.Result;
+            bool success = rowsAffected == 1;
             return success;
         }
 
-         /// <summary>
-         /// Compare two Products to have similar Mongo properties
-         /// </summary>
-         /// <param name="expected">Expected Product</param>
-         /// <param name="actual">Actual Product</param>
-         /// <returns>Comparison result</returns>
+        /// <summary>
+        /// Compare two Products to have similar Mongo properties
+        /// </summary>
+        /// <param name="expected">Expected Product</param>
+        /// <param name="actual">Actual Product</param>
+        /// <returns>Comparison result</returns>
         private bool CheckProductUpdated(Product expected, Product actual)
         {
             if (expected.MongoId != actual.MongoId) return false;
-            foreach (var spec in expected.Specifications)
+            foreach (Models.Specifications.Specification spec in expected.Specifications)
             {
                 if (actual.Specifications.Any(s => s.Name != spec.Name ||
                                               s.MaxSelectionAvailable != spec.MaxSelectionAvailable ||

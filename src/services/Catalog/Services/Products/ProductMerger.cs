@@ -1,8 +1,8 @@
-﻿using GreenShop.Catalog.Properties;
+﻿using Dapper;
+using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Properties;
 using GreenShop.Catalog.Services.Products.Interfaces;
-using Common.Configuration.SQL;
-using Common.Models.Products;
-using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +25,9 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>MongoId</returns>
         public string GetMongoId(int id)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var mongoId = context.Query<string>(@"
+                string mongoId = context.Query<string>(@"
                     SELECT [MongoId]
                     FROM [Products]
                     WHERE [Id] = @id
@@ -48,9 +48,9 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>List of merged Products</returns>
         public IEnumerable<Product> MergeProducts(IEnumerable<Product> sqlProducts, IEnumerable<Product> mongoProducts)
         {
-            var products = new List<Product>();
+            List<Product> products = new List<Product>();
 
-            foreach (var sqlProduct in sqlProducts)
+            foreach (Product sqlProduct in sqlProducts)
             {
                 products.Add(MergeProduct(sqlProduct, mongoProducts.FirstOrDefault(x => x.MongoId == sqlProduct.MongoId)));
             }

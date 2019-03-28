@@ -1,9 +1,9 @@
-﻿using GreenShop.Catalog.Services.Comments.Interfaces;
-using Common.Interfaces;
-using Common.Models.Comments;
-using Common.Validatiors;
-using Common.Validatiors.Comments;
+﻿using CommGreenShop.Catalog.Validatiors;
 using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Comments;
+using GreenShop.Catalog.Services.Comments.Interfaces;
+using GreenShop.Catalog.Validators;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,13 +25,13 @@ namespace GreenShop.Catalog.Services.Comments
         /// <returns>True if succeeded</returns>
         public async Task<int> AddComment(Comment comment)
         {
-            var validator = new CommentValidator();
+            CommentValidator validator = new CommentValidator();
             validator.ValidateAndThrow(comment);
 
             EntityNameValidator stringValidator = new EntityNameValidator();
             stringValidator.ValidateAndThrow(comment.Message);
 
-            var id = await Comments.Add(comment);
+            int id = await Comments.Add(comment);
             return id;
         }
 
@@ -42,11 +42,11 @@ namespace GreenShop.Catalog.Services.Comments
         /// <returns>True if succeeded</returns>
         public async Task<bool> DeleteComment(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            var rowsAffected = await Comments.Delete(id);
-            var result = rowsAffected == 1;
+            int rowsAffected = await Comments.Delete(id);
+            bool result = rowsAffected == 1;
             return result;
         }
 
@@ -66,14 +66,14 @@ namespace GreenShop.Catalog.Services.Comments
         /// <returns>True if succeeded</returns>
         public async Task<bool> EditComment(int id, string message)
         {
-            var idValidator = new IdValidator();
+            IdValidator idValidator = new IdValidator();
             idValidator.ValidateAndThrow(id);
 
-            var messageValidator = new CommentMessageValidator();
+            CommentMessageValidator messageValidator = new CommentMessageValidator();
             messageValidator.ValidateAndThrow(message);
 
-            var rowsAffected = await Comments.Edit(id, message);
-            var result = rowsAffected == 1;
+            int rowsAffected = await Comments.Edit(id, message);
+            bool result = rowsAffected == 1;
             return result;
         }
 
@@ -84,10 +84,10 @@ namespace GreenShop.Catalog.Services.Comments
         /// <returns>Task with list of all comments</returns>
         public async Task<IEnumerable<Comment>> GetAllProductComments(int productId)
         {
-            var idValidator = new IdValidator();
+            IdValidator idValidator = new IdValidator();
             idValidator.ValidateAndThrow(productId);
 
-            var comments = await Comments.GetAllParentRelated(productId);
+            IEnumerable<Comment> comments = await Comments.GetAllParentRelated(productId);
             return comments;
         }
 
@@ -98,7 +98,7 @@ namespace GreenShop.Catalog.Services.Comments
         /// <returns>Task with specified Comment</returns>
         public async Task<Comment> GetComment(int id)
         {
-            var validator = new IdValidator();
+            IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
             Comment comment = await Comments.Get(id);

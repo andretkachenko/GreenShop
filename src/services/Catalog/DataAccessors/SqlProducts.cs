@@ -1,9 +1,10 @@
-﻿using Common.Configuration.SQL;
-using Common.Interfaces;
-using Common.Models.Products;
-using Dapper;
+﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Products;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.DataAccessors
@@ -23,9 +24,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAll()
         {
-            using (var context = _sql.Context)
+            using (SqlConnection context = _sql.Context)
             {
-                var products = await context.GetAllAsync<Product>();
+                IEnumerable<Product> products = await context.GetAllAsync<Product>();
 
                 return products;
             }
@@ -38,9 +39,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with specified Product</returns>
         public async Task<Product> Get(int id)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var product = await context.GetAsync<Product>(id);
+                Product product = await context.GetAsync<Product>(id);
 
                 return product;
             }
@@ -53,9 +54,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with specified Category</returns>
         public async Task<int> Add(Product product)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var id = await context.InsertAsync(product);
+                int id = await context.InsertAsync(product);
 
                 return id;
             }
@@ -68,9 +69,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Number of rows affected</returns>
         public async Task<int> Delete(int id)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var affectedRows = await context.ExecuteAsync(@"
+                int affectedRows = await context.ExecuteAsync(@"
                     DELETE
                     FROM [Products]
                     WHERE [Id] = @id
@@ -90,9 +91,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Number of rows affected</returns>
         public async Task<int> Edit(Product product)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var query = @"
+                string query = @"
                     UPDATE [Products]
                     SET
                     ";
@@ -120,7 +121,7 @@ namespace GreenShop.Catalog.DataAccessors
 
                 query += " WHERE [Id] = @id";
 
-                var affectedRows = await context.ExecuteAsync(query, new
+                int affectedRows = await context.ExecuteAsync(query, new
                 {
                     id = product.Id,
                     name = product.Name,

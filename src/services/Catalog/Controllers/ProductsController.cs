@@ -1,5 +1,5 @@
-﻿using GreenShop.Catalog.Services.Products.Interfaces;
-using Common.Models.Products;
+﻿using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Services.Products.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

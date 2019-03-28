@@ -1,4 +1,4 @@
-﻿using Common.Models.Products;
+﻿using GreenShop.Catalog.Models.Products;
 using System.Collections.Generic;
 
 namespace GreenShop.Catalog.Services.Products.Interfaces

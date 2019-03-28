@@ -1,6 +1,6 @@
-﻿using Common.Interfaces;
-using Common.Models.Comments;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Comments;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;

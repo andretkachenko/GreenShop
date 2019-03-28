@@ -1,5 +1,5 @@
-﻿using GreenShop.Catalog.Services.Categories.Interfaces;
-using Common.Models.Categories;
+﻿using GreenShop.Catalog.Models.Categories;
+using GreenShop.Catalog.Services.Categories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

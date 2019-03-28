@@ -1,4 +1,4 @@
-﻿using Common.Models.Categories;
+﻿using GreenShop.Catalog.Models.Categories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

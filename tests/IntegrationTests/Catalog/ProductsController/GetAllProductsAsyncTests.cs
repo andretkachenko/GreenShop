@@ -1,5 +1,5 @@
-﻿using Common.Models.Products;
-using GreenShop.Catalog;
+﻿using GreenShop.Catalog;
+using GreenShop.Catalog.Models.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System.Collections.Generic;

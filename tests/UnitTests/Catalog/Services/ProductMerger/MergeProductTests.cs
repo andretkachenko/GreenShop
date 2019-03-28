@@ -1,12 +1,12 @@
-﻿using Target = GreenShop.Catalog.Services.Products.ProductMerger;
+﻿using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Models.Specifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Common.Configuration.SQL;
 using System;
-using Common.Models.Products;
 using System.Collections.Generic;
-using Common.Models.Specifications;
 using System.Linq;
+using Target = GreenShop.Catalog.Services.Products.ProductMerger;
 
 namespace UnitTests.Catalog.Services.ProductMerger
 {
@@ -26,19 +26,19 @@ namespace UnitTests.Catalog.Services.ProductMerger
         public void ValidSqlProduct_ValidMongoProduct_ReturnValidMergedProduct()
         {
             // Assign
-            var expectedId = 1;
-            var expectedMongoId = "sampleMongoId";
-            var expectedDescription = "sampleDesription";
-            var expectedSpecName = "sampleSpecification";
-            var expectedMaxSelectionAvailable = 1;
-            var expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
-            var validSqlProduct = new Product
+            int expectedId = 1;
+            string expectedMongoId = "sampleMongoId";
+            string expectedDescription = "sampleDesription";
+            string expectedSpecName = "sampleSpecification";
+            int expectedMaxSelectionAvailable = 1;
+            List<string> expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
+            Product validSqlProduct = new Product
             {
                 Id = expectedId,
                 MongoId = expectedMongoId,
                 Description = expectedDescription
             };
-            var validMongoProduct = new Product
+            Product validMongoProduct = new Product
             {
                 MongoId = expectedMongoId,
                 Specifications = new List<Specification>
@@ -53,7 +53,7 @@ namespace UnitTests.Catalog.Services.ProductMerger
             };
 
             // Act
-            var mergedProduct = ProductMerger.MergeProduct(validSqlProduct, validMongoProduct);
+            Product mergedProduct = ProductMerger.MergeProduct(validSqlProduct, validMongoProduct);
 
             // Assert
             Assert.AreEqual(expectedId, mergedProduct.Id);
@@ -72,11 +72,11 @@ namespace UnitTests.Catalog.Services.ProductMerger
         {
             // Assign
             Product invalidSqlProduct = null;
-            var expectedMongoId = "sampleMongoId";
-            var expectedSpecName = "sampleSpecification";
-            var expectedMaxSelectionAvailable = 1;
-            var expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
-            var validMongoProduct = new Product
+            string expectedMongoId = "sampleMongoId";
+            string expectedSpecName = "sampleSpecification";
+            int expectedMaxSelectionAvailable = 1;
+            List<string> expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
+            Product validMongoProduct = new Product
             {
                 MongoId = expectedMongoId,
                 Specifications = new List<Specification>
@@ -99,20 +99,20 @@ namespace UnitTests.Catalog.Services.ProductMerger
         public void ValidProductsWithDifferentMongoIds_ThrowArgumentException()
         {
             // Assign
-            var expectedId = 1;
-            var firstMongoId = "firstMongoId";
-            var secondMongoId = "secondMongoId";
-            var expectedDescription = "sampleDesription";
-            var expectedSpecName = "sampleSpecification";
-            var expectedMaxSelectionAvailable = 1;
-            var expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
-            var validSqlProduct = new Product
+            int expectedId = 1;
+            string firstMongoId = "firstMongoId";
+            string secondMongoId = "secondMongoId";
+            string expectedDescription = "sampleDesription";
+            string expectedSpecName = "sampleSpecification";
+            int expectedMaxSelectionAvailable = 1;
+            List<string> expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
+            Product validSqlProduct = new Product
             {
                 Id = expectedId,
                 MongoId = firstMongoId,
                 Description = expectedDescription
             };
-            var validMongoProduct = new Product
+            Product validMongoProduct = new Product
             {
                 MongoId = secondMongoId,
                 Specifications = new List<Specification>
@@ -134,11 +134,11 @@ namespace UnitTests.Catalog.Services.ProductMerger
         public void ValidSqlProduct_NullMongoProduct_ReturnSameSqlProduct()
         {
             // Assign
-            var expectedId = 1;
-            var expectedMongoId = "sampleMongoId";
-            var expectedDescription = "sampleDesription";
-            var expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
-            var validSqlProduct = new Product
+            int expectedId = 1;
+            string expectedMongoId = "sampleMongoId";
+            string expectedDescription = "sampleDesription";
+            List<string> expectedSpecOptions = new List<string> { "opt1", "opt2", "opt3" };
+            Product validSqlProduct = new Product
             {
                 Id = expectedId,
                 MongoId = expectedMongoId,
@@ -147,7 +147,7 @@ namespace UnitTests.Catalog.Services.ProductMerger
             Product invalidMongoProduct = null;
 
             // Act
-            var actualProduct = ProductMerger.MergeProduct(validSqlProduct, invalidMongoProduct);
+            Product actualProduct = ProductMerger.MergeProduct(validSqlProduct, invalidMongoProduct);
 
             // Assert
             Assert.AreEqual(validSqlProduct, actualProduct);

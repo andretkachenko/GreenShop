@@ -1,10 +1,10 @@
-﻿using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
-using Common.Interfaces;
-using Common.Models.Categories;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
 
 namespace UnitTests.Catalog.Services.CategoriesRepository
 {
@@ -24,14 +24,14 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void ValidId_ReturnsExpectedType()
         {
             // Arrange
-            var id = 1;
+            int id = 1;
 
             CategoriesAccessorStub
                 .Setup(categories => categories.Get(id))
                 .Returns(Task.FromResult(ExpectedValidCategory));
 
             // Act
-            var result = CategoriesRepository.GetCategory(id);
+            Task<Category> result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Category>));
@@ -41,15 +41,15 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void ValidId_ReturnsExpectedCategory()
         {
             // Arrange
-            var id = 1;
+            int id = 1;
 
             CategoriesAccessorStub
                 .Setup(categories => categories.Get(id))
                 .Returns(Task.FromResult(ExpectedValidCategory));
 
             // Act
-            var result = CategoriesRepository.GetCategory(id);
-            var actualCategory = result.GetAwaiter().GetResult();
+            Task<Category> result = CategoriesRepository.GetCategory(id);
+            Category actualCategory = result.GetAwaiter().GetResult();
 
             // Assert
             Assert.AreEqual(actualCategory.Id, ExpectedValidCategory.Id);
@@ -61,14 +61,14 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void InvalidId_ReturnsNull()
         {
             // Arrange
-            var id = 99999;
+            int id = 99999;
 
             CategoriesAccessorStub
                 .Setup(categories => categories.Get(id))
                 .Returns(Task.FromResult(ExpectedInvalidCategory));
 
             // Act
-            var result = CategoriesRepository.GetCategory(id);
+            Task<Category> result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<Category>));
@@ -79,10 +79,10 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void NegativeId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            int id = -1;
 
             // Act
-            var result = CategoriesRepository.GetCategory(id);
+            Task<Category> result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -93,11 +93,11 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         {
             get
             {
-                var id = 1;
-                var name = "TestCategory";
-                var parentId = 2;
+                int id = 1;
+                string name = "TestCategory";
+                int parentId = 2;
 
-                var category = new Category
+                Category category = new Category
                 {
                     Id = id,
                     Name = name,

@@ -1,6 +1,5 @@
-﻿using GreenShop.Catalog.Extensions;
-using Common.Models.Products;
-using Common.Models.Specifications;
+﻿using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Models.Specifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 

@@ -1,13 +1,13 @@
 ﻿using Target = GreenShop.Catalog.Services.Products.ProductsRepository;
 using GreenShop.Catalog.Services.Products.Interfaces;
-using Common.Interfaces;
-using Common.Models.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Common.Models.Specifications;
+using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Specifications;
 
 namespace UnitTests.Catalog.Services.ProductsRepository
 {

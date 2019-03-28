@@ -1,10 +1,10 @@
-﻿using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
-using Common.Interfaces;
-using Common.Models.Categories;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
+using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
 
 namespace UnitTests.Catalog.Services.CategoriesRepository
 {
@@ -24,15 +24,15 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void ValidId_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var expectedResult = true;
+            int id = 1;
+            bool expectedResult = true;
 
             CategoriesAccessorStub
                 .Setup(categories => categories.Delete(id))
                 .Returns(Task.FromResult(1));
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            Task<bool> result = CategoriesRepository.DeleteCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -43,10 +43,10 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void NegativeId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
+            int id = -1;
 
             // Act
-            var result = CategoriesRepository.GetCategory(id);
+            Task<Category> result = CategoriesRepository.GetCategory(id);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -57,15 +57,15 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         public void InvalidId_ReturnsFalse()
         {
             // Arrange
-            var id = 99999;
-            var expectedResult = false;
+            int id = 99999;
+            bool expectedResult = false;
 
             CategoriesAccessorStub
                 .Setup(categories => categories.Delete(id))
                 .Returns(Task.FromResult(0));
 
             // Act
-            var result = CategoriesRepository.DeleteCategory(id);
+            Task<bool> result = CategoriesRepository.DeleteCategory(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

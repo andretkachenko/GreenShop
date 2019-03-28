@@ -1,11 +1,11 @@
-﻿using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
-using Common.Interfaces;
-using Common.Models.Categories;
+﻿using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
 
 namespace UnitTests.Catalog.Services.CategoriesRepository
 {
@@ -30,7 +30,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
                 .Returns(Task.FromResult(ExpectedCategoryList));
 
             // Act
-            var result = Service.GetAllCategories();
+            Task<IEnumerable<Category>> result = Service.GetAllCategories();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<IEnumerable<Category>>));
@@ -45,9 +45,9 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
                 .Returns(Task.FromResult(ExpectedCategoryList));
 
             // Act
-            var result = Service.GetAllCategories();
-            var actualCategory = result.GetAwaiter().GetResult().First();
-            var expectedCategory = ExpectedCategoryList.First();
+            Task<IEnumerable<Category>> result = Service.GetAllCategories();
+            Category actualCategory = result.GetAwaiter().GetResult().First();
+            Category expectedCategory = ExpectedCategoryList.First();
 
             // Assert
             Assert.AreEqual(result.Result.Count(), ExpectedCategoryList.Count());
@@ -60,11 +60,11 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
         {
             get
             {
-                var id = 1;
-                var name = "TestCategory";
-                var parentId = 2;
+                int id = 1;
+                string name = "TestCategory";
+                int parentId = 2;
 
-                var categoriesList = new List<Category>()
+                List<Category> categoriesList = new List<Category>()
                     {
                         new Category
                         {

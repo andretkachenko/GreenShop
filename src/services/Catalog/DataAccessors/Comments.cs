@@ -1,8 +1,8 @@
-﻿using Common.Configuration.SQL;
-using Common.Interfaces;
-using Common.Models.Comments;
-using Dapper;
+﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Comments;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,9 +26,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with Id of the Comment</returns>
         public async Task<int> Add(Comment comment)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var id = await context.InsertAsync(comment);
+                int id = await context.InsertAsync(comment);
                 return id;
             }
         }
@@ -40,9 +40,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with number of deleted rows</returns>
         public async Task<int> Delete(int id)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var query = @"
+                string query = @"
                         DELETE
                         FROM [Comments]
                         WHERE [Id] = @id";
@@ -62,9 +62,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with number of proceeded rows</returns>
         public async Task<int> Edit(int id, string message)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var query = @"
+                string query = @"
                         UPDATE [Comments]
                         SET [Message] = @message
                         WHERE [Id] = @id";
@@ -92,9 +92,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with Comment</returns>
         public async Task<Comment> Get(int id)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var comment = await context.GetAsync<Comment>(id);
+                Comment comment = await context.GetAsync<Comment>(id);
 
                 return comment;
             }
@@ -113,9 +113,9 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with list of comments</returns>
         public async Task<IEnumerable<Comment>> GetAllParentRelated(int productId)
         {
-            using (var context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
             {
-                var comments = await context.QueryAsync<Comment>(@"
+                IEnumerable<Comment> comments = await context.QueryAsync<Comment>(@"
                     SELECT [Id]
                         ,[AuthorId]
                         ,[Message]

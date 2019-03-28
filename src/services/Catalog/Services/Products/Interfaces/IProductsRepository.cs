@@ -1,7 +1,5 @@
-﻿using Common.Models.Products;
-using System;
+﻿using GreenShop.Catalog.Models.Products;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Services.Products.Interfaces
