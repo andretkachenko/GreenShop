@@ -1,7 +1,7 @@
-﻿using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.DTO;
-using Common.Models.Products;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.Comments;
+using GreenShop.Web.Bff.Shopping.Models.DTO;
+using GreenShop.Web.Bff.Shopping.Models.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

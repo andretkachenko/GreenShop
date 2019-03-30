@@ -1,9 +1,8 @@
-﻿using Common.Models.Comments;
+﻿using GreenShop.Web.Bff.Shopping.Models.Comments;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using FluentValidation;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Target = GreenShop.Web.Bff.Shopping.Services.Catalog.CommentService;
 
 namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
@@ -21,31 +20,17 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
         }
 
         [TestMethod]
-        public void NegativeCommentId_ThrowsValidationException()
-        {
-            //Arrange
-            var id = -1;
-
-            //Act
-            var result = CommentService.GetComment(id);
-
-            //Assert
-            Assert.AreEqual(result.Status, TaskStatus.Faulted);
-            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
-        }
-
-        [TestMethod]
         public void ReturnExpectedComment()
         {
             //Arrange
-            var id = 1;
+            int id = 1;
             CommentsAccessorStub
                 .Setup(comments => comments.GetAsync(id))
                 .Returns(Task.FromResult(ExpectedValidComment));
 
             //Act 
-            var result = CommentService.GetComment(id);
-            var comment = result.GetAwaiter().GetResult();
+            Task<Comment> result = CommentService.GetComment(id);
+            Comment comment = result.GetAwaiter().GetResult();
 
             //Assert
             Assert.AreEqual(comment.Id, ExpectedValidComment.Id);
@@ -57,12 +42,12 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
         {
             get
             {
-                var id = 1;
-                var authorId = 1;
-                var parentID = 1;
-                var message = "TestMessage";
+                int id = 1;
+                int authorId = 1;
+                int parentID = 1;
+                string message = "TestMessage";
 
-                var comment = new Comment
+                Comment comment = new Comment
                 {
                     Id = id,
                     AuthorId = authorId,

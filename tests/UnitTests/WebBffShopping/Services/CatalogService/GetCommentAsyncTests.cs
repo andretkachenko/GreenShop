@@ -1,11 +1,10 @@
-﻿using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.Products;
-using FluentValidation;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.Comments;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Target = GreenShop.Web.Bff.Shopping.Services.CatalogService;
 
 namespace UnitTests.WebBffShopping.Services.CatalogService
@@ -24,20 +23,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             ProductsConsumerStub = new Mock<IConsumer<Product>>();
             CommentsConsumerStub = new Mock<ICommentsConsumer>();
             CatalogService = new Target(CategoriesConsumerStub.Object, ProductsConsumerStub.Object, CommentsConsumerStub.Object);
-        }
-
-        [TestMethod]
-        public void NegativeCommentId_ThrowsValidationException()
-        {
-            //Arrange
-            int id = -1;
-
-            //Act
-            Task<Comment> result = CatalogService.GetCommentAsync(id);
-
-            //Assert
-            Assert.AreEqual(result.Status, TaskStatus.Faulted);
-            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
 
         [TestMethod]

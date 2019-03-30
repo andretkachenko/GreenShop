@@ -1,12 +1,12 @@
-﻿using Common.Models.Products;
+﻿using GreenShop.Web.Bff.Shopping.Config;
+using GreenShop.Web.Bff.Shopping.Extensions;
+using GreenShop.Web.Bff.Shopping.Helpers;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.Extensions.Options;
 using RestSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Config;
-using GreenShop.Web.Bff.Shopping.Helpers;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
-using GreenShop.Web.Bff.Shopping.Extensions;
 
 namespace GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers
 {

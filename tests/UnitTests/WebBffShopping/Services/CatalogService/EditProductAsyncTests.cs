@@ -1,10 +1,9 @@
-﻿using Common.Models.Categories;
-using Common.Models.Products;
-using FluentValidation;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Target = GreenShop.Web.Bff.Shopping.Services.CatalogService;
 
 namespace UnitTests.WebBffShopping.Services.CatalogService
@@ -57,35 +56,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
             Assert.AreEqual(expectedResult, result.Result);
-        }
-
-        [TestMethod]
-        public void NegativeProductId_ThrowsValidationException()
-        {
-            // Arrange
-            int id = -1;
-            string name = "RenamedTestProduct";
-            int parentId = 3;
-            string description = "TestDescription";
-            decimal basePrice = 12m;
-            float rating = 4.5f;
-
-            Product product = new Product
-            {
-                Id = id,
-                Name = name,
-                CategoryId = parentId,
-                Description = description,
-                BasePrice = basePrice,
-                Rating = rating
-            };
-
-            // Act
-            Task<bool> result = CatalogService.EditProductAsync(product);
-
-            // Assert
-            Assert.AreEqual(result.Status, TaskStatus.Faulted);
-            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
 
         [TestMethod]

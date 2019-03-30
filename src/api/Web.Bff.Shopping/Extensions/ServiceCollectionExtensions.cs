@@ -1,15 +1,15 @@
-﻿using Common.Models.Categories;
-using Common.Models.Products;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Services;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
-using GreenShop.Web.Bff.Shopping.Services;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
-using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 
 namespace GreenShop.Web.Bff.Shopping.Extensions
 {

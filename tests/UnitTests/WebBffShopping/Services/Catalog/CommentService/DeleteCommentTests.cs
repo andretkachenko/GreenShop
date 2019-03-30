@@ -1,8 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using FluentValidation;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Target = GreenShop.Web.Bff.Shopping.Services.Catalog.CommentService;
 
 namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
@@ -23,15 +22,15 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
         public void ValidComment_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var expectedResult = true;
+            int id = 1;
+            bool expectedResult = true;
 
             CommentsAccessorStub
                 .Setup(Comment => Comment.DeleteAsync(id))
                 .Returns(Task.FromResult(true));
 
             // Act
-            var result = CommentService.DeleteComment(id);
+            Task<bool> result = CommentService.DeleteComment(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -39,32 +38,18 @@ namespace UnitTests.WebBffShopping.Services.Catalog.CommentService
         }
 
         [TestMethod]
-        public void NegativeCommentId_ThrowsValidationException()
-        {
-            // Arrange
-            var id = -1;
-
-            // Act
-            var result = CommentService.DeleteComment(id);
-
-            // Assert
-            Assert.AreEqual(result.Status, TaskStatus.Faulted);
-            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
-        }
-
-        [TestMethod]
         public void InvalidCommentId_ReturnsFalse()
         {
             // Arrange 
-            var id = 99999;
-            var expectedResult = false;
+            int id = 99999;
+            bool expectedResult = false;
 
             CommentsAccessorStub
                 .Setup(comments => comments.DeleteAsync(id))
                 .Returns(Task.FromResult(false));
 
             // Act
-            var result = CommentService.DeleteComment(id);
+            Task<bool> result = CommentService.DeleteComment(id);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

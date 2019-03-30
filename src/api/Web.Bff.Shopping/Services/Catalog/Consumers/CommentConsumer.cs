@@ -1,13 +1,13 @@
-﻿using Common.Models.Comments;
+﻿using GreenShop.Web.Bff.Shopping.Config;
+using GreenShop.Web.Bff.Shopping.Extensions;
+using GreenShop.Web.Bff.Shopping.Helpers;
+using GreenShop.Web.Bff.Shopping.Models.Comments;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.Extensions.Options;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Config;
-using GreenShop.Web.Bff.Shopping.Extensions;
-using GreenShop.Web.Bff.Shopping.Helpers;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 
 namespace GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers
 {
@@ -104,6 +104,6 @@ namespace GreenShop.Web.Bff.Shopping.Services.Catalog.Consumers
             Comment comment = response.Data;
 
             return comment;
-        }        
+        }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Common.Models.Categories;
-using Common.Models.Products;
-using FluentValidation;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Target = GreenShop.Web.Bff.Shopping.Services.CatalogService;
 
 namespace UnitTests.WebBffShopping.Services.CatalogService
@@ -55,25 +54,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<int>));
             Assert.AreEqual(expectedId, result.Result);
-        }
-
-        [TestMethod]
-        public void EmptyName_ThrowsValidationException()
-        {
-            // Arrange
-            string name = "";
-
-            Product product = new Product
-            {
-                Name = name
-            };
-
-            // Act
-            Task<int> result = CatalogService.AddProductAsync(product);
-
-            // Assert
-            Assert.AreEqual(result.Status, TaskStatus.Faulted);
-            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
         }
     }
 }

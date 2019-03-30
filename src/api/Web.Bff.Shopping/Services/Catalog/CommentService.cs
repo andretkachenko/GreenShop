@@ -1,10 +1,7 @@
-﻿using Common.Models.Comments;
-using Common.Validatiors;
-using Common.Validatiors.Comments;
-using FluentValidation;
+﻿using GreenShop.Web.Bff.Shopping.Models.Comments;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 
 namespace GreenShop.Web.Bff.Shopping.Services.Catalog
 {
@@ -24,12 +21,6 @@ namespace GreenShop.Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with Comment Id</returns>
         public async Task<int> AddComment(Comment comment)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(comment.ProductId);      
-
-            EntityNameValidator stringValidator = new EntityNameValidator();
-            stringValidator.ValidateAndThrow(comment.Message);
-
             int result = await _commentConsumer.AddAsync(comment);
 
             return result;
@@ -42,9 +33,6 @@ namespace GreenShop.Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with boolean result</returns>
         public async Task<bool> DeleteComment(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             bool result = await _commentConsumer.DeleteAsync(id);
 
             return result;
@@ -58,12 +46,7 @@ namespace GreenShop.Web.Bff.Shopping.Services.Catalog
         /// <returns>True if succeeded</returns>
         public async Task<bool> EditComment(int id, string message)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
-            EntityNameValidator validationRules = new EntityNameValidator();
-            validationRules.ValidateAndThrow(message);
-            var result = await _commentConsumer.EditAsync(id, message);
+            bool result = await _commentConsumer.EditAsync(id, message);
 
             return result;
         }
@@ -83,9 +66,6 @@ namespace GreenShop.Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with list of comments</returns>
         public async Task<IEnumerable<Comment>> GetAllProductComments(int productID)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(productID);
-
             IEnumerable<Comment> comments = await _commentConsumer.GetAllProductRelatedCommentsAsync(productID);
 
             return comments;
@@ -98,9 +78,6 @@ namespace GreenShop.Web.Bff.Shopping.Services.Catalog
         /// <returns>Task with Comment</returns>
         public async Task<Comment> GetComment(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             Comment comment = await _commentConsumer.GetAsync(id);
 
             return comment;

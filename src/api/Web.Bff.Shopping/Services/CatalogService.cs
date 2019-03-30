@@ -1,14 +1,12 @@
-﻿using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.DTO;
-using Common.Models.Products;
-using Common.Validatiors;
-using FluentValidation;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.Comments;
+using GreenShop.Web.Bff.Shopping.Models.DTO;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
-using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 
 namespace GreenShop.Web.Bff.Shopping.Services
 {
@@ -35,9 +33,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with Category id</returns>
         public async Task<int> AddCategoryAsync(Category category)
         {
-            EntityNameValidator validator = new EntityNameValidator();
-            validator.ValidateAndThrow(category.Name);
-
             int id = await _categoriesConsumer.AddAsync(category);
 
             return id;
@@ -50,9 +45,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with success flag</returns>
         public async Task<bool> DeleteCategoryAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             bool success = await _categoriesConsumer.DeleteAsync(id);
 
             return success;
@@ -65,9 +57,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with success flag</returns>
         public async Task<bool> EditCategoryAsync(Category category)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(category.Id);
-
             bool success = await _categoriesConsumer.EditAsync(category);
 
             return success;
@@ -91,9 +80,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with specified Category</returns>
         public async Task<Category> GetCategoryAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             Category category = await _categoriesConsumer.GetAsync(id);
 
             return category;
@@ -106,9 +92,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Specified Category and list of related Products</returns>
         public async Task<CategoryProductsDTO> GetCategoryWithProductsAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             Task<Category> getCategoryTask = _categoriesConsumer.GetAsync(id);
             Task<IEnumerable<Product>> getAllProductsTask = _productsConsumer.GetAllAsync();
             List<Task> taskList = new List<Task>
@@ -140,9 +123,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with Product id</returns>
         public async Task<int> AddProductAsync(Product product)
         {
-            EntityNameValidator validator = new EntityNameValidator();
-            validator.ValidateAndThrow(product.Name);
-
             int id = await _productsConsumer.AddAsync(product);
             return id;
         }
@@ -154,9 +134,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with success flag</returns>
         public async Task<bool> DeleteProductAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             bool success = await _productsConsumer.DeleteAsync(id);
 
             return success;
@@ -169,9 +146,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with success flag</returns>
         public async Task<bool> EditProductAsync(Product product)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(product.Id);
-
             bool success = await _productsConsumer.EditAsync(product);
 
             return success;
@@ -195,9 +169,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with specified Product</returns>
         public async Task<Product> GetProductAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             Product product = await _productsConsumer.GetAsync(id);
 
             return product;
@@ -210,9 +181,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Specified Product with the related Category</returns>
         public async Task<Product> GetProductWithCategoryAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             Product product = await _productsConsumer.GetAsync(id);
             if (product == null) return product;
             product.Category = await _categoriesConsumer.GetAsync(product.CategoryId);
@@ -229,12 +197,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with Comment Id</returns>
         public async Task<int> AddCommentAsync(Comment comment)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(comment.ProductId);
-
-            EntityNameValidator stringValidator = new EntityNameValidator();
-            stringValidator.ValidateAndThrow(comment.Message);
-
             int result = await _commentsConsumer.AddAsync(comment);
 
             return result;
@@ -247,9 +209,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with boolean result</returns>
         public async Task<bool> DeleteCommentAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             bool result = await _commentsConsumer.DeleteAsync(id);
 
             return result;
@@ -263,12 +222,7 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>True if succeeded</returns>
         public async Task<bool> EditCommentAsync(int id, string message)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
-            EntityNameValidator validationRules = new EntityNameValidator();
-            validationRules.ValidateAndThrow(message);
-            var result = await _commentsConsumer.EditAsync(id, message);
+            bool result = await _commentsConsumer.EditAsync(id, message);
 
             return result;
         }
@@ -288,9 +242,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with list of comments</returns>
         public async Task<IEnumerable<Comment>> GetAllProductCommentsAsync(int productID)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(productID);
-
             IEnumerable<Comment> comments = await _commentsConsumer.GetAllProductRelatedCommentsAsync(productID);
 
             return comments;
@@ -303,9 +254,6 @@ namespace GreenShop.Web.Bff.Shopping.Services
         /// <returns>Task with Comment</returns>
         public async Task<Comment> GetCommentAsync(int id)
         {
-            IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(id);
-
             Comment comment = await _commentsConsumer.GetAsync(id);
 
             return comment;

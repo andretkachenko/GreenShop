@@ -1,14 +1,13 @@
-﻿using Common.Models.Categories;
-using Common.Models.DTO;
-using Common.Models.Products;
-using Common.Models.Specifications;
-using FluentValidation;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.DTO;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Models.Specifications;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Target = GreenShop.Web.Bff.Shopping.Services.CatalogService;
 
 namespace UnitTests.WebBffShopping.Services.CatalogService
@@ -96,7 +95,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             // Assert
             Assert.AreEqual(actualProducts.Count(), ExpectedProductList.Count());
             Assert.AreEqual(actualProduct.Id, expectedProduct.Id);
-            Assert.AreEqual(actualProduct.MongoId, expectedProduct.MongoId);
             Assert.AreEqual(actualProduct.Name, expectedProduct.Name);
             Assert.AreEqual(actualProduct.CategoryId, expectedProduct.CategoryId);
             Assert.AreEqual(actualProduct.Description, expectedProduct.Description);
@@ -150,20 +148,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             Assert.IsTrue(result.Result.Products.Count() == 0);
         }
 
-        [TestMethod]
-        public void NegativeId_ThrowsValidationException()
-        {
-            // Arrange
-            int id = -1;
-
-            // Act
-            Task<CategoryProductsDTO> result = CatalogService.GetCategoryWithProductsAsync(id);
-
-            // Assert
-            Assert.AreEqual(result.Status, TaskStatus.Faulted);
-            Assert.IsInstanceOfType(result.Exception.InnerException, typeof(ValidationException));
-        }
-
         private Category ExpectedValidCategory
         {
             get
@@ -191,7 +175,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             {
                 int id = 1;
                 string name = "TestProduct";
-                string mongoId = "TestMongoId";
                 int categoryId = 1;
                 string description = "TestDescription";
                 decimal basePrice = 12m;
@@ -205,7 +188,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
                         new Product
                         {
                             Id = id,
-                            MongoId = mongoId,
                             Name = name,
                             CategoryId = categoryId,
                             Description = description,

@@ -1,4 +1,4 @@
-﻿using Common.Models.Comments;
+﻿using GreenShop.Web.Bff.Shopping.Models.Comments;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

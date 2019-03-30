@@ -1,6 +1,6 @@
-﻿using Common.Models.Categories;
-using Common.Models.Products;
-using Common.Models.Specifications;
+﻿using GreenShop.Web.Bff.Shopping.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Models.Products;
+using GreenShop.Web.Bff.Shopping.Models.Specifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
@@ -58,7 +58,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             // Assert
             Assert.AreEqual(result.Result.Count(), ExpectedProductList.Count());
             Assert.AreEqual(actualProduct.Id, expectedProduct.Id);
-            Assert.AreEqual(actualProduct.MongoId, expectedProduct.MongoId);
             Assert.AreEqual(actualProduct.Name, expectedProduct.Name);
             Assert.AreEqual(actualProduct.CategoryId, expectedProduct.CategoryId);
             Assert.AreEqual(actualProduct.Description, expectedProduct.Description);
@@ -76,7 +75,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
             {
                 int id = 1;
                 string name = "TestProduct";
-                string mongoId = "TestMongoId";
                 int parentId = 3;
                 string description = "TestDescription";
                 decimal basePrice = 12m;
@@ -90,7 +88,6 @@ namespace UnitTests.WebBffShopping.Services.CatalogService
                         new Product
                         {
                             Id = id,
-                            MongoId = mongoId,
                             Name = name,
                             CategoryId = parentId,
                             Description = description,
