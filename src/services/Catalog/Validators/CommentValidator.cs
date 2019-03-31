@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using GreenShop.Catalog.Models.Comments;
 
-namespace CommGreenShop.Catalog.Validatiors
+namespace GreenShop.Catalog.Validators
 {
     public class CommentValidator : AbstractValidator<Comment>
     {

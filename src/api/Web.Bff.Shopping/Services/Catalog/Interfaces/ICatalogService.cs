@@ -5,7 +5,7 @@ using GreenShop.Web.Bff.Shopping.Models.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GreenShop.Web.Bff.Shopping.Services.Interfaces
+namespace GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces
 {
     public interface ICatalogService
     {

@@ -2,7 +2,7 @@
 using GreenShop.Web.Bff.Shopping.Models.Comments;
 using GreenShop.Web.Bff.Shopping.Models.DTO;
 using GreenShop.Web.Bff.Shopping.Models.Products;
-using GreenShop.Web.Bff.Shopping.Services.Interfaces;
+using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

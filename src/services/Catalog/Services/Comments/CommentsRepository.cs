@@ -1,5 +1,4 @@
-﻿using CommGreenShop.Catalog.Validatiors;
-using FluentValidation;
+﻿using FluentValidation;
 using GreenShop.Catalog.DataAccessors.Interfaces;
 using GreenShop.Catalog.Models.Comments;
 using GreenShop.Catalog.Services.Comments.Interfaces;

@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 
-namespace GreenShop.Catalog.Config.Interfaces
+namespace GreenShop.Catalog.Config
 {
     /// <summary>
     /// Abstract class, describing basic logic for SqlContext.

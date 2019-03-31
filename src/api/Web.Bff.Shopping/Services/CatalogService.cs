@@ -3,7 +3,6 @@ using GreenShop.Web.Bff.Shopping.Models.Comments;
 using GreenShop.Web.Bff.Shopping.Models.DTO;
 using GreenShop.Web.Bff.Shopping.Models.Products;
 using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
-using GreenShop.Web.Bff.Shopping.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
