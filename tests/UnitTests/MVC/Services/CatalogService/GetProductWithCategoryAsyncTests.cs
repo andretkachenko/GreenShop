@@ -1,7 +1,7 @@
-﻿using Common.Models.Categories;
-using Common.Models.Products;
-using Common.Models.Specifications;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.MVC.Models.Categories;
+using GreenShop.MVC.Models.Products;
+using GreenShop.MVC.Models.Specifications;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -56,7 +56,6 @@ namespace UnitTests.MVC.Services.CatalogService
 
             // Assert
             Assert.AreEqual(ExpectedValidProduct.Id, result.Id);
-            Assert.AreEqual(ExpectedValidProduct.MongoId, result.MongoId);
             Assert.AreEqual(ExpectedValidProduct.Name, result.Name);
             Assert.AreEqual(ExpectedValidProduct.CategoryId, result.CategoryId);
             Assert.AreEqual(ExpectedValidProduct.Description, result.Description);
@@ -92,7 +91,7 @@ namespace UnitTests.MVC.Services.CatalogService
         {
             // Arrange
             int id = 1;
-            var expectedProduct = ExpectedValidProduct;
+            Product expectedProduct = ExpectedValidProduct;
             expectedProduct.Category = ExpectedInvalidCategory;
 
             CatalogConsumerStub

@@ -1,10 +1,8 @@
-﻿using Common.Models.Comments;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.MVC.Models.Comments;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Target = GreenShop.MVC.Services.CatalogService;
 

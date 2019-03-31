@@ -1,4 +1,4 @@
-﻿using Common.Models.Categories;
+﻿using GreenShop.MVC.Models.Categories;
 using System.Collections.Generic;
 
 namespace GreenShop.MVC.ViewModels.Catalog

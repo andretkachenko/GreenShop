@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\api\Web.Bff.Shopping\Web.Bff.Shopping.csproj" />
-    <ProjectReference Include="..\..\src\Common\Common.csproj" />
     <ProjectReference Include="..\..\src\services\Catalog\Catalog.csproj" />
     <ProjectReference Include="..\..\src\web\MVC\MVC.csproj" />
   </ItemGroup>

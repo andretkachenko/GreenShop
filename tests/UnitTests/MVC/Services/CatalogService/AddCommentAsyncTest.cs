@@ -1,5 +1,5 @@
-﻿using Common.Models.Comments;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.MVC.Models.Comments;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

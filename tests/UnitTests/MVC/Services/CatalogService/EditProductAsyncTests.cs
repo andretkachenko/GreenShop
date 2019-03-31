@@ -1,5 +1,5 @@
-﻿using Common.Models.Products;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.MVC.Models.Products;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

@@ -1,4 +1,4 @@
-﻿using Common.Models.Comments;
+﻿using GreenShop.Web.Bff.Shopping.Models.Comments;
 using GreenShop.Web.Bff.Shopping.Services.Catalog.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

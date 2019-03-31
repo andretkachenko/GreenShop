@@ -1,12 +1,11 @@
-﻿using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.DTO;
-using Common.Models.Products;
+﻿using GreenShop.MVC.Models.Categories;
+using GreenShop.MVC.Models.Comments;
+using GreenShop.MVC.Models.DTO;
+using GreenShop.MVC.Models.Products;
 using GreenShop.MVC.Services.Interfaces;
 using GreenShop.MVC.ViewModels.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GreenShop.MVC.Controllers

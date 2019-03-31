@@ -1,5 +1,5 @@
-﻿using Common.Models.Comments;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.MVC.Models.Comments;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -82,7 +82,7 @@ namespace UnitTests.MVC.Services.CatalogService
             };
 
             //Act
-            var result = _catalogService.EditCommentAsync(comment);
+            Task<bool> result = _catalogService.EditCommentAsync(comment);
 
             //Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);

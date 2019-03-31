@@ -1,10 +1,10 @@
-﻿using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.DTO;
-using Common.Models.Products;
-using Common.Validatiors;
-using FluentValidation;
+﻿using FluentValidation;
+using GreenShop.MVC.Models.Categories;
+using GreenShop.MVC.Models.Comments;
+using GreenShop.MVC.Models.DTO;
+using GreenShop.MVC.Models.Products;
 using GreenShop.MVC.Services.Interfaces;
+using GreenShop.MVC.Validators;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-﻿using Common.Models.Categories;
+﻿using GreenShop.MVC.Models.Categories;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

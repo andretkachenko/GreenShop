@@ -1,5 +1,5 @@
-﻿using Common.Models.Products;
-using Common.Models.Specifications;
+﻿using GreenShop.MVC.Models.Products;
+using GreenShop.MVC.Models.Specifications;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -53,7 +53,6 @@ namespace UnitTests.MVC.Services.CatalogService
             // Assert
             Assert.AreEqual(result.Result.Count(), ExpectedProductList.Count());
             Assert.AreEqual(actualProduct.Id, expectedProduct.Id);
-            Assert.AreEqual(actualProduct.MongoId, expectedProduct.MongoId);
             Assert.AreEqual(actualProduct.Name, expectedProduct.Name);
             Assert.AreEqual(actualProduct.CategoryId, expectedProduct.CategoryId);
             Assert.AreEqual(actualProduct.Description, expectedProduct.Description);
@@ -71,7 +70,6 @@ namespace UnitTests.MVC.Services.CatalogService
             {
                 int id = 1;
                 string name = "TestProduct";
-                string mongoId = "TestMongoId";
                 int parentId = 3;
                 string description = "TestDescription";
                 decimal basePrice = 12m;
@@ -85,7 +83,6 @@ namespace UnitTests.MVC.Services.CatalogService
                         new Product
                         {
                             Id = id,
-                            MongoId = mongoId,
                             Name = name,
                             CategoryId = parentId,
                             Description = description,

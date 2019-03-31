@@ -1,4 +1,4 @@
-﻿using Common.Models.Entity.Interfaces;
+﻿using GreenShop.MVC.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,6 +1,4 @@
-﻿using Common.Models.Comments;
-using Common.Models.Products;
-using System.Collections.Generic;
+﻿using GreenShop.MVC.Models.Products;
 
 namespace GreenShop.MVC.ViewModels.Catalog
 {

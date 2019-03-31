@@ -1,10 +1,10 @@
-﻿using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.DTO;
-using Common.Models.Products;
-using GreenShop.MVC.Config;
+﻿using GreenShop.MVC.Config;
 using GreenShop.MVC.Extensions;
 using GreenShop.MVC.Helpers;
+using GreenShop.MVC.Models.Categories;
+using GreenShop.MVC.Models.Comments;
+using GreenShop.MVC.Models.DTO;
+using GreenShop.MVC.Models.Products;
 using GreenShop.MVC.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using RestSharp;

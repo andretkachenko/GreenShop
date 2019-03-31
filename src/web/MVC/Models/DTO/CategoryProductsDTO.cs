@@ -2,11 +2,11 @@
 using GreenShop.MVC.Models.Products;
 using System.Collections.Generic;
 
-namespace GreenShop.MVC.ViewModels.Catalog
+namespace GreenShop.MVC.Models.DTO
 {
-    public class CategoryViewModel
+    public class CategoryProductsDTO
     {
         public Category Category { get; set; }
-        public IEnumerable<Product> Products { get; set; }
+        public List<Product> Products { get; set; }
     }
 }

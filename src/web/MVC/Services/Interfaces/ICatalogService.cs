@@ -1,7 +1,7 @@
-﻿using Common.Models.Categories;
-using Common.Models.Comments;
-using Common.Models.DTO;
-using Common.Models.Products;
+﻿using GreenShop.MVC.Models.Categories;
+using GreenShop.MVC.Models.Comments;
+using GreenShop.MVC.Models.DTO;
+using GreenShop.MVC.Models.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

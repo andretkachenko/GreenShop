@@ -1,5 +1,4 @@
-﻿using Common.Models.Products;
-using System;
+﻿using GreenShop.MVC.Models.Products;
 
 namespace IntegrationTests.Catalog
 {
@@ -10,7 +9,6 @@ namespace IntegrationTests.Catalog
             dbContext.Products.Add(new Product
             {
                 Id = 1,
-                MongoId = Guid.NewGuid().ToString(),
                 BasePrice = 10,
                 CategoryId = 1,
                 Description = "First Integration Product Description",
@@ -20,7 +18,6 @@ namespace IntegrationTests.Catalog
             dbContext.Products.Add(new Product
             {
                 Id = 2,
-                MongoId = Guid.NewGuid().ToString(),
                 BasePrice = 8,
                 CategoryId = 2,
                 Description = "Second Integration Product Description",

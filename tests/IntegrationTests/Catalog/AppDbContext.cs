@@ -1,5 +1,4 @@
-﻿using Common.Models.Categories;
-using Common.Models.Products;
+﻿using GreenShop.MVC.Models.Products;
 using Microsoft.EntityFrameworkCore;
 
 namespace IntegrationTests.Catalog
