@@ -17,11 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{D408927A-653
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Bff.Shopping", "src\api\Web.Bff.Shopping\Web.Bff.Shopping.csproj", "{9765A47C-E3B1-48BE-94C0-7B2BEFC94A44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "src\Common\Common.csproj", "{38F566A8-987D-4FC6-8FC5-1C032856592C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{5C7DD061-8E0A-4ED1-93BC-5C0CD47AE438}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{81F7B1BC-6A49-45AE-A0FF-F5F8E9EB92F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{81F7B1BC-6A49-45AE-A0FF-F5F8E9EB92F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +39,6 @@ Global
 		{9765A47C-E3B1-48BE-94C0-7B2BEFC94A44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9765A47C-E3B1-48BE-94C0-7B2BEFC94A44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9765A47C-E3B1-48BE-94C0-7B2BEFC94A44}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38F566A8-987D-4FC6-8FC5-1C032856592C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38F566A8-987D-4FC6-8FC5-1C032856592C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38F566A8-987D-4FC6-8FC5-1C032856592C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38F566A8-987D-4FC6-8FC5-1C032856592C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C7DD061-8E0A-4ED1-93BC-5C0CD47AE438}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5C7DD061-8E0A-4ED1-93BC-5C0CD47AE438}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C7DD061-8E0A-4ED1-93BC-5C0CD47AE438}.Release|Any CPU.ActiveCfg = Release|Any CPU
