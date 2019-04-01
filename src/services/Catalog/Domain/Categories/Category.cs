@@ -1,16 +1,15 @@
 ﻿using Dapper.Contrib.Extensions;
+using System;
 
 namespace GreenShop.Catalog.Models.Categories
 {
     [Table("Categories")]
-    public class Category : ICategory
+    public class Category : IAggregate
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
-
-        public int ParentCategoryId { get; set; }
-        
+        public Guid ParentCategoryId { get; set; }        
         [Write(false)]
-        public ICategory SubCategory { get; set; }
+        public Category SubCategory { get; set; }
     }
 }
