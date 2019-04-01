@@ -39,9 +39,7 @@ namespace GreenShop.Catalog.Models.Products
 
         [BsonIgnore]
         public Guid CategoryId { get; protected set; }
-
-        [Write(false), BsonIgnore]
-        public Category Category { get; set; }
+        
         [Write(false), JsonIgnore, BsonIgnore]
         public IEnumerable<Comment> Comments { get; set; }
         [BsonElement("specifications"), Write(false)]
