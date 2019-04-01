@@ -1,7 +1,9 @@
-﻿namespace GreenShop.Catalog.Models
+﻿using System;
+
+namespace GreenShop.Catalog.Models
 {
-    public interface IIdentifiable
+    public interface IAggregate
     {
-        int Id { get; }
+        Guid Id { get; }
     }
 }

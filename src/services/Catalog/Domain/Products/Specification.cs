@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 namespace GreenShop.Catalog.Models.Specifications
 {
-    public class Specification : ISpecification
+    public class Specification
     {
         [BsonElement("name")]
         public string Name { get; set; }
-
         [BsonElement("max_selection_available")]
         public int MaxSelectionAvailable { get; set; }
         [BsonElement("options")]
