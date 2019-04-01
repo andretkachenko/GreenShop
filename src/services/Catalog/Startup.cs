@@ -1,4 +1,17 @@
-﻿using GreenShop.Catalog.Extensions;
+﻿using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.DataAccessor;
+using GreenShop.Catalog.DataAccessors;
+using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Models.Categories;
+using GreenShop.Catalog.Models.Comments;
+using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Services.Categories;
+using GreenShop.Catalog.Services.Categories.Interfaces;
+using GreenShop.Catalog.Services.Comments;
+using GreenShop.Catalog.Services.Comments.Interfaces;
+using GreenShop.Catalog.Services.Products;
+using GreenShop.Catalog.Services.Products.Interfaces;
+using GreenShop.Catalog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +38,7 @@ namespace GreenShop.Catalog
             services.AddSingleton(Configuration);
 
             // Dependency injection block
-            services.InjectDependencies();
+            InjectDependencies(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +55,57 @@ namespace GreenShop.Catalog
 
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        /// <summary>
+        /// Distinct Dependency Injection Block.
+        /// </summary>
+        /// <param name="services">Service Collection to inject dependencies into.</param>
+        private void InjectDependencies(IServiceCollection services)
+        {
+            RegisterSingletones(services);
+            RegisterScoped(services);
+            RegisterTransient(services);
+        }
+
+        /// <summary>
+        /// Method that registers all Singleton-type dependencies
+        /// <para>Singleton objects are the same for every object and every request.</para>
+        /// </summary>
+        /// <param name="services">Service Collection to inject dependencies into.</param>
+        private void RegisterSingletones(IServiceCollection services)
+        {
+            services.AddSingleton<IMongoContext, MongoContext>();
+            services.AddSingleton<ISqlContext, SqlContext>();
+
+            services.AddSingleton<ISqlDataAccessor<Category>, Categories>();
+            services.AddSingleton<ISqlDataAccessor<Product>, SqlProducts>();
+            services.AddSingleton<ISqlChildDataAccessor<Comment>, Comments>();
+            services.AddSingleton<IProductMerger, ProductMerger>();
+        }
+
+
+        /// <summary>
+        /// Method that registers all Scoped-type dependencies
+        /// <para>Scoped objects are the same within a request, but different across different requests.</para>
+        /// </summary>
+        /// <param name="services">Service Collection to inject dependencies into.</param>
+        private void RegisterScoped(IServiceCollection services)
+        {
+            services.AddScoped<IMongoDataAccessor<Product>, MongoProducts>();
+        }
+
+
+        /// <summary>
+        /// Method that registers all Transient-type dependencies.
+        /// <para>Transient objects are provided as a new instance to every controller and every service.</para>
+        /// </summary>
+        /// <param name="services">Service Collection to inject dependencies into.</param>
+        private void RegisterTransient(IServiceCollection services)
+        {
+            services.AddTransient<ICategoriesRepository, CategoriesRepository>();
+            services.AddTransient<IProductsRepository, ProductsRepository>();
+            services.AddTransient<ICommentsRepository, CommentsRepository>();
         }
     }
 }
