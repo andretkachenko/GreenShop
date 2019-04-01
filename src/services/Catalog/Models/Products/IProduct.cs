@@ -7,12 +7,12 @@ namespace GreenShop.Catalog.Models.Products
 {
     public interface IProduct : IEntity, IIdentifiable
     {
-        string MongoId { get; set; }
-        string Description { get; set; }
+        string MongoId { get; }
+        string Description { get; }
 
-        decimal BasePrice { get; set; }
-        float Rating { get; set; }
-        int CategoryId { get; set; }
+        decimal BasePrice { get; }
+        float Rating { get; }
+        int CategoryId { get; }
 
         Category Category { get; set; }
         IEnumerable<IComment> Comments { get; set; }
