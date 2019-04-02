@@ -24,7 +24,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAll()
         {
-            using (SqlConnection context = _sql.Context)
+            using (SqlConnection context = _sql.Connection)
             {
                 IEnumerable<Product> products = await context.GetAllAsync<Product>();
 
@@ -39,7 +39,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with specified Product</returns>
         public async Task<Product> Get(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 Product product = await context.GetAsync<Product>(id);
 
@@ -54,7 +54,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with specified Category</returns>
         public async Task<int> Add(Product product)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 int id = await context.InsertAsync(product);
 
@@ -69,7 +69,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Number of rows affected</returns>
         public async Task<int> Delete(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 int affectedRows = await context.ExecuteAsync(@"
                     DELETE
@@ -91,7 +91,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Number of rows affected</returns>
         public async Task<int> Edit(Product product)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 string query = @"
                     UPDATE [Products]

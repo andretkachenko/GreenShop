@@ -1,9 +1,10 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 
 namespace GreenShop.Catalog.Config.Interfaces
 {
-    public interface ISqlContext
+    public interface ISqlContext : IDisposable
     {
-        SqlConnection Context { get; }
+        SqlConnection Connection { get; }
     }
 }

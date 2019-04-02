@@ -26,7 +26,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with Id of the Comment</returns>
         public async Task<int> Add(Comment comment)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 int id = await context.InsertAsync(comment);
                 return id;
@@ -40,7 +40,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with number of deleted rows</returns>
         public async Task<int> Delete(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 string query = @"
                         DELETE
@@ -62,7 +62,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with number of proceeded rows</returns>
         public async Task<int> Edit(int id, string message)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 string query = @"
                         UPDATE [Comments]
@@ -92,7 +92,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with Comment</returns>
         public async Task<Comment> Get(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 Comment comment = await context.GetAsync<Comment>(id);
 
@@ -113,7 +113,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <returns>Task with list of comments</returns>
         public async Task<IEnumerable<Comment>> GetAllParentRelated(int productId)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 IEnumerable<Comment> comments = await context.QueryAsync<Comment>(@"
                     SELECT [Id]

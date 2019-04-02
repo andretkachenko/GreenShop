@@ -25,7 +25,7 @@ namespace GreenShop.Catalog.Services.Products
         /// <returns>MongoId</returns>
         public string GetMongoId(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 string mongoId = context.Query<string>(@"
                     SELECT [MongoId]

@@ -23,7 +23,7 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAll()
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 IEnumerable<Category> categories = await context.GetAllAsync<Category>();
 
@@ -38,7 +38,7 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Task with specified Category</returns>
         public async Task<Category> Get(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 Category category = await context.GetAsync<Category>(id);
 
@@ -53,7 +53,7 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Category Id</returns>
         public async Task<int> Add(Category category)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 int id = await context.InsertAsync(category);
 
@@ -68,7 +68,7 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<int> Delete(int id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 int affectedRows = await context.ExecuteAsync(@"
                     DELETE
@@ -90,7 +90,7 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<int> Edit(Category category)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Context)
+            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {
                 string query = @"
                     UPDATE [Categories]
