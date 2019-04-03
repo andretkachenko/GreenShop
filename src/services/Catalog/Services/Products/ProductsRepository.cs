@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using GreenShop.Catalog.DataAccessors.Interfaces;
-using GreenShop.Catalog.Extensions;
 using GreenShop.Catalog.Helpers;
 using GreenShop.Catalog.Models.Products;
 using GreenShop.Catalog.Services.Products.Interfaces;

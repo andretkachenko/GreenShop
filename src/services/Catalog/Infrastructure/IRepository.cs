@@ -11,10 +11,10 @@ namespace GreenShop.Catalog.Infrastructure
 
         void SetTransaction(IDbTransaction transaction);
 
-        Task<IEnumerable<TAggregate>> GetAll();
-        Task<TAggregate> Get(string id);
-        Task<bool> Delete(string id);
-        Task<bool> Add(TAggregate entity);
-        Task<bool> Edit(TAggregate entity);
+        Task<IEnumerable<TAggregate>> GetAllAsync();
+        Task<TAggregate> GetAsync(string id);
+        Task<bool> DeleteAsync(string id);
+        Task<int> CreateAsync(TAggregate entity);
+        Task<bool> UpdateAsync(TAggregate entity);
     }
 }
