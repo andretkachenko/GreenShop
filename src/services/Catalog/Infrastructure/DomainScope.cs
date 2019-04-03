@@ -11,8 +11,9 @@ namespace GreenShop.Catalog.Infrastructure
     {
         private ISqlContext SqlContext;
         private readonly IMongoContext MongoContext;
-        private IDbTransaction _sqlTransaction;
-        public IRepository<Product> ProductsRepository {get; private set; }
+        private IDbTransaction SqlTransaction;
+        private IClientSessionHandle MongoSession;
+        public IRepository<Product> ProductsRepository { get; private set; }
         public IRepository<Category> CategoriesRepository { get; private set; }
         private bool _disposed = false;
 
@@ -30,23 +31,25 @@ namespace GreenShop.Catalog.Infrastructure
         public void Begin()
         {
             SqlContext.Connection.Open();
-            _sqlTransaction = SqlContext.Connection.BeginTransaction();
+            SqlTransaction = SqlContext.Connection.BeginTransaction();
 
-            IClientSessionHandle mongoSession = MongoContext.Client.StartSession();
-            mongoSession.StartTransaction();
+            MongoSession = MongoContext.Client.StartSession();
+            MongoSession.StartTransaction();
 
-            ProductsRepository.SetTransaction(_sqlTransaction);
-            CategoriesRepository.SetTransaction(_sqlTransaction);
+            ProductsRepository.SetSqlTransaction(SqlTransaction);
+            CategoriesRepository.SetSqlTransaction(SqlTransaction);
         }
 
         public void Commit()
         {
-            _sqlTransaction.Commit();
+            SqlTransaction.Commit();
+            MongoSession.CommitTransactionAsync();
         }
 
         public void Rollback()
         {
-            _sqlTransaction.Rollback();
+            SqlTransaction.Rollback();
+            MongoSession.AbortTransactionAsync();
         }
 
         public void Dispose()
@@ -61,10 +64,10 @@ namespace GreenShop.Catalog.Infrastructure
             {
                 if (disposing)
                 {
-                    if (_sqlTransaction != null)
+                    if (SqlTransaction != null)
                     {
-                        _sqlTransaction.Dispose();
-                        _sqlTransaction = null;
+                        SqlTransaction.Dispose();
+                        SqlTransaction = null;
                     }
                     if (SqlContext != null)
                     {

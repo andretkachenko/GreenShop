@@ -80,6 +80,15 @@ namespace GreenShop.Catalog.Models.Products
         {
             CategoryId = newCategoryId;
         }
+
+        /// <summary>
+        /// Set id that was assigned to the product in the MongoDB
+        /// </summary>
+        /// <param name="id">Bson ObjectID that identifies product</param>
+        public void SetMongoId(string id)
+        {
+            MongoId = id;
+        }
         
         /// <summary>
         /// Check if specified Product has any properties filled, that are stored in MongoDB
