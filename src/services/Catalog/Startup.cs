@@ -2,6 +2,9 @@
 using GreenShop.Catalog.DataAccessor;
 using GreenShop.Catalog.DataAccessors;
 using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Infrastructure;
+using GreenShop.Catalog.Infrastructure.Products;
+using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using GreenShop.Catalog.Models.Categories;
 using GreenShop.Catalog.Models.Comments;
 using GreenShop.Catalog.Models.Products;
@@ -9,8 +12,6 @@ using GreenShop.Catalog.Services.Categories;
 using GreenShop.Catalog.Services.Categories.Interfaces;
 using GreenShop.Catalog.Services.Comments;
 using GreenShop.Catalog.Services.Comments.Interfaces;
-using GreenShop.Catalog.Services.Products;
-using GreenShop.Catalog.Services.Products.Interfaces;
 using GreenShop.Catalog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -79,9 +80,7 @@ namespace GreenShop.Catalog
             services.AddSingleton<ISqlContext, SqlContext>();
 
             services.AddSingleton<ISqlDataAccessor<Category>, Categories>();
-            services.AddSingleton<ISqlDataAccessor<Product>, SqlProducts>();
             services.AddSingleton<ISqlChildDataAccessor<Comment>, Comments>();
-            services.AddSingleton<IProductMerger, ProductMerger>();
         }
 
 
@@ -92,7 +91,9 @@ namespace GreenShop.Catalog
         /// <param name="services">Service Collection to inject dependencies into.</param>
         private void RegisterScoped(IServiceCollection services)
         {
-            services.AddScoped<IMongoDataAccessor<Product>, MongoProducts>();
+            services.AddScoped<IMongoProducts, MongoProducts>();
+            services.AddScoped<ISqlProducts, SqlProducts>();
+            services.AddScoped<IUnitOfWork, DomainScope>();
         }
 
 
@@ -104,7 +105,7 @@ namespace GreenShop.Catalog
         private void RegisterTransient(IServiceCollection services)
         {
             services.AddTransient<ICategoriesRepository, CategoriesRepository>();
-            services.AddTransient<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddTransient<ICommentsRepository, CommentsRepository>();
         }
     }

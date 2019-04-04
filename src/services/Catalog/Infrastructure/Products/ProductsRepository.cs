@@ -5,40 +5,50 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Dapper.Contrib.Extensions;
+using FluentValidation;
 using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.Helpers;
+using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using GreenShop.Catalog.Models.Products;
 using GreenShop.Catalog.Properties;
+using GreenShop.Catalog.Validators;
 using MongoDB.Driver;
 
 namespace GreenShop.Catalog.Infrastructure.Products
 {
-    public class ProductsRepository : IRepository<Product>
+    public class ProductRepository : IRepository<Product>
     {
+        private ISqlProducts SqlProducts;
+        private IMongoProducts MongoProducts;
         private ISqlContext SqlContext;
         private readonly IMongoContext MongoContext;
         private IMongoCollection<Product> MongoCollection => MongoContext.Database.GetCollection<Product>(Resources.Products);
         public IDbTransaction Transaction { get; private set; }
 
-        public ProductsRepository(ISqlContext sqlContext, IMongoContext mongoContext)
+        public ProductRepository(ISqlContext sqlContext, 
+            IMongoContext mongoContext,
+            ISqlProducts sqlProducts,
+            IMongoProducts mongoProducts)
         {
             SqlContext = sqlContext;
             MongoContext = mongoContext;
+            SqlProducts = sqlProducts;
+            MongoProducts = mongoProducts;
         }
 
-        public void SetTransaction(IDbTransaction transaction)
+        public void SetSqlTransaction(IDbTransaction transaction)
         {
             Transaction = transaction;
         }
         
         /// <summary>
-        /// Asynchronously get all Products
+        /// Asynchronously gets all Products
         /// </summary>
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            Task<IEnumerable<Product>> sqlGetAllTask = SqlProducts.GetAll();
-            Task<IEnumerable<Product>> mongoGetAllTask = MongoProducts.GetAll();
+            Task<IEnumerable<Product>> sqlGetAllTask = SqlProducts.GetAllAsync();
+            Task<IEnumerable<Product>> mongoGetAllTask = MongoProducts.GetAllAsync();
             List<Task> taskList = new List<Task>
             {
                 sqlGetAllTask,
@@ -48,107 +58,137 @@ namespace GreenShop.Catalog.Infrastructure.Products
 
             IEnumerable<Product> products = MergeProducts(sqlGetAllTask.Result, mongoGetAllTask.Result);
             return products;
-
-            using (SqlConnection context = SqlContext.Connection)
-            {
-                IEnumerable<Product> products = await context.GetAllAsync<Product>();
-
-                return products;
-            }
         }
-        
+
         /// <summary>
-        /// Asynchronously get Product with the specific id
+        /// Asynchronously gets Product with the specific id
         /// </summary>
         /// <param name="id">Id of the Product to get</param>
         /// <returns>Task with specified Product</returns>
         public async Task<Product> GetAsync(string id)
         {
-            using (SqlConnection context = SqlContext.Connection)
-            {
-                Product product = await context.GetAsync<Product>(id);
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(Guid.Parse(id));
 
-                return product;
-            }
+            Task<Product> sqlGetTask = SqlProducts.GetAsync(id);
+            string mongoId = GetMongoId(id);
+            Task<Product> mongoGetTask = MongoProducts.GetAsync(mongoId);
+            List<Task> taskList = new List<Task>
+            {
+                sqlGetTask,
+                mongoGetTask
+            };
+            await Task.WhenAll(taskList);
+
+            Product product = MergeProduct(sqlGetTask.Result, mongoGetTask.Result);
+            return product;
         }
-        
+
         /// <summary>
-        /// Asynchronously create Product
+        /// Asynchronously adds Product
         /// </summary>
         /// <param name="product">Product to add</param>
-        /// <returns>Task with specified Product</returns>
-        public async Task<int> CreateAsync(Product product)
+        /// <returns>Product id</returns>
+        public async Task<bool> CreateAsync(Product product)
         {
-            using (SqlConnection context = SqlContext.Connection)
-            {
-                int id = await context.InsertAsync(product, transaction: Transaction);
+            EntityNameValidator validator = new EntityNameValidator();
+            validator.ValidateAndThrow(product.Name);
 
-                return id;
+            product.SetMongoId(MongoHelper.GenerateMongoId());
+            Task<bool> sqlAddTask = SqlProducts.CreateAsync(product);
+            List<Task<bool>> taskList = new List<Task<bool>> { sqlAddTask };
+            if (product.HasMongoProperties())
+            {
+                taskList.Add(MongoProducts.CreateAsync(product));
             }
+            await Task.WhenAll(taskList);
+            return taskList.All(x => x.Result);
         }
 
-        public async Task<bool> DeleteAsync(string id)
-        {
-            using (SqlConnection context = SqlContext.Connection)
-            {
-                int affectedRows = await context.ExecuteAsync(@"
-                    DELETE
-                    FROM [Products]
-                    WHERE [Id] = @id
-                ", new
-                {
-                    id
-                }, transaction: Transaction);
-
-                return affectedRows == 1;
-            }
-        }
-
+        /// <summary>
+        /// Asynchronously edits specified Product
+        /// </summary>
+        /// <param name="product">Product, that contains id of entity that should be changed, and all changed values</param>
+        /// <returns>Operation success flag</returns>
         public async Task<bool> UpdateAsync(Product product)
         {
-            using (SqlConnection context = SqlContext.Connection)
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(product.Id);
+
+            bool sqlTaskNeeded = product.HasSqlProperties();
+            bool mongoTaskNeeded = product.HasMongoProperties();
+            List<Task> taskList = new List<Task>();
+            if (sqlTaskNeeded)
             {
-                string query = @"
-                    UPDATE [Products]
-                    SET
-                    ";
-
-                if (!string.IsNullOrWhiteSpace(product.Name))
-                {
-                    query += " [Name] = @name";
-                }
-                if (product.CategoryId != null)
-                {
-                    query += " [CategoryId] = @categoryId";
-                }
-                if (!string.IsNullOrWhiteSpace(product.Description))
-                {
-                    query += " [Description] = @description";
-                }
-                if (product.BasePrice != 0)
-                {
-                    query += " [BasePrice] = @basePrice";
-                }
-                if (product.Rating != 0)
-                {
-                    query += " [Rating] = @rating";
-                }
-
-                query += " WHERE [Id] = @id";
-
-                int affectedRows = await context.ExecuteAsync(query, new
-                {
-                    id = product.Id,
-                    name = product.Name,
-                    parentId = product.CategoryId,
-                    description = product.Description,
-                    basePrice = product.BasePrice,
-                    rating = product.Rating
-                });
-
-                return affectedRows == 1;
+                taskList.Add(SqlProducts.UpdateAsync(product));
             }
-        }        
+            if (mongoTaskNeeded)
+            {
+                if (string.IsNullOrWhiteSpace(product.MongoId))
+                {
+                    product.SetMongoId(GetMongoId(product.Id.ToString()));
+                }
+                taskList.Add(MongoProducts.UpdateAsync(product));
+            }
+            await Task.WhenAll(taskList);
+
+            if (sqlTaskNeeded)
+            {
+                Task<int> sqlTask = taskList.First(x => x is Task<int>) as Task<int>;
+                int rowsAffected = sqlTask.Result;
+                return rowsAffected == 1;
+            }
+            if (mongoTaskNeeded)
+            {
+                Product mongoProduct = await MongoProducts.GetAsync(product.MongoId);
+                return CheckProductUpdated(product, mongoProduct);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously removed Product with specified id
+        /// </summary>
+        /// <param name="id">Id of the Product to delete</param>
+        /// <returns>Number of rows affected</returns>
+        public async Task<bool> DeleteAsync(string id)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(Guid.Parse(id));
+
+            Task<bool> sqlDeleteTask = SqlProducts.DeleteAsync(id);
+            string mongoId = GetMongoId(id);
+            Task<bool> mongoDeleteTask = MongoProducts.DeleteAsync(mongoId);
+            List<Task<bool>> taskList = new List<Task<bool>>
+            {
+                sqlDeleteTask,
+                mongoDeleteTask
+            };
+            await Task.WhenAll(taskList);
+            return taskList.All(x => x.Result);
+        }
+
+        /// <summary>
+        /// Compare two Products to have similar Mongo properties
+        /// </summary>
+        /// <param name="expected">Expected Product</param>
+        /// <param name="actual">Actual Product</param>
+        /// <returns>Comparison result</returns>
+        private bool CheckProductUpdated(Product expected, Product actual)
+        {
+            if (expected.MongoId != actual.MongoId) return false;
+            foreach (Models.Specifications.Specification spec in expected.Specifications)
+            {
+                if (actual.Specifications.Any(s => s.Name != spec.Name ||
+                                              s.MaxSelectionAvailable != spec.MaxSelectionAvailable ||
+                                              s.Options.Except(spec.Options).Any() ||
+                                              spec.Options.Except(s.Options).Any())) return false;
+            }
+            return true;
+        }      
         
         /// <summary>
         /// Get MongoId field for a Product with the specified Id

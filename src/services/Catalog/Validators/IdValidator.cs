@@ -1,12 +1,14 @@
 ﻿using FluentValidation;
+using System;
 
 namespace GreenShop.Catalog.Validators
 {
-    public class IdValidator : AbstractValidator<int>
+    public class IdValidator : AbstractValidator<Guid>
     {
         public IdValidator()
         {
-            RuleFor(id => id).GreaterThan(0);
+            RuleFor(id => id).NotNull();
+            RuleFor(id => id).NotEqual(Guid.Empty);
         }
     }
 }

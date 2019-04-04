@@ -1,14 +1,15 @@
 ﻿using GreenShop.Catalog.Config.Interfaces;
-using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using GreenShop.Catalog.Models.Products;
 using GreenShop.Catalog.Properties;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
-namespace GreenShop.Catalog.DataAccessors
+namespace GreenShop.Catalog.Infrastructure.Products
 {
-    public class MongoProducts : IMongoDataAccessor<Product>
+    public class MongoProducts : IMongoProducts
     {
         private readonly IMongoContext _mongoContext;
 
@@ -23,10 +24,10 @@ namespace GreenShop.Catalog.DataAccessors
         }
 
         /// <summary>
-        /// Asynchronously gets all Products
+        /// Asynchronously get all Products
         /// </summary>
         /// <returns>Task with list of all Products</returns>
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
             List<Product> products = await MongoCollection.Find(_ => true).ToListAsync();
 
@@ -34,11 +35,11 @@ namespace GreenShop.Catalog.DataAccessors
         }
 
         /// <summary>
-        /// Asynchronously gets Product with the specific id
+        /// Asynchronously get Product with the specific id
         /// </summary>
         /// <param name="id">Id of the Product to get</param>
         /// <returns>Task with specified Product</returns>
-        public async Task<Product> Get(string id)
+        public async Task<Product> GetAsync(string id)
         {
             Product product = await MongoCollection.Find(x => x.MongoId == id).FirstOrDefaultAsync();
 
@@ -50,30 +51,36 @@ namespace GreenShop.Catalog.DataAccessors
         /// </summary>
         /// <param name="product">Product to add</param>
         /// <returns>Task with specified Category</returns>
-        public async Task Add(Product product)
+        public async Task<bool> CreateAsync(Product product)
         {
             await MongoCollection.InsertOneAsync(product);
+            return true;
         }
 
         /// <summary>
-        /// Asynchronously removed Product with specified id
+        /// Asynchronously remove Product with specified id
         /// </summary>
         /// <param name="id">Id of the Product to delete</param>
         /// <returns>Number of rows affected</returns>
-        public async Task Delete(string id)
+        public async Task<bool> DeleteAsync(string id)
         {
             await MongoCollection.FindOneAndDeleteAsync(x => x.MongoId == id);
+            return true;
         }
 
         /// <summary>
-        /// Asynchronously edits specified Product
+        /// Asynchronously update specified Product
         /// </summary>
         /// <param name="product">Product, that contains id of entity that should be changed, and all changed values</param>
         /// <returns>Number of rows affected</returns>
-        public async Task Edit(Product product)
+        public async Task<bool> UpdateAsync(Product product)
         {
             FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(x => x.MongoId, product.MongoId);
             await MongoCollection.FindOneAndReplaceAsync(filter, product);
+            return true;
         }
+
+        public IDbTransaction Transaction => throw new System.NotImplementedException();
+        public void SetSqlTransaction(IDbTransaction transaction) => throw new System.NotImplementedException();
     }
 }

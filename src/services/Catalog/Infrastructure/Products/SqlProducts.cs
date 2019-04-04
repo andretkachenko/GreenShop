@@ -1,28 +1,36 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
-using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using GreenShop.Catalog.Models.Products;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace GreenShop.Catalog.DataAccessors
+namespace GreenShop.Catalog.Infrastructure.Products
 {
-    public class SqlProducts : ISqlDataAccessor<Product>
+    public class SqlProducts : ISqlProducts
     {
         private readonly ISqlContext _sql;
+
+        public IDbTransaction Transaction { get; private set; }
 
         public SqlProducts(ISqlContext sqlContext)
         {
             _sql = sqlContext;
         }
 
+        public void SetSqlTransaction(IDbTransaction transaction)
+        {
+            Transaction = transaction;
+        }
+
         /// <summary>
-        /// Asynchronously gets all Products
+        /// Asynchronously get all Products
         /// </summary>
         /// <returns>Task with list of all Products</returns>
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -33,13 +41,13 @@ namespace GreenShop.Catalog.DataAccessors
         }
 
         /// <summary>
-        /// Asynchronously gets Product with the specific id
+        /// Asynchronously get Product with the specific id
         /// </summary>
         /// <param name="id">Id of the Product to get</param>
         /// <returns>Task with specified Product</returns>
-        public async Task<Product> Get(int id)
+        public async Task<Product> GetAsync(string id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 Product product = await context.GetAsync<Product>(id);
 
@@ -48,30 +56,30 @@ namespace GreenShop.Catalog.DataAccessors
         }
 
         /// <summary>
-        /// Asynchronously adds Product
+        /// Asynchronously create Product
         /// </summary>
         /// <param name="product">Product to add</param>
-        /// <returns>Task with specified Category</returns>
-        public async Task<int> Add(Product product)
+        /// <returns>Result flag</returns>
+        public async Task<bool> CreateAsync(Product product)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
-                int id = await context.InsertAsync(product);
+                await context.InsertAsync(product);
 
-                return id;
+                return true;
             }
         }
 
         /// <summary>
-        /// Asynchronously removed Product with specified id
+        /// Asynchronously remove Product with specified id
         /// </summary>
         /// <param name="id">Id of the Product to delete</param>
-        /// <returns>Number of rows affected</returns>
-        public async Task<int> Delete(int id)
+        /// <returns>Result flag</returns>
+        public async Task<bool> DeleteAsync(string id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
-                int affectedRows = await context.ExecuteAsync(@"
+                await context.ExecuteAsync(@"
                     DELETE
                     FROM [Products]
                     WHERE [Id] = @id
@@ -80,18 +88,18 @@ namespace GreenShop.Catalog.DataAccessors
                     id
                 });
 
-                return affectedRows;
+                return true;
             }
         }
 
         /// <summary>
-        /// Asynchronously edits specified Product
+        /// Asynchronously edit specified Product
         /// </summary>
         /// <param name="product">Product, that contains id of entity that should be changed, and all changed values</param>
-        /// <returns>Number of rows affected</returns>
-        public async Task<int> Edit(Product product)
+        /// <returns>Result flag</returns>
+        public async Task<bool> UpdateAsync(Product product)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 string query = @"
                     UPDATE [Products]
@@ -102,7 +110,7 @@ namespace GreenShop.Catalog.DataAccessors
                 {
                     query += " [Name] = @name";
                 }
-                if (product.CategoryId != 0)
+                if (product.CategoryId != null)
                 {
                     query += " [CategoryId] = @categoryId";
                 }
@@ -131,7 +139,7 @@ namespace GreenShop.Catalog.DataAccessors
                     rating = product.Rating
                 });
 
-                return affectedRows;
+                return true;
             }
         }
     }

@@ -74,6 +74,11 @@ namespace GreenShop.Catalog.Infrastructure
                         SqlContext.Dispose();
                         SqlContext = null;
                     }
+                    if(MongoSession != null)
+                    {
+                        MongoSession.Dispose();
+                        MongoSession = null;
+                    }
                 }
                 _disposed = true;
             }

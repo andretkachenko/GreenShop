@@ -14,7 +14,7 @@ namespace GreenShop.Catalog.Infrastructure
         Task<IEnumerable<TAggregate>> GetAllAsync();
         Task<TAggregate> GetAsync(string id);
         Task<bool> DeleteAsync(string id);
-        Task<string> CreateAsync(TAggregate entity);
+        Task<bool> CreateAsync(TAggregate entity);
         Task<bool> UpdateAsync(TAggregate entity);
     }
 }
