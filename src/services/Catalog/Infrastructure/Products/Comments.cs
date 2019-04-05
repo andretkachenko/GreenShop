@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GreenShop.Catalog.DataAccessors
+namespace GreenShop.Catalog.Infrastructure.Products
 {
     public class Comments : ISqlChildDataAccessor<Comment>
     {
@@ -60,7 +60,7 @@ namespace GreenShop.Catalog.DataAccessors
         /// <param name="id">Id of the Comment to edit</param>
         /// <param name="message">Updated message for the Comment</param>
         /// <returns>Task with number of proceeded rows</returns>
-        public async Task<int> Edit(int id, string message)
+        public async Task<int> Edit(Guid id, string message)
         {
             using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
             {

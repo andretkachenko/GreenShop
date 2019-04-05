@@ -1,6 +1,6 @@
 ﻿using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
-using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Properties;
 using MongoDB.Driver;
 using System.Collections.Generic;

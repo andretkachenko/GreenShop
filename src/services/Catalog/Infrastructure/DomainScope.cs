@@ -1,6 +1,6 @@
 ﻿using GreenShop.Catalog.Config.Interfaces;
-using GreenShop.Catalog.Models.Categories;
-using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Domain.Categories;
+using GreenShop.Catalog.Domain.Products;
 using MongoDB.Driver;
 using System;
 using System.Data;
@@ -74,7 +74,7 @@ namespace GreenShop.Catalog.Infrastructure
                         SqlContext.Dispose();
                         SqlContext = null;
                     }
-                    if(MongoSession != null)
+                    if (MongoSession != null)
                     {
                         MongoSession.Dispose();
                         MongoSession = null;

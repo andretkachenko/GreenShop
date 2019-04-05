@@ -1,4 +1,4 @@
-﻿using GreenShop.Catalog.Models.Products;
+﻿using GreenShop.Catalog.Domain.Products;
 
 namespace GreenShop.Catalog.Infrastructure.Products.Interfaces
 {

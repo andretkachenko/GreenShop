@@ -1,9 +1,10 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using GreenShop.Catalog.Domain;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace GreenShop.Catalog.Models.Specifications
 {
-    public class Specification
+    public class Specification : IValueObject
     {
         [BsonElement("name")]
         public string Name { get; set; }

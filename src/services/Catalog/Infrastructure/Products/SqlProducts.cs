@@ -2,7 +2,7 @@
 using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
-using GreenShop.Catalog.Models.Products;
+using GreenShop.Catalog.Domain.Products;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -64,7 +64,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         {
             using (SqlConnection context = _sql.Connection)
             {
-                await context.InsertAsync(product);
+                await context.InsertAsync(product, transaction: Transaction);
 
                 return true;
             }
@@ -86,7 +86,8 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 ", new
                 {
                     id
-                });
+                },
+                transaction: Transaction);
 
                 return true;
             }
@@ -137,7 +138,8 @@ namespace GreenShop.Catalog.Infrastructure.Products
                     description = product.Description,
                     basePrice = product.BasePrice,
                     rating = product.Rating
-                });
+                },
+                transaction: Transaction);
 
                 return true;
             }

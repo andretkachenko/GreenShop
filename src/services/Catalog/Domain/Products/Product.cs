@@ -1,5 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
-using GreenShop.Catalog.Models.Categories;
+using GreenShop.Catalog.Domain;
 using GreenShop.Catalog.Models.Comments;
 using GreenShop.Catalog.Models.Specifications;
 using MongoDB.Bson;
@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GreenShop.Catalog.Models.Products
+namespace GreenShop.Catalog.Domain.Products
 {
     public class Product : IAggregate
     {
@@ -39,7 +39,7 @@ namespace GreenShop.Catalog.Models.Products
 
         [BsonIgnore]
         public Guid CategoryId { get; protected set; }
-        
+
         [Write(false), JsonIgnore, BsonIgnore]
         public IEnumerable<Comment> Comments { get; set; }
         [BsonElement("specifications"), Write(false)]
@@ -60,7 +60,7 @@ namespace GreenShop.Catalog.Models.Products
         /// <param name="newDescription">New Description</param>
         public void UpdateDescription(string newDescription)
         {
-             Description = newDescription;
+            Description = newDescription;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace GreenShop.Catalog.Models.Products
         {
             MongoId = id;
         }
-        
+
         /// <summary>
         /// Check if specified Product has any properties filled, that are stored in MongoDB
         /// </summary>
