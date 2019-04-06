@@ -20,6 +20,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
     {
         private ISqlProducts SqlProducts;
         private IMongoProducts MongoProducts;
+        private IComments Comments;
         private ISqlContext SqlContext;
         private readonly IMongoContext MongoContext;
         private IMongoCollection<Product> MongoCollection => MongoContext.Database.GetCollection<Product>(Resources.Products);
@@ -28,12 +29,14 @@ namespace GreenShop.Catalog.Infrastructure.Products
         public ProductRepository(ISqlContext sqlContext, 
             IMongoContext mongoContext,
             ISqlProducts sqlProducts,
-            IMongoProducts mongoProducts)
+            IMongoProducts mongoProducts,
+            IComments comments)
         {
             SqlContext = sqlContext;
             MongoContext = mongoContext;
             SqlProducts = sqlProducts;
             MongoProducts = mongoProducts;
+            Comments = comments;
         }
 
         public void SetSqlTransaction(IDbTransaction transaction)
