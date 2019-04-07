@@ -13,6 +13,7 @@ using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Properties;
 using GreenShop.Catalog.Validators;
 using MongoDB.Driver;
+using GreenShop.Catalog.Models.Comments;
 
 namespace GreenShop.Catalog.Infrastructure.Products
 {
@@ -20,7 +21,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
     {
         private ISqlProducts SqlProducts;
         private IMongoProducts MongoProducts;
-        private IComments Comments;
+        public IComments Comments { get; private set; }
         private ISqlContext SqlContext;
         private readonly IMongoContext MongoContext;
         private IMongoCollection<Product> MongoCollection => MongoContext.Database.GetCollection<Product>(Resources.Products);
@@ -70,12 +71,14 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with specified Product</returns>
         public async Task<Product> GetAsync(string id)
         {
+            var guid = Guid.Parse(id);
             IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(Guid.Parse(id));
+            validator.ValidateAndThrow(guid);
 
             Task<Product> sqlGetTask = SqlProducts.GetAsync(id);
             string mongoId = GetMongoId(id);
             Task<Product> mongoGetTask = MongoProducts.GetAsync(mongoId);
+            Task<IEnumerable<Comment>> getCommentsTask = Comments.GetAllParentRelatedAsync(guid);
             List<Task> taskList = new List<Task>
             {
                 sqlGetTask,

@@ -1,17 +1,21 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
-using GreenShop.Catalog.DataAccessors.Interfaces;
+using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using GreenShop.Catalog.Models.Comments;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products
 {
-    public class Comments : ISqlChildDataAccessor<Comment>
+    public class Comments : IComments
     {
         public readonly ISqlContext _sql;
+
+        public IDbTransaction Transaction { get; private set; }
 
         public Comments(ISqlContext sqlContext)
         {
@@ -19,17 +23,22 @@ namespace GreenShop.Catalog.Infrastructure.Products
 
         }
 
+        public void SetSqlTransaction(IDbTransaction transaction)
+        {
+            Transaction = transaction;
+        }
+
         /// <summary>
         /// Asynchronously Add new Comment
         /// </summary>
         /// <param name="comment">Comment to insert to the database</param>
         /// <returns>Task with Id of the Comment</returns>
-        public async Task<int> Add(Comment comment)
+        public async Task<bool> CreateAsync(Comment comment)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
-                int id = await context.InsertAsync(comment);
-                return id;
+                await context.InsertAsync(comment, transaction: Transaction);
+                return true;
             }
         }
 
@@ -38,9 +47,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="id">Id of the Comment to delete from database</param>
         /// <returns>Task with number of deleted rows</returns>
-        public async Task<int> Delete(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 string query = @"
                         DELETE
@@ -49,8 +58,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 int affectedRows = await context.ExecuteAsync(query, new
                 {
                     id
-                });
-                return affectedRows;
+                },
+                transaction: Transaction);
+                return affectedRows == 1;
             }
         }
 
@@ -60,9 +70,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <param name="id">Id of the Comment to edit</param>
         /// <param name="message">Updated message for the Comment</param>
         /// <returns>Task with number of proceeded rows</returns>
-        public async Task<int> Edit(Guid id, string message)
+        public async Task<bool> UpdateAsync(Guid id, string message)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 string query = @"
                         UPDATE [Comments]
@@ -72,8 +82,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 {
                     id,
                     message,
-                });
-                return affectedRows;
+                },
+                transaction: Transaction);
+                return affectedRows == 1;
             }
         }
 
@@ -83,16 +94,16 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="comment">Comment to edit</param>
         /// <returns>Task with the number of proceeded rows</returns>
-        public async Task<int> Edit(Comment comment) => await Edit(comment.Id, comment.Message);
+        public async Task<bool> UpdateAsync(Comment comment) => await UpdateAsync(comment.Id, comment.Message);
 
         /// <summary>
         /// Asynchronously Get Comment by ID
         /// </summary>
         /// <param name="id">Id of the Comment to get</param>
         /// <returns>Task with Comment</returns>
-        public async Task<Comment> Get(int id)
+        public async Task<Comment> GetAsync(string id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 Comment comment = await context.GetAsync<Comment>(id);
 
@@ -104,16 +115,16 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// For this time Not emplemented
         /// </summary>
         /// <returns>NotImplementedException</returns>     
-        public Task<IEnumerable<Comment>> GetAll() => throw new NotImplementedException();
+        public Task<IEnumerable<Comment>> GetAllAsync() => throw new NotImplementedException();
 
         /// <summary>
         /// Asynchronously Get all Comments by product ID
         /// </summary>
         /// <param name="productId">Id of the product to get its comments</param>
         /// <returns>Task with list of comments</returns>
-        public async Task<IEnumerable<Comment>> GetAllParentRelated(int productId)
+        public async Task<IEnumerable<Comment>> GetAllParentRelatedAsync(Guid productId)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 IEnumerable<Comment> comments = await context.QueryAsync<Comment>(@"
                     SELECT [Id]

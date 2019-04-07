@@ -1,29 +1,38 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
-using GreenShop.Catalog.DataAccessors.Interfaces;
-using GreenShop.Catalog.Models.Categories;
+using GreenShop.Catalog.Domain.Categories;
+using GreenShop.Catalog.Infrastructure;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.DataAccessor
 {
-    public class Categories : ISqlDataAccessor<Category>
+    public class CategoryRepository : IRepository<Category>
     {
         public readonly ISqlContext _sql;
 
-        public Categories(ISqlContext sqlContext)
+        public IDbTransaction Transaction { get; private set; }
+
+        public CategoryRepository(ISqlContext sqlContext)
         {
             _sql = sqlContext;
+        }
+
+        public void SetSqlTransaction(IDbTransaction transaction)
+        {
+            Transaction = transaction;
         }
 
         /// <summary>
         /// Asynchronously gets all Categories
         /// </summary>
         /// <returns>Task with list of all Categories</returns>
-        public async Task<IEnumerable<Category>> GetAll()
+        public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 IEnumerable<Category> categories = await context.GetAllAsync<Category>();
 
@@ -36,9 +45,9 @@ namespace GreenShop.Catalog.DataAccessor
         /// </summary>
         /// <param name="id">Id of the Category to get</param>
         /// <returns>Task with specified Category</returns>
-        public async Task<Category> Get(int id)
+        public async Task<Category> GetAsync(string id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 Category category = await context.GetAsync<Category>(id);
 
@@ -51,13 +60,13 @@ namespace GreenShop.Catalog.DataAccessor
         /// </summary>
         /// <param name="category">Category to add</param>
         /// <returns>Category Id</returns>
-        public async Task<int> Add(Category category)
+        public async Task<bool> CreateAsync(Category category)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
-                int id = await context.InsertAsync(category);
+                await context.InsertAsync(category);
 
-                return id;
+                return true;
             }
         }
 
@@ -66,9 +75,9 @@ namespace GreenShop.Catalog.DataAccessor
         /// </summary>
         /// <param name="id">Id of the Category to delete</param>
         /// <returns>Number of rows affected</returns>
-        public async Task<int> Delete(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 int affectedRows = await context.ExecuteAsync(@"
                     DELETE
@@ -79,7 +88,7 @@ namespace GreenShop.Catalog.DataAccessor
                     id
                 });
 
-                return affectedRows;
+                return affectedRows == 1;
             }
         }
 
@@ -88,9 +97,9 @@ namespace GreenShop.Catalog.DataAccessor
         /// </summary>
         /// <param name="category">Category, that contains id of entity that should be changed, and all changed values</param>
         /// <returns>Number of rows affected</returns>
-        public async Task<int> Edit(Category category)
+        public async Task<bool> UpdateAsync(Category category)
         {
-            using (System.Data.SqlClient.SqlConnection context = _sql.Connection)
+            using (SqlConnection context = _sql.Connection)
             {
                 string query = @"
                     UPDATE [Categories]
@@ -101,7 +110,7 @@ namespace GreenShop.Catalog.DataAccessor
                 {
                     query += " [Name] = @name";
                 }
-                if (category.ParentCategoryId != 0)
+                if (category.ParentCategoryId != null)
                 {
                     query += " [ParentCategoryId] = @parentId";
                 }
@@ -115,7 +124,7 @@ namespace GreenShop.Catalog.DataAccessor
                     parentId = category.ParentCategoryId
                 });
 
-                return affectedRows;
+                return affectedRows == 1;
             }
         }
     }
