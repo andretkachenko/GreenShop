@@ -16,6 +16,7 @@ namespace GreenShop.Catalog.Domain.Products
         public Product(string name, Guid categoryId) : this(name, categoryId, null) { }
         public Product(string name, Guid categoryId, string description)
         {
+            Id = new Guid();
             Name = name;
             CategoryId = categoryId;
             Description = description;

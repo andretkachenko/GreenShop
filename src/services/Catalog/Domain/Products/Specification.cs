@@ -7,10 +7,10 @@ namespace GreenShop.Catalog.Models.Specifications
     public class Specification : IValueObject
     {
         [BsonElement("name")]
-        public string Name { get; set; }
+        public string Name { get; protected set; }
         [BsonElement("max_selection_available")]
-        public int MaxSelectionAvailable { get; set; }
+        public int MaxSelectionAvailable { get; protected set; }
         [BsonElement("options")]
-        public IEnumerable<string> Options { get; set; }
+        public IEnumerable<string> Options { get; protected set; }
     }
 }
