@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products
@@ -42,6 +43,18 @@ namespace GreenShop.Catalog.Infrastructure.Products
             }
         }
 
+        public async Task<bool> CreateAsync(IEnumerable<Comment> comments)
+        {
+            List<Task<bool>> createTasks = new List<Task<bool>>();
+
+            foreach (Comment comment in comments)
+            {
+                createTasks.Add(CreateAsync(comment));
+            }
+            await Task.WhenAll(createTasks);
+            return createTasks.TrueForAll(x => x.Result);
+        }
+
         /// <summary>
         /// Asynchronously Delete Comment
         /// </summary>
@@ -64,12 +77,6 @@ namespace GreenShop.Catalog.Infrastructure.Products
             }
         }
 
-        /// <summary>
-        /// Asynchronously Edit comment's message
-        /// </summary>
-        /// <param name="id">Id of the Comment to edit</param>
-        /// <param name="message">Updated message for the Comment</param>
-        /// <returns>Task with number of proceeded rows</returns>
         public async Task<bool> UpdateAsync(Guid id, string message)
         {
             using (SqlConnection context = _sql.Connection)
@@ -117,11 +124,6 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>NotImplementedException</returns>     
         public Task<IEnumerable<Comment>> GetAllAsync() => throw new NotImplementedException();
 
-        /// <summary>
-        /// Asynchronously Get all Comments by product ID
-        /// </summary>
-        /// <param name="productId">Id of the product to get its comments</param>
-        /// <returns>Task with list of comments</returns>
         public async Task<IEnumerable<Comment>> GetAllParentRelatedAsync(Guid productId)
         {
             using (SqlConnection context = _sql.Connection)
@@ -139,6 +141,38 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 });
 
                 return comments;
+            }
+        }
+
+        public async Task<Dictionary<Guid, IEnumerable<Comment>>> GetAllParentRelatedAsync(IEnumerable<Guid> productIds)
+        {
+            List<Task<IEnumerable<Comment>>> taskList = new List<Task<IEnumerable<Comment>>>();
+            Dictionary <Guid, IEnumerable<Comment>> commentsDict = new Dictionary<Guid, IEnumerable<Comment>>();
+
+            foreach (Guid productId in productIds)
+            {
+                taskList.Add(GetAllParentRelatedAsync(productId));
+            }
+            await Task.WhenAll(taskList);
+            taskList.ForEach(x => commentsDict.Add(x.Result.FirstOrDefault().ProductId, x.Result));
+
+            return commentsDict;
+        }
+
+        public async Task<bool> DeleteAllParentRelatedAsync(Guid productId)
+        {
+            using (SqlConnection context = _sql.Connection)
+            {
+                string query = @"
+                        DELETE
+                        FROM [Comments]
+                        WHERE [ProductId] = @productId";
+                int affectedRows = await context.ExecuteAsync(query, new
+                {
+                    productId
+                },
+                transaction: Transaction);
+                return affectedRows != 0;
             }
         }
     }

@@ -21,7 +21,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
     {
         private ISqlProducts SqlProducts;
         private IMongoProducts MongoProducts;
-        public IComments Comments { get; private set; }
+        private IComments Comments;
         private ISqlContext SqlContext;
         private readonly IMongoContext MongoContext;
         private IMongoCollection<Product> MongoCollection => MongoContext.Database.GetCollection<Product>(Resources.Products);
@@ -59,8 +59,10 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 mongoGetAllTask
             };
             await Task.WhenAll(taskList);
-
             IEnumerable<Product> products = MergeProducts(sqlGetAllTask.Result, mongoGetAllTask.Result);
+            var commentsDict = await Comments.GetAllParentRelatedAsync(products.Select(x => x.Id));
+            products.ToList().ForEach(x => x.Comments = commentsDict[x.Id]);
+
             return products;
         }
 
@@ -82,11 +84,13 @@ namespace GreenShop.Catalog.Infrastructure.Products
             List<Task> taskList = new List<Task>
             {
                 sqlGetTask,
-                mongoGetTask
+                mongoGetTask,
+                getCommentsTask
             };
             await Task.WhenAll(taskList);
 
             Product product = MergeProduct(sqlGetTask.Result, mongoGetTask.Result);
+            product.Comments = getCommentsTask.Result;
             return product;
         }
 
@@ -106,6 +110,10 @@ namespace GreenShop.Catalog.Infrastructure.Products
             if (product.HasMongoProperties())
             {
                 taskList.Add(MongoProducts.CreateAsync(product));
+            }
+            if((bool)product.Comments?.Any())
+            {
+                taskList.Add(Comments.CreateAsync(product.Comments));
             }
             await Task.WhenAll(taskList);
             return taskList.All(x => x.Result);
@@ -162,16 +170,19 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Number of rows affected</returns>
         public async Task<bool> DeleteAsync(string id)
         {
+            Guid guid = Guid.Parse(id);
             IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(Guid.Parse(id));
+            validator.ValidateAndThrow(guid);
 
             Task<bool> sqlDeleteTask = SqlProducts.DeleteAsync(id);
             string mongoId = GetMongoId(id);
             Task<bool> mongoDeleteTask = MongoProducts.DeleteAsync(mongoId);
+            Task<bool> deleteCommentsTask = Comments.DeleteAllParentRelatedAsync(guid);
             List<Task<bool>> taskList = new List<Task<bool>>
             {
                 sqlDeleteTask,
-                mongoDeleteTask
+                mongoDeleteTask,
+                deleteCommentsTask
             };
             await Task.WhenAll(taskList);
             return taskList.All(x => x.Result);
