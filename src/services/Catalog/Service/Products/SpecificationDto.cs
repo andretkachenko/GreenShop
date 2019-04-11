@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GreenShop.Catalog.Infrastructure.Products
+namespace GreenShop.Catalog.Service.Products
 {
     public class SpecificationDto
     {

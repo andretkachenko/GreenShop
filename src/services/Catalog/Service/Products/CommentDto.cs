@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GreenShop.Catalog.Infrastructure.Products
+namespace GreenShop.Catalog.Service.Products
 {
     public class CommentDto
     {

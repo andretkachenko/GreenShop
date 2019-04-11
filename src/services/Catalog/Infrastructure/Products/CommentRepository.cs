@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products
 {
-    public class Comments : IComments
+    public class CommentRepository : ICommentRepository
     {
         public readonly ISqlContext _sql;
 
         public IDbTransaction Transaction { get; private set; }
 
-        public Comments(ISqlContext sqlContext)
+        public CommentRepository(ISqlContext sqlContext)
         {
             _sql = sqlContext;
 

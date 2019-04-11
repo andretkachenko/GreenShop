@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products
 {
-    public class MongoProducts : IMongoProducts
+    public class MongoProductRepository : IMongoProductRepository
     {
         private readonly IMongoContext _mongoContext;
 
@@ -18,7 +18,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         private IMongoCollection<Product> MongoCollection => _mongoContext.Database.GetCollection<Product>(Resources.Products);
 
-        public MongoProducts(IMongoContext mongoContext)
+        public MongoProductRepository(IMongoContext mongoContext)
         {
             _mongoContext = mongoContext;
         }

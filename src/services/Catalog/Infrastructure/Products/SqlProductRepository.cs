@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products
 {
-    public class SqlProducts : ISqlProducts
+    public class SqlProductRepository : ISqlProductRepository
     {
         private readonly ISqlContext _sql;
 
         public IDbTransaction Transaction { get; private set; }
 
-        public SqlProducts(ISqlContext sqlContext)
+        public SqlProductRepository(ISqlContext sqlContext)
         {
             _sql = sqlContext;
         }

@@ -15,23 +15,23 @@ using GreenShop.Catalog.Validators;
 using MongoDB.Driver;
 using GreenShop.Catalog.Models.Comments;
 
-namespace GreenShop.Catalog.Infrastructure.Products
+namespace GreenShop.Catalog.Service.Products
 {
-    public class ProductRepository : IRepository<Product>
+    public class ProductService
     {
-        private ISqlProducts SqlProducts;
-        private IMongoProducts MongoProducts;
-        private IComments Comments;
+        private ISqlProductRepository SqlProducts;
+        private IMongoProductRepository MongoProducts;
+        private ICommentRepository Comments;
         private ISqlContext SqlContext;
         private readonly IMongoContext MongoContext;
         private IMongoCollection<Product> MongoCollection => MongoContext.Database.GetCollection<Product>(Resources.Products);
         public IDbTransaction Transaction { get; private set; }
 
-        public ProductRepository(ISqlContext sqlContext, 
+        public ProductService(ISqlContext sqlContext, 
             IMongoContext mongoContext,
-            ISqlProducts sqlProducts,
-            IMongoProducts mongoProducts,
-            IComments comments)
+            ISqlProductRepository sqlProducts,
+            IMongoProductRepository mongoProducts,
+            ICommentRepository comments)
         {
             SqlContext = sqlContext;
             MongoContext = mongoContext;
@@ -78,7 +78,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
             validator.ValidateAndThrow(guid);
 
             Task<Product> sqlGetTask = SqlProducts.GetAsync(id);
-            string mongoId = GetMongoId(id);
+            string mongoId = RetrieveMongoIdFromSqlDb(id);
             Task<Product> mongoGetTask = MongoProducts.GetAsync(mongoId);
             Task<IEnumerable<Comment>> getCommentsTask = Comments.GetAllParentRelatedAsync(guid);
             List<Task> taskList = new List<Task>
@@ -131,7 +131,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
 
             bool sqlTaskNeeded = product.HasSqlProperties();
             bool mongoTaskNeeded = product.HasMongoProperties();
-            List<Task> taskList = new List<Task>();
+            List<Task<bool>> taskList = new List<Task<bool>>();
             if (sqlTaskNeeded)
             {
                 taskList.Add(SqlProducts.UpdateAsync(product));
@@ -140,27 +140,14 @@ namespace GreenShop.Catalog.Infrastructure.Products
             {
                 if (string.IsNullOrWhiteSpace(product.MongoId))
                 {
-                    product.SetMongoId(GetMongoId(product.Id.ToString()));
+                    var mongoId = RetrieveMongoIdFromSqlDb(product.Id.ToString());
+                    product.SetMongoId(mongoId);
                 }
                 taskList.Add(MongoProducts.UpdateAsync(product));
             }
             await Task.WhenAll(taskList);
 
-            if (sqlTaskNeeded)
-            {
-                Task<int> sqlTask = taskList.First(x => x is Task<int>) as Task<int>;
-                int rowsAffected = sqlTask.Result;
-                return rowsAffected == 1;
-            }
-            if (mongoTaskNeeded)
-            {
-                Product mongoProduct = await MongoProducts.GetAsync(product.MongoId);
-                return CheckProductUpdated(product, mongoProduct);
-            }
-            else
-            {
-                return false;
-            }
+            return taskList.All(x => x.Result);
         }
 
         /// <summary>
@@ -175,7 +162,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
             validator.ValidateAndThrow(guid);
 
             Task<bool> sqlDeleteTask = SqlProducts.DeleteAsync(id);
-            string mongoId = GetMongoId(id);
+            string mongoId = RetrieveMongoIdFromSqlDb(id);
             Task<bool> mongoDeleteTask = MongoProducts.DeleteAsync(mongoId);
             Task<bool> deleteCommentsTask = Comments.DeleteAllParentRelatedAsync(guid);
             List<Task<bool>> taskList = new List<Task<bool>>
@@ -212,7 +199,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="id">Id of a Product</param>
         /// <returns>MongoId</returns>
-        private string GetMongoId(string id)
+        private string RetrieveMongoIdFromSqlDb(string id)
         {
             using (SqlConnection context = SqlContext.Connection)
             {

@@ -62,11 +62,11 @@ namespace GreenShop.Catalog
         {
             services.AddScoped<IMongoContext, MongoContext>();
             services.AddScoped<ISqlContext, SqlContext>();
-            services.AddScoped<IComments, Comments>();
-            services.AddScoped<IMongoProducts, MongoProducts>();
-            services.AddScoped<ISqlProducts, SqlProducts>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IMongoProductRepository, MongoProductRepository>();
+            services.AddScoped<ISqlProductRepository, SqlProductRepository>();
             services.AddScoped<IUnitOfWork, DomainScope>();
-            services.AddScoped<IRepository<Product>, ProductRepository>();
+            services.AddScoped<IRepository<Product>, ProductService>();
             services.AddScoped<IRepository<Category>, CategoryRepository>();
         }
     }

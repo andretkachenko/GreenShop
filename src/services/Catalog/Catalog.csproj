@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <Folder Include="Service\Products\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

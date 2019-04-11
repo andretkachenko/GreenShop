@@ -2,7 +2,7 @@
 
 namespace GreenShop.Catalog.Infrastructure.Products.Interfaces
 {
-    public interface IMongoProducts : IRepository<Product>
+    public interface IMongoProductRepository : IRepository<Product>
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace GreenShop.Catalog.Infrastructure.Products.Interfaces
 {
-    public interface ISqlProducts : IRepository<Product>
+    public interface ISqlProductRepository : IRepository<Product>
     {
     }
 }

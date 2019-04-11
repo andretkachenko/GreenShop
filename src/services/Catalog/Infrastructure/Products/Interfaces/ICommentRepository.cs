@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products.Interfaces
 {
-    public interface IComments : IRepository<Comment>
+    public interface ICommentRepository : IRepository<Comment>
     {
         /// <summary>
         /// Asynchronously add List of the Comments
