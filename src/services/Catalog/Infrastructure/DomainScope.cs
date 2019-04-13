@@ -1,6 +1,7 @@
 ﻿using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Domain.Categories;
 using GreenShop.Catalog.Domain.Products;
+using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using MongoDB.Driver;
 using System;
 using System.Data;
@@ -15,17 +16,20 @@ namespace GreenShop.Catalog.Infrastructure
         private IClientSessionHandle MongoSession;
         public IRepository<Product> ProductsRepository { get; private set; }
         public IRepository<Category> CategoriesRepository { get; private set; }
+        public ICommentRepository Comments { get; private set; }
         private bool _disposed = false;
 
         public DomainScope(ISqlContext sqlContext,
             IMongoContext mongoContext,
             IRepository<Product> productsRepository,
-            IRepository<Category> categoriesRepository)
+            IRepository<Category> categoriesRepository,
+            ICommentRepository comments)
         {
             SqlContext = sqlContext;
             MongoContext = mongoContext;
             ProductsRepository = productsRepository;
             CategoriesRepository = categoriesRepository;
+            Comments = comments;
         }
 
         public void Begin()

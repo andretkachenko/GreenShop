@@ -14,11 +14,13 @@ using GreenShop.Catalog.Properties;
 using GreenShop.Catalog.Validators;
 using MongoDB.Driver;
 using GreenShop.Catalog.Models.Comments;
+using GreenShop.Catalog.Infrastructure;
 
 namespace GreenShop.Catalog.Service.Products
 {
     public class ProductService
     {
+        private IUnitOfWork Scope;
         private ISqlProductRepository SqlProducts;
         private IMongoProductRepository MongoProducts;
         private ICommentRepository Comments;
@@ -29,20 +31,11 @@ namespace GreenShop.Catalog.Service.Products
 
         public ProductService(ISqlContext sqlContext, 
             IMongoContext mongoContext,
-            ISqlProductRepository sqlProducts,
-            IMongoProductRepository mongoProducts,
-            ICommentRepository comments)
+            IUnitOfWork unitOfWork)
         {
             SqlContext = sqlContext;
             MongoContext = mongoContext;
-            SqlProducts = sqlProducts;
-            MongoProducts = mongoProducts;
-            Comments = comments;
-        }
-
-        public void SetSqlTransaction(IDbTransaction transaction)
-        {
-            Transaction = transaction;
+            Scope = unitOfWork;
         }
         
         /// <summary>
