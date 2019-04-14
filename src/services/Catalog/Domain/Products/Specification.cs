@@ -1,8 +1,7 @@
-﻿using GreenShop.Catalog.Domain;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
-namespace GreenShop.Catalog.Models.Specifications
+namespace GreenShop.Catalog.Domain.Products
 {
     public class Specification : IValueObject
     {
@@ -12,5 +11,12 @@ namespace GreenShop.Catalog.Models.Specifications
         public int MaxSelectionAvailable { get; protected set; }
         [BsonElement("options")]
         public IEnumerable<string> Options { get; protected set; }
+
+        public Specification(string name, int maxSelect, IEnumerable<string> options)
+        {
+            Name = name;
+            MaxSelectionAvailable = maxSelect;
+            Options = options;
+        }
     }
 }

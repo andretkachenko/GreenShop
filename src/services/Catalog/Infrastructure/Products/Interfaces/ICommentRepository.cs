@@ -1,4 +1,4 @@
-﻿using GreenShop.Catalog.Models.Comments;
+﻿using GreenShop.Catalog.Domain.Products;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

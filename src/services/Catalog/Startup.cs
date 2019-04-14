@@ -5,6 +5,7 @@ using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Infrastructure;
 using GreenShop.Catalog.Infrastructure.Products;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
+using GreenShop.Catalog.Service.Products;
 using GreenShop.Catalog.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -65,9 +66,10 @@ namespace GreenShop.Catalog
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IMongoProductRepository, MongoProductRepository>();
             services.AddScoped<ISqlProductRepository, SqlProductRepository>();
-            services.AddScoped<IUnitOfWork, DomainScope>();
-            services.AddScoped<IRepository<Product>, ProductService>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IRepository<Category>, CategoryRepository>();
+
+            services.AddTransient<IDomainScope, DomainScope>();
         }
     }
 }

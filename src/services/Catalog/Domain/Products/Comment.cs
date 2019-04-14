@@ -1,7 +1,7 @@
 ﻿using GreenShop.Catalog.Domain;
 using System;
 
-namespace GreenShop.Catalog.Models.Comments
+namespace GreenShop.Catalog.Domain.Products
 {
     public class Comment : IEntity
     {

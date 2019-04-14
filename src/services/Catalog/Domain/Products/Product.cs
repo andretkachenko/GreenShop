@@ -1,7 +1,4 @@
 ﻿using Dapper.Contrib.Extensions;
-using GreenShop.Catalog.Domain;
-using GreenShop.Catalog.Models.Comments;
-using GreenShop.Catalog.Models.Specifications;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -80,6 +77,25 @@ namespace GreenShop.Catalog.Domain.Products
         public void ChangeCategory(Guid newCategoryId)
         {
             CategoryId = newCategoryId;
+        }
+
+        /// <summary>
+        /// Add or update Specifications for the Product
+        /// </summary>
+        /// <param name="specifications">Updated list of Specifcations</param>
+        public void UpdateSpecifications(IEnumerable<Specification> specifications)
+        {
+            Specifications = specifications;
+        }
+
+        /// <summary>
+        /// Add Comment to the Product
+        /// </summary>
+        /// <param name="comment">New Comment to add to the Product's Comment list.</param>
+        public void AddComment(Comment comment)
+        {
+            if(Comments == null) Comments = new List<Comment>();
+            Comments.ToList().Add(comment);
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using GreenShop.Catalog.Models.Products;
-using GreenShop.Catalog.Services.Products.Interfaces;
+﻿using GreenShop.Catalog.Service.Products;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,29 +12,29 @@ namespace GreenShop.Catalog.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductsRepository _productsService;
+        private readonly IProductService _productsService;
 
-        public ProductsController(IProductsRepository productsService)
+        public ProductsController(IProductService productsService)
         {
             _productsService = productsService;
         }
 
         // GET api/products
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
         {
-            IEnumerable<Product> products = await _productsService.GetAllProducts();
+            IEnumerable<ProductDto> products = await _productsService.GetAllAsync();
 
             return products;
         }
 
         // GET api/products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductAsync(int id)
+        public async Task<ActionResult<ProductDto>> GetProductAsync(string id)
         {
             try
             {
-                Product product = await _productsService.GetProduct(id);
+                ProductDto product = await _productsService.GetAsync(id);
                 if (product == null) throw new ArgumentNullException();
                 return Ok(product);
             }
@@ -47,27 +46,27 @@ namespace GreenShop.Catalog.Controllers
 
         // POST api/products
         [HttpPost]
-        public async Task<int> AddProductAsync([FromBody] Product product)
+        public async Task<Guid> AddProductAsync([FromBody] ProductDto product)
         {
-            int success = await _productsService.AddProduct(product);
+            Guid id = await _productsService.CreateAsync(product);
 
-            return success;
+            return id;
         }
 
         // PUT api/products/5
         [HttpPut]
-        public async Task<bool> EditProductAsync([FromBody] Product product)
+        public async Task<bool> EditProductAsync([FromBody] ProductDto product)
         {
-            bool success = await _productsService.EditProduct(product);
+            bool success = await _productsService.UpdateAsync(product);
 
             return success;
         }
 
         // DELETE api/products/5
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteProductAsync(int id)
+        public async Task<bool> DeleteProductAsync(string id)
         {
-            bool success = await _productsService.DeleteProduct(id);
+            bool success = await _productsService.DeleteAsync(id);
 
             return success;
         }

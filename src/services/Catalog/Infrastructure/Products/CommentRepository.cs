@@ -1,8 +1,8 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
+using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
-using GreenShop.Catalog.Models.Comments;
 using System;
 using System.Collections.Generic;
 using System.Data;
