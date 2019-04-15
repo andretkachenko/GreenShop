@@ -256,6 +256,80 @@ namespace GreenShop.Catalog.Service.Products
         }
 
         /// <summary>
+        ///Asynchronously adds Comment 
+        /// </summary>
+        /// <param name="commentDto">Comment to add</param>
+        /// <returns>True if succeeded</returns>
+        public async Task<Guid> AddCommentAsync(CommentDto commentDto)
+        {
+            CommentValidator validator = new CommentValidator();
+            validator.ValidateAndThrow(commentDto);
+
+            Scope.Begin();
+            try
+            {
+                Comment comment = new Comment(commentDto.AuthorId, commentDto.Message, commentDto.ProductId);
+                await Scope.Comments.CreateAsync(comment);
+                Scope.Commit();
+                return comment.Id;
+            }
+            catch (Exception e)
+            {
+                Scope.Rollback();
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously Deletes Comment by Id
+        /// </summary>
+        /// <param name="id">Id of the Comment to delete</param>
+        /// <returns>True if succeeded</returns>
+        public async Task<bool> DeleteCommentAsync(Guid id)
+        {
+            IdValidator validator = new IdValidator();
+            validator.ValidateAndThrow(id);
+            Scope.Begin();
+            try
+            {
+                bool result = await Scope.Comments.DeleteAsync(id.ToString());
+                Scope.Commit();
+                return result;
+            }
+            catch (Exception e)
+            {
+                Scope.Rollback();
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously Edit comment's message
+        /// </summary>
+        /// <param name="id">Id of the Comment to edit</param>
+        /// <param name="message">Updated message for the comment</param>
+        /// <returns>True if succeeded</returns>
+        public async Task<bool> EditComment(Guid id, string message)
+        {
+            IdValidator idValidator = new IdValidator();
+            idValidator.ValidateAndThrow(id);
+            CommentMessageValidator messageValidator = new CommentMessageValidator();
+            messageValidator.ValidateAndThrow(message);
+            Scope.Begin();
+            try
+            {
+                bool result = await Scope.Comments.UpdateAsync(id, message);
+                Scope.Commit();
+                return result;
+            }
+            catch (Exception e)
+            {
+                Scope.Rollback();
+                throw e;
+            }
+        }
+
+        /// <summary>
         /// Compare two Products to have similar Mongo properties
         /// </summary>
         /// <param name="expected">Expected Product</param>

@@ -1,7 +1,6 @@
-﻿using GreenShop.Catalog.Models.Comments;
-using GreenShop.Catalog.Services.Comments.Interfaces;
+﻿using GreenShop.Catalog.Service.Products;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Controllers
@@ -12,54 +11,36 @@ namespace GreenShop.Catalog.Controllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
-        private readonly ICommentsRepository _commentServices;
+        private readonly IProductService _productsService;
 
-        public CommentsController(ICommentsRepository commentsRepository)
+        public CommentsController(IProductService productsService)
         {
-            _commentServices = commentsRepository;
+            _productsService = productsService;
         }
 
-        //GET all comments from product
-        [HttpGet("product/{productId}")]
-        public async Task<IEnumerable<Comment>> GetAllProductComments(int productId)
-        {
-            IEnumerable<Comment> comments = await _commentServices.GetAllProductComments(productId);
-
-            return comments;
-        }
-
-        //Get comment by ID
-        [HttpGet("{id}")]
-        public async Task<Comment> GetComment(int id)
-        {
-            Comment comment = await _commentServices.GetComment(id);
-
-            return comment;
-        }
-
-        //Put Comment
+        // PUT api/comment/5
         [HttpPut("{id}")]
-        public async Task<bool> EditComment(int id, [FromBody] string message)
+        public async Task<bool> EditComment(Guid id, [FromBody] string message)
         {
-            bool success = await _commentServices.EditComment(id, message);
+            bool success = await _productsService.EditComment(id, message);
 
             return success;
         }
 
-        //Delete Comment
+        // DELETE api/comment/5
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteComment(int id)
+        public async Task<bool> DeleteComment(Guid id)
         {
-            bool success = await _commentServices.DeleteComment(id);
+            bool success = await _productsService.DeleteCommentAsync(id);
 
             return success;
         }
 
-        //Post Comment
+        // POST api/comment
         [HttpPost]
-        public async Task<int> AddComment([FromBody] Comment comment)
+        public async Task<Guid> AddComment([FromBody] CommentDto comment)
         {
-            int id = await _commentServices.AddComment(comment);
+            Guid id = await _productsService.AddCommentAsync(comment);
 
             return id;
         }

@@ -1,14 +1,17 @@
 ﻿using FluentValidation;
-using GreenShop.Catalog.Models.Comments;
+using GreenShop.Catalog.Service.Products;
+using System;
 
 namespace GreenShop.Catalog.Validators
 {
-    public class CommentValidator : AbstractValidator<Comment>
+    public class CommentValidator : AbstractValidator<CommentDto>
     {
         public CommentValidator()
         {
-            RuleFor(comment => comment.ProductId).GreaterThan(0);
-            RuleFor(comment => comment.AuthorId).GreaterThan(0);
+            RuleFor(comment => comment.ProductId).NotNull();
+            RuleFor(comment => comment.AuthorId).NotNull();
+            RuleFor(comment => comment.ProductId).NotEqual(Guid.Empty);
+            RuleFor(comment => comment.AuthorId).NotEqual(Guid.Empty);
             RuleFor(comment => comment.Message).NotNull();
         }
     }

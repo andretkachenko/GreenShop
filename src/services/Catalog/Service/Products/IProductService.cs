@@ -11,5 +11,9 @@ namespace GreenShop.Catalog.Service.Products
         Task<Guid> CreateAsync(ProductDto product);
         Task<bool> UpdateAsync(ProductDto product);
         Task<bool> DeleteAsync(string id);
+
+        Task<Guid> AddCommentAsync(CommentDto commentDto);
+        Task<bool> DeleteCommentAsync(Guid id);
+        Task<bool> EditComment(Guid id, string message);
     }
 }
