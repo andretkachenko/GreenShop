@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Dapper;
 using FluentValidation;
-using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Helpers;
 using GreenShop.Catalog.Infrastructure;
@@ -10,8 +8,6 @@ using GreenShop.Catalog.Validators;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,17 +16,9 @@ namespace GreenShop.Catalog.Service.Products
     public class ProductService : IProductService
     {
         private IDomainScope Scope;
-        private ISqlContext SqlContext;
-        private readonly IMongoContext MongoContext;
-        private IMongoCollection<Product> MongoCollection => MongoContext.Database.GetCollection<Product>(Resources.Products);
-        public IDbTransaction Transaction { get; private set; }
 
-        public ProductService(ISqlContext sqlContext,
-            IMongoContext mongoContext,
-            IDomainScope unitOfWork)
+        public ProductService(IDomainScope unitOfWork)
         {
-            SqlContext = sqlContext;
-            MongoContext = mongoContext;
             Scope = unitOfWork;
         }
 
@@ -42,8 +30,8 @@ namespace GreenShop.Catalog.Service.Products
         {
             using (Scope)
             {
-                Task<IEnumerable<Product>> sqlGetAllTask = Scope.SqlProducts.GetAllAsync();
-                Task<IEnumerable<Product>> mongoGetAllTask = Scope.MongoProducts.GetAllAsync();
+                Task<IEnumerable<Product>> sqlGetAllTask = Scope.SqlProductRepository.GetAllAsync();
+                Task<IEnumerable<Product>> mongoGetAllTask = Scope.MongoProductRepository.GetAllAsync();
                 List<Task> taskList = new List<Task>
                 {
                     sqlGetAllTask,
@@ -72,9 +60,9 @@ namespace GreenShop.Catalog.Service.Products
 
             using (Scope)
             {
-                Task<Product> sqlGetTask = Scope.SqlProducts.GetAsync(id);
-                string mongoId = RetrieveMongoIdFromSqlDb(id);
-                Task<Product> mongoGetTask = Scope.MongoProducts.GetAsync(mongoId);
+                Task<Product> sqlGetTask = Scope.SqlProductRepository.GetAsync(id);
+                Task<string> getMongoIdTask = Scope.SqlProductRepository.GetMongoIdAsync(id);
+                Task<Product> mongoGetTask = getMongoIdTask.ContinueWith(x => Scope.MongoProductRepository.GetAsync(x.Result)).Unwrap();
                 Task<IEnumerable<Comment>> getCommentsTask = Scope.Comments.GetAllParentRelatedAsync(guid);
                 List<Task> taskList = new List<Task>
                 {
@@ -126,11 +114,11 @@ namespace GreenShop.Catalog.Service.Products
                 {
                     Scope.Begin();
 
-                    Task<bool> sqlAddTask = Scope.SqlProducts.CreateAsync(product);
+                    Task<bool> sqlAddTask = Scope.SqlProductRepository.CreateAsync(product);
                     List<Task<bool>> taskList = new List<Task<bool>> { sqlAddTask };
                     if (product.HasMongoProperties())
                     {
-                        taskList.Add(Scope.MongoProducts.CreateAsync(product));
+                        taskList.Add(Scope.MongoProductRepository.CreateAsync(product));
                     }
                     if ((bool)productDto.Comments?.Any())
                     {
@@ -190,16 +178,16 @@ namespace GreenShop.Catalog.Service.Products
                     List<Task<bool>> taskList = new List<Task<bool>>();
                     if (sqlTaskNeeded)
                     {
-                        taskList.Add(Scope.SqlProducts.UpdateAsync(product));
+                        taskList.Add(Scope.SqlProductRepository.UpdateAsync(product));
                     }
                     if (mongoTaskNeeded)
                     {
                         if (string.IsNullOrWhiteSpace(product.MongoId))
                         {
-                            string mongoId = RetrieveMongoIdFromSqlDb(product.Id.ToString());
+                            string mongoId = await Scope.SqlProductRepository.GetMongoIdAsync(product.Id.ToString());
                             product.SetMongoId(mongoId);
                         }
-                        taskList.Add(Scope.MongoProducts.UpdateAsync(product));
+                        taskList.Add(Scope.MongoProductRepository.UpdateAsync(product));
                     }
                     await Task.WhenAll(taskList);
 
@@ -232,9 +220,9 @@ namespace GreenShop.Catalog.Service.Products
                 {
                     Scope.Begin();
 
-                    Task<bool> sqlDeleteTask = Scope.SqlProducts.DeleteAsync(id);
-                    string mongoId = RetrieveMongoIdFromSqlDb(id);
-                    Task<bool> mongoDeleteTask = Scope.MongoProducts.DeleteAsync(mongoId);
+                    Task<bool> sqlDeleteTask = Scope.SqlProductRepository.DeleteAsync(id);
+                    Task<string> getMongoIdTask = Scope.SqlProductRepository.GetMongoIdAsync(id);
+                    Task<bool> mongoDeleteTask = getMongoIdTask.ContinueWith(x => Scope.MongoProductRepository.DeleteAsync(x.Result)).Unwrap();
                     Task<bool> deleteCommentsTask = Scope.Comments.DeleteAllParentRelatedAsync(guid);
                     List<Task<bool>> taskList = new List<Task<bool>>
                     {
@@ -346,28 +334,6 @@ namespace GreenShop.Catalog.Service.Products
                                               spec.Options.Except(s.Options).Any())) return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Get MongoId field for a Product with the specified Id
-        /// </summary>
-        /// <param name="id">Id of a Product</param>
-        /// <returns>MongoId</returns>
-        private string RetrieveMongoIdFromSqlDb(string id)
-        {
-            using (SqlConnection context = SqlContext.Connection)
-            {
-                string mongoId = context.Query<string>(@"
-                    SELECT [MongoId]
-                    FROM [Products]
-                    WHERE [Id] = @id
-                ", new
-                {
-                    id
-                }).FirstOrDefault();
-
-                return mongoId;
-            }
         }
 
         /// <summary>

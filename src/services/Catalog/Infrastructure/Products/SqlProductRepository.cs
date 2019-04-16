@@ -1,11 +1,12 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
-using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using GreenShop.Catalog.Domain.Products;
+using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products
@@ -52,6 +53,30 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 Product product = await context.GetAsync<Product>(id);
 
                 return product;
+            }
+        }
+
+        /// <summary>
+        /// Get MongoId field for a Product with the specified Id
+        /// </summary>
+        /// <param name="id">Id of a Product</param>
+        /// <returns>MongoId</returns>
+        public async Task<string> GetMongoIdAsync(string id)
+        {
+            using (SqlConnection context = _sql.Connection)
+            {
+                IEnumerable<string> result = await context.QueryAsync<string>(@"
+                    SELECT [MongoId]
+                    FROM [Products]
+                    WHERE [Id] = @id
+                ", new
+                {
+                    id
+                });
+
+                string mongoId = result.FirstOrDefault();
+
+                return mongoId;
             }
         }
 
