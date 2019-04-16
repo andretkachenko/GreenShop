@@ -13,24 +13,24 @@ namespace GreenShop.Catalog.Infrastructure
         private readonly IMongoContext MongoContext;
         private IDbTransaction SqlTransaction;
         private IClientSessionHandle MongoSession;
-        public ISqlProductRepository SqlProducts { get; private set; }
-        public IMongoProductRepository MongoProducts { get; private set; }
-        public IRepository<Category> CategoriesRepository { get; private set; }
+        public ISqlProductRepository SqlProductRepository { get; private set; }
+        public IMongoProductRepository MongoProductRepository { get; private set; }
+        public IRepository<Category> CategoryRepository { get; private set; }
         public ICommentRepository Comments { get; private set; }
         private bool _disposed = false;
 
         public DomainScope(ISqlContext sqlContext,
             IMongoContext mongoContext,
-            ISqlProductRepository sqlProducts,
-            IMongoProductRepository mongoProducts,
-            IRepository<Category> categoriesRepository,
+            ISqlProductRepository sqlProductRepository,
+            IMongoProductRepository mongoProductRepository,
+            IRepository<Category> categoryRepository,
             ICommentRepository comments)
         {
             SqlContext = sqlContext;
             MongoContext = mongoContext;
-            SqlProducts = sqlProducts;
-            MongoProducts = mongoProducts;
-            CategoriesRepository = categoriesRepository;
+            SqlProductRepository = sqlProductRepository;
+            MongoProductRepository = mongoProductRepository;
+            CategoryRepository = categoryRepository;
             Comments = comments;
         }
 
@@ -42,8 +42,8 @@ namespace GreenShop.Catalog.Infrastructure
             MongoSession = MongoContext.Client.StartSession();
             MongoSession.StartTransaction();
 
-            SqlProducts.SetSqlTransaction(SqlTransaction);
-            CategoriesRepository.SetSqlTransaction(SqlTransaction);
+            SqlProductRepository.SetSqlTransaction(SqlTransaction);
+            CategoryRepository.SetSqlTransaction(SqlTransaction);
         }
 
         public void Commit()
