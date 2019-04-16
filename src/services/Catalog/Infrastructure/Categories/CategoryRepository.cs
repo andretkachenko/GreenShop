@@ -64,7 +64,7 @@ namespace GreenShop.Catalog.DataAccessor
         {
             using (SqlConnection context = _sql.Connection)
             {
-                await context.InsertAsync(category);
+                await context.InsertAsync(category, transaction: Transaction);
 
                 return true;
             }
@@ -86,7 +86,7 @@ namespace GreenShop.Catalog.DataAccessor
                 ", new
                 {
                     id
-                });
+                }, transaction: Transaction);
 
                 return affectedRows == 1;
             }
@@ -122,7 +122,7 @@ namespace GreenShop.Catalog.DataAccessor
                     id = category.Id,
                     name = category.Name,
                     parentId = category.ParentCategoryId
-                });
+                }, transaction: Transaction);
 
                 return affectedRows == 1;
             }

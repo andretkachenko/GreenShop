@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GreenShop.Catalog.Infrastructure.Categories
+namespace GreenShop.Catalog.Service.Categories
 {
     public class CategoryDto
     {

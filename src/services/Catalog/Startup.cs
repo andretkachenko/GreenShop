@@ -1,10 +1,10 @@
 ﻿using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.DataAccessor;
 using GreenShop.Catalog.Domain.Categories;
-using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Infrastructure;
 using GreenShop.Catalog.Infrastructure.Products;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
+using GreenShop.Catalog.Service.Categories;
 using GreenShop.Catalog.Service.Products;
 using GreenShop.Catalog.Utils;
 using Microsoft.AspNetCore.Builder;
@@ -68,6 +68,7 @@ namespace GreenShop.Catalog
             services.AddScoped<ISqlProductRepository, SqlProductRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IRepository<Category>, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddTransient<IDomainScope, DomainScope>();
         }
