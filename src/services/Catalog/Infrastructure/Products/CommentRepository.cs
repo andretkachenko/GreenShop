@@ -38,7 +38,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         {
             using (SqlConnection context = _sql.Connection)
             {
-                var result = await context.InsertAsync(comment, transaction: Transaction);
+                int result = await context.InsertAsync(comment, transaction: Transaction);
                 return result;
             }
         }
@@ -149,7 +149,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         public async Task<Dictionary<int, IEnumerable<Comment>>> GetAllParentRelatedAsync(IEnumerable<int> productIds)
         {
             List<Task<IEnumerable<Comment>>> taskList = new List<Task<IEnumerable<Comment>>>();
-            Dictionary <int, IEnumerable<Comment>> commentsDict = new Dictionary<int, IEnumerable<Comment>>();
+            Dictionary<int, IEnumerable<Comment>> commentsDict = new Dictionary<int, IEnumerable<Comment>>();
 
             foreach (int productId in productIds)
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Service.Products
@@ -7,13 +6,13 @@ namespace GreenShop.Catalog.Service.Products
     public interface IProductService
     {
         Task<IEnumerable<ProductDto>> GetAllAsync();
-        Task<ProductDto> GetAsync(string id);
-        Task<Guid> CreateAsync(ProductDto product);
+        Task<ProductDto> GetAsync(int id);
+        Task<int> CreateAsync(ProductDto product);
         Task<bool> UpdateAsync(ProductDto product);
-        Task<bool> DeleteAsync(string id);
+        Task<bool> DeleteAsync(int id);
 
-        Task<Guid> AddCommentAsync(CommentDto commentDto);
-        Task<bool> DeleteCommentAsync(Guid id);
-        Task<bool> EditComment(Guid id, string message);
+        Task<int> AddCommentAsync(CommentDto commentDto);
+        Task<bool> DeleteCommentAsync(int id);
+        Task<bool> EditComment(int id, string message);
     }
 }

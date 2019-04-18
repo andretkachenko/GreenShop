@@ -1,6 +1,5 @@
 ﻿using GreenShop.Catalog.Service.Products;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Controllers
@@ -20,7 +19,7 @@ namespace GreenShop.Catalog.Controllers
 
         // PUT api/comment/5
         [HttpPut("{id}")]
-        public async Task<bool> EditComment(Guid id, [FromBody] string message)
+        public async Task<bool> EditComment(int id, [FromBody] string message)
         {
             bool success = await _productsService.EditComment(id, message);
 
@@ -29,7 +28,7 @@ namespace GreenShop.Catalog.Controllers
 
         // DELETE api/comment/5
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteComment(Guid id)
+        public async Task<bool> DeleteComment(int id)
         {
             bool success = await _productsService.DeleteCommentAsync(id);
 
@@ -38,9 +37,9 @@ namespace GreenShop.Catalog.Controllers
 
         // POST api/comment
         [HttpPost]
-        public async Task<Guid> AddComment([FromBody] CommentDto comment)
+        public async Task<int> AddComment([FromBody] CommentDto comment)
         {
-            Guid id = await _productsService.AddCommentAsync(comment);
+            int id = await _productsService.AddCommentAsync(comment);
 
             return id;
         }

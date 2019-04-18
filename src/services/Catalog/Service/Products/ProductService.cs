@@ -39,7 +39,7 @@ namespace GreenShop.Catalog.Service.Products
                 };
                 await Task.WhenAll(taskList);
                 IEnumerable<Product> products = MergeProducts(sqlGetAllTask.Result, mongoGetAllTask.Result);
-                Dictionary<Guid, IEnumerable<Comment>> commentsDict = await Scope.Comments.GetAllParentRelatedAsync(products.Select(x => x.Id));
+                Dictionary<int, IEnumerable<Comment>> commentsDict = await Scope.Comments.GetAllParentRelatedAsync(products.Select(x => x.Id));
                 products.ToList().ForEach(x => x.Comments = commentsDict[x.Id]);
 
                 IEnumerable<ProductDto> result = Mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(products);
@@ -84,7 +84,7 @@ namespace GreenShop.Catalog.Service.Products
         /// </summary>
         /// <param name="productDto">Product to add</param>
         /// <returns>Product id</returns>
-        public async Task<Guid> CreateAsync(ProductDto productDto)
+        public async Task<int> CreateAsync(ProductDto productDto)
         {
             EntityNameValidator validator = new EntityNameValidator();
             validator.ValidateAndThrow(productDto.Name);
@@ -113,8 +113,8 @@ namespace GreenShop.Catalog.Service.Products
                 {
                     Scope.Begin();
 
-                    Task<bool> sqlAddTask = Scope.SqlProductRepository.CreateAsync(product);
-                    List<Task<bool>> taskList = new List<Task<bool>> { sqlAddTask };
+                    Task<int> sqlAddTask = Scope.SqlProductRepository.CreateAsync(product);
+                    List<Task> taskList = new List<Task> { sqlAddTask };
                     if (product.HasMongoProperties())
                     {
                         taskList.Add(Scope.MongoProductRepository.CreateAsync(product));
@@ -127,7 +127,7 @@ namespace GreenShop.Catalog.Service.Products
 
                     Scope.Commit();
 
-                    return product.Id;
+                    return sqlAddTask.Result;
                 }
                 catch (Exception e)
                 {
@@ -183,7 +183,7 @@ namespace GreenShop.Catalog.Service.Products
                     {
                         if (string.IsNullOrWhiteSpace(product.MongoId))
                         {
-                            string mongoId = await Scope.SqlProductRepository.GetMongoIdAsync(product.Id.ToString());
+                            string mongoId = await Scope.SqlProductRepository.GetMongoIdAsync(product.Id);
                             product.SetMongoId(mongoId);
                         }
                         taskList.Add(Scope.MongoProductRepository.UpdateAsync(product));
@@ -207,7 +207,7 @@ namespace GreenShop.Catalog.Service.Products
         /// </summary>
         /// <param name="id">Id of the Product to delete</param>
         /// <returns>Number of rows affected</returns>
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
@@ -246,7 +246,7 @@ namespace GreenShop.Catalog.Service.Products
         /// </summary>
         /// <param name="commentDto">Comment to add</param>
         /// <returns>True if succeeded</returns>
-        public async Task<Guid> AddCommentAsync(CommentDto commentDto)
+        public async Task<int> AddCommentAsync(CommentDto commentDto)
         {
             CommentValidator validator = new CommentValidator();
             validator.ValidateAndThrow(commentDto);
@@ -271,14 +271,14 @@ namespace GreenShop.Catalog.Service.Products
         /// </summary>
         /// <param name="id">Id of the Comment to delete</param>
         /// <returns>True if succeeded</returns>
-        public async Task<bool> DeleteCommentAsync(Guid id)
+        public async Task<bool> DeleteCommentAsync(int id)
         {
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
             Scope.Begin();
             try
             {
-                bool result = await Scope.Comments.DeleteAsync(id.ToString());
+                bool result = await Scope.Comments.DeleteAsync(id);
                 Scope.Commit();
                 return result;
             }
@@ -295,7 +295,7 @@ namespace GreenShop.Catalog.Service.Products
         /// <param name="id">Id of the Comment to edit</param>
         /// <param name="message">Updated message for the comment</param>
         /// <returns>True if succeeded</returns>
-        public async Task<bool> EditComment(Guid id, string message)
+        public async Task<bool> EditComment(int id, string message)
         {
             IdValidator idValidator = new IdValidator();
             idValidator.ValidateAndThrow(id);

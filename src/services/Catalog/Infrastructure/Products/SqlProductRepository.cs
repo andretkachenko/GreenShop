@@ -89,7 +89,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         {
             using (SqlConnection context = _sql.Connection)
             {
-                var id = await context.InsertAsync(product, transaction: Transaction);
+                int id = await context.InsertAsync(product, transaction: Transaction);
 
                 return id;
             }

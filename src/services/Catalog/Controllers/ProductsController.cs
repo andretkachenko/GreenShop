@@ -30,7 +30,7 @@ namespace GreenShop.Catalog.Controllers
 
         // GET api/products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductDto>> GetProductAsync(string id)
+        public async Task<ActionResult<ProductDto>> GetProductAsync(int id)
         {
             try
             {
@@ -46,9 +46,9 @@ namespace GreenShop.Catalog.Controllers
 
         // POST api/products
         [HttpPost]
-        public async Task<Guid> AddProductAsync([FromBody] ProductDto product)
+        public async Task<int> AddProductAsync([FromBody] ProductDto product)
         {
-            Guid id = await _productsService.CreateAsync(product);
+            int id = await _productsService.CreateAsync(product);
 
             return id;
         }
@@ -64,7 +64,7 @@ namespace GreenShop.Catalog.Controllers
 
         // DELETE api/products/5
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteProductAsync(string id)
+        public async Task<bool> DeleteProductAsync(int id)
         {
             bool success = await _productsService.DeleteAsync(id);
 

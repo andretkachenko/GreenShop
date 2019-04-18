@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using GreenShop.Catalog.Service.Products;
-using System;
 
 namespace GreenShop.Catalog.Validators
 {
@@ -10,8 +9,8 @@ namespace GreenShop.Catalog.Validators
         {
             RuleFor(comment => comment.ProductId).NotNull();
             RuleFor(comment => comment.AuthorId).NotNull();
-            RuleFor(comment => comment.ProductId).NotEqual(Guid.Empty);
-            RuleFor(comment => comment.AuthorId).NotEqual(Guid.Empty);
+            RuleFor(comment => comment.ProductId).NotEqual(default(int));
+            RuleFor(comment => comment.AuthorId).NotEqual(default(int));
             RuleFor(comment => comment.Message).NotNull();
         }
     }

@@ -1,5 +1,4 @@
 ﻿using GreenShop.Catalog.Domain.Products;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
