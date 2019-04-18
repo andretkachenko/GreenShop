@@ -38,11 +38,11 @@ namespace GreenShop.Catalog.Service.Categories
         /// </summary>
         /// <param name="id">Id of the Category to get</param>
         /// <returns>Task with specified Category</returns>
-        public async Task<CategoryDto> GetAsync(string id)
+        public async Task<CategoryDto> GetAsync(int id)
         {
             using (Scope)
             {
-                Category category = await Scope.CategoryRepository.GetAsync(id.ToString());
+                Category category = await Scope.CategoryRepository.GetAsync(id);
 
                 CategoryDto result = Mapper.Map<Category, CategoryDto>(category);
                 return result;
@@ -54,10 +54,8 @@ namespace GreenShop.Catalog.Service.Categories
         /// </summary>
         /// <param name="categoryDto">Category to add</param>
         /// <returns>Category id</returns>
-        public async Task<Guid> CreateAsync(CategoryDto categoryDto)
+        public async Task<int> CreateAsync(CategoryDto categoryDto)
         {
-            IdValidator idValidator = new IdValidator();
-            idValidator.ValidateAndThrow(categoryDto.Id);
             EntityNameValidator nameValidator = new EntityNameValidator();
             nameValidator.ValidateAndThrow(categoryDto.Name);
 
@@ -66,10 +64,10 @@ namespace GreenShop.Catalog.Service.Categories
             Scope.Begin();
             try
             {
-                bool success = await Scope.CategoryRepository.UpdateAsync(category);
+                int id = await Scope.CategoryRepository.CreateAsync(category);
                 Scope.Commit();
 
-                return category.Id;
+                return id;
             }
             catch (Exception e)
             {
@@ -110,15 +108,15 @@ namespace GreenShop.Catalog.Service.Categories
         /// </summary>
         /// <param name="id">Id of the Category to delete</param>
         /// <returns>True on success</returns>
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(Guid.Parse(id));
+            validator.ValidateAndThrow(id);
 
             Scope.Begin();
             try
             {
-                bool success = await Scope.CategoryRepository.DeleteAsync(id.ToString());
+                bool success = await Scope.CategoryRepository.DeleteAsync(id);
                 Scope.Commit();
 
                 return success;

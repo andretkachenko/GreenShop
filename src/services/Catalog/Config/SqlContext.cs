@@ -43,7 +43,7 @@ namespace GreenShop.Catalog.Utils
         /// <remarks>Should be changed later on to work with different types of authentication</remarks>
         private string AssembleConnectionString(string dataSource, string initCatalog)
             => $"Data Source={dataSource};Initial Catalog={initCatalog};Integrated Security=True";
-        
+
         private bool disposedValue = false;
 
         private void Dispose(bool disposing)
@@ -52,7 +52,10 @@ namespace GreenShop.Catalog.Utils
             {
                 if (disposing)
                 {
-                    _connection.Dispose();
+                    if (_connection != null)
+                    {
+                        _connection.Dispose();
+                    }
                 }
 
                 disposedValue = true;

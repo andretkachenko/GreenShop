@@ -52,18 +52,17 @@ namespace GreenShop.Catalog.Service.Products
         /// </summary>
         /// <param name="id">Id of the Product to get</param>
         /// <returns>Task with specified Product</returns>
-        public async Task<ProductDto> GetAsync(string id)
+        public async Task<ProductDto> GetAsync(int id)
         {
-            Guid guid = Guid.Parse(id);
             IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(guid);
+            validator.ValidateAndThrow(id);
 
             using (Scope)
             {
                 Task<Product> sqlGetTask = Scope.SqlProductRepository.GetAsync(id);
                 Task<string> getMongoIdTask = Scope.SqlProductRepository.GetMongoIdAsync(id);
                 Task<Product> mongoGetTask = getMongoIdTask.ContinueWith(x => Scope.MongoProductRepository.GetAsync(x.Result)).Unwrap();
-                Task<IEnumerable<Comment>> getCommentsTask = Scope.Comments.GetAllParentRelatedAsync(guid);
+                Task<IEnumerable<Comment>> getCommentsTask = Scope.Comments.GetAllParentRelatedAsync(id);
                 List<Task> taskList = new List<Task>
                 {
                     sqlGetTask,
@@ -210,9 +209,8 @@ namespace GreenShop.Catalog.Service.Products
         /// <returns>Number of rows affected</returns>
         public async Task<bool> DeleteAsync(string id)
         {
-            Guid guid = Guid.Parse(id);
             IdValidator validator = new IdValidator();
-            validator.ValidateAndThrow(guid);
+            validator.ValidateAndThrow(id);
 
             using (Scope)
             {
@@ -223,7 +221,7 @@ namespace GreenShop.Catalog.Service.Products
                     Task<bool> sqlDeleteTask = Scope.SqlProductRepository.DeleteAsync(id);
                     Task<string> getMongoIdTask = Scope.SqlProductRepository.GetMongoIdAsync(id);
                     Task<bool> mongoDeleteTask = getMongoIdTask.ContinueWith(x => Scope.MongoProductRepository.DeleteAsync(x.Result)).Unwrap();
-                    Task<bool> deleteCommentsTask = Scope.Comments.DeleteAllParentRelatedAsync(guid);
+                    Task<bool> deleteCommentsTask = Scope.Comments.DeleteAllParentRelatedAsync(id);
                     List<Task<bool>> taskList = new List<Task<bool>>
                     {
                         sqlDeleteTask,

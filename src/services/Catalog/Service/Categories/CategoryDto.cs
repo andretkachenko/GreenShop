@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace GreenShop.Catalog.Service.Categories
+﻿namespace GreenShop.Catalog.Service.Categories
 {
     public class CategoryDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public Guid ParentCategoryId { get; set; }
+        public int ParentCategoryId { get; set; }
     }
 }

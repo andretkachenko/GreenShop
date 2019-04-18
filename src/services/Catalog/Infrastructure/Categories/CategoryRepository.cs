@@ -45,7 +45,7 @@ namespace GreenShop.Catalog.DataAccessor
         /// </summary>
         /// <param name="id">Id of the Category to get</param>
         /// <returns>Task with specified Category</returns>
-        public async Task<Category> GetAsync(string id)
+        public async Task<Category> GetAsync(int id)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -60,13 +60,13 @@ namespace GreenShop.Catalog.DataAccessor
         /// </summary>
         /// <param name="category">Category to add</param>
         /// <returns>Category Id</returns>
-        public async Task<bool> CreateAsync(Category category)
+        public async Task<int> CreateAsync(Category category)
         {
             using (SqlConnection context = _sql.Connection)
             {
-                await context.InsertAsync(category, transaction: Transaction);
+                int id = await context.InsertAsync(category, transaction: Transaction);
 
-                return true;
+                return id;
             }
         }
 
@@ -75,7 +75,7 @@ namespace GreenShop.Catalog.DataAccessor
         /// </summary>
         /// <param name="id">Id of the Category to delete</param>
         /// <returns>Number of rows affected</returns>
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -110,7 +110,7 @@ namespace GreenShop.Catalog.DataAccessor
                 {
                     query += " [Name] = @name";
                 }
-                if (category.ParentCategoryId != null)
+                if (category.ParentCategoryId != default(int))
                 {
                     query += " [ParentCategoryId] = @parentId";
                 }

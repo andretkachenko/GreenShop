@@ -6,21 +6,19 @@ namespace GreenShop.Catalog.Domain.Categories
     [Table("Categories")]
     public class Category : IAggregate
     {
-        public Guid Id { get; protected set; }
+        public int Id { get; protected set; }
         public string Name { get; protected set; }
-        public Guid ParentCategoryId { get; protected set; }
+        public int ParentCategoryId { get; protected set; }
         [Write(false)]
         public Category SubCategory { get; protected set; }
 
         public Category(string name)
         {
-            Id = new Guid();
             Name = name;
         }
 
-        public Category(string name, Guid parentId)
+        public Category(string name, int parentId)
         {
-            Id = new Guid();
             Name = name;
             ParentCategoryId = parentId;
         }
@@ -38,7 +36,7 @@ namespace GreenShop.Catalog.Domain.Categories
         /// Move Category to the different parent Category
         /// </summary>
         /// <param name="id">Guid of the Category, that should become parent</param>
-        public void ChangeParentCategory(Guid id)
+        public void ChangeParentCategory(int id)
         {
             ParentCategoryId = id;
         }

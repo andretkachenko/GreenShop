@@ -46,7 +46,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="id">Id of the Product to get</param>
         /// <returns>Task with specified Product</returns>
-        public async Task<Product> GetAsync(string id)
+        public async Task<Product> GetAsync(int id)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -61,7 +61,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="id">Id of a Product</param>
         /// <returns>MongoId</returns>
-        public async Task<string> GetMongoIdAsync(string id)
+        public async Task<string> GetMongoIdAsync(int id)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -85,13 +85,13 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="product">Product to add</param>
         /// <returns>Result flag</returns>
-        public async Task<bool> CreateAsync(Product product)
+        public async Task<int> CreateAsync(Product product)
         {
             using (SqlConnection context = _sql.Connection)
             {
-                await context.InsertAsync(product, transaction: Transaction);
+                var id = await context.InsertAsync(product, transaction: Transaction);
 
-                return true;
+                return id;
             }
         }
 
@@ -100,7 +100,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="id">Id of the Product to delete</param>
         /// <returns>Result flag</returns>
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -136,7 +136,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 {
                     query += " [Name] = @name";
                 }
-                if (product.CategoryId != null)
+                if (product.CategoryId != default(int))
                 {
                     query += " [CategoryId] = @categoryId";
                 }

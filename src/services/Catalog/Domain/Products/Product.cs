@@ -10,17 +10,16 @@ namespace GreenShop.Catalog.Domain.Products
 {
     public class Product : IAggregate
     {
-        public Product(string name, Guid categoryId) : this(name, categoryId, null) { }
-        public Product(string name, Guid categoryId, string description)
+        public Product(string name, int categoryId) : this(name, categoryId, null) { }
+        public Product(string name, int categoryId, string description)
         {
-            Id = new Guid();
             Name = name;
             CategoryId = categoryId;
             Description = description;
         }
 
         [BsonIgnore]
-        public Guid Id { get; protected set; }
+        public int Id { get; protected set; }
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string MongoId { get; protected set; }
@@ -36,7 +35,7 @@ namespace GreenShop.Catalog.Domain.Products
         public float Rating { get; protected set; }
 
         [BsonIgnore]
-        public Guid CategoryId { get; protected set; }
+        public int CategoryId { get; protected set; }
 
         [Write(false), JsonIgnore, BsonIgnore]
         public IEnumerable<Comment> Comments { get; set; }
@@ -74,7 +73,7 @@ namespace GreenShop.Catalog.Domain.Products
         /// Move Product to the different Category
         /// </summary>
         /// <param name="newCategoryId">ID of the new Category</param>
-        public void ChangeCategory(Guid newCategoryId)
+        public void ChangeCategory(int newCategoryId)
         {
             CategoryId = newCategoryId;
         }
@@ -94,7 +93,7 @@ namespace GreenShop.Catalog.Domain.Products
         /// <param name="comment">New Comment to add to the Product's Comment list.</param>
         public void AddComment(Comment comment)
         {
-            if(Comments == null) Comments = new List<Comment>();
+            if (Comments == null) Comments = new List<Comment>();
             Comments.ToList().Add(comment);
         }
 
@@ -121,7 +120,7 @@ namespace GreenShop.Catalog.Domain.Products
         public bool HasSqlProperties()
         {
             return !string.IsNullOrWhiteSpace(Name)
-                    || CategoryId != null
+                    || CategoryId != default(int)
                     || !string.IsNullOrWhiteSpace(Description)
                     || BasePrice != 0
                     || Rating != 0;

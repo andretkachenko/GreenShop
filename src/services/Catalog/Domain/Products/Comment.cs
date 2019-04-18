@@ -1,22 +1,18 @@
-﻿using GreenShop.Catalog.Domain;
-using System;
-
-namespace GreenShop.Catalog.Domain.Products
+﻿namespace GreenShop.Catalog.Domain.Products
 {
     public class Comment : IEntity
     {
-        public Comment(Guid authorId, string message, Guid productId)
+        public Comment(int authorId, string message, int productId)
         {
-            Id = new Guid();
             AuthorId = authorId;
             Message = message;
             ProductId = productId;
         }
 
-        public Guid Id { get; protected set; }
-        public Guid AuthorId { get; protected set; }
+        public int Id { get; protected set; }
+        public int AuthorId { get; protected set; }
         public string Message { get; protected set; }
-        public Guid ProductId { get; protected set; }
+        public int ProductId { get; protected set; }
 
         /// <summary>
         /// Edit message of the Comment

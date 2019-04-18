@@ -34,25 +34,27 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="comment">Comment to insert to the database</param>
         /// <returns>Task with Id of the Comment</returns>
-        public async Task<bool> CreateAsync(Comment comment)
+        public async Task<int> CreateAsync(Comment comment)
         {
             using (SqlConnection context = _sql.Connection)
             {
-                await context.InsertAsync(comment, transaction: Transaction);
-                return true;
+                var result = await context.InsertAsync(comment, transaction: Transaction);
+                return result;
             }
         }
 
-        public async Task<bool> CreateAsync(IEnumerable<Comment> comments)
+        public async Task<IEnumerable<int>> CreateAsync(IEnumerable<Comment> comments)
         {
-            List<Task<bool>> createTasks = new List<Task<bool>>();
+            List<int> ids = new List<int>();
+            List<Task<int>> createTasks = new List<Task<int>>();
 
             foreach (Comment comment in comments)
             {
                 createTasks.Add(CreateAsync(comment));
             }
             await Task.WhenAll(createTasks);
-            return createTasks.TrueForAll(x => x.Result);
+            createTasks.ForEach(x => ids.Add(x.Result));
+            return ids;
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="id">Id of the Comment to delete from database</param>
         /// <returns>Task with number of deleted rows</returns>
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -77,7 +79,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
             }
         }
 
-        public async Task<bool> UpdateAsync(Guid id, string message)
+        public async Task<bool> UpdateAsync(int id, string message)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -108,7 +110,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="id">Id of the Comment to get</param>
         /// <returns>Task with Comment</returns>
-        public async Task<Comment> GetAsync(string id)
+        public async Task<Comment> GetAsync(int id)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -124,7 +126,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>NotImplementedException</returns>     
         public Task<IEnumerable<Comment>> GetAllAsync() => throw new NotImplementedException();
 
-        public async Task<IEnumerable<Comment>> GetAllParentRelatedAsync(Guid productId)
+        public async Task<IEnumerable<Comment>> GetAllParentRelatedAsync(int productId)
         {
             using (SqlConnection context = _sql.Connection)
             {
@@ -144,12 +146,12 @@ namespace GreenShop.Catalog.Infrastructure.Products
             }
         }
 
-        public async Task<Dictionary<Guid, IEnumerable<Comment>>> GetAllParentRelatedAsync(IEnumerable<Guid> productIds)
+        public async Task<Dictionary<int, IEnumerable<Comment>>> GetAllParentRelatedAsync(IEnumerable<int> productIds)
         {
             List<Task<IEnumerable<Comment>>> taskList = new List<Task<IEnumerable<Comment>>>();
-            Dictionary <Guid, IEnumerable<Comment>> commentsDict = new Dictionary<Guid, IEnumerable<Comment>>();
+            Dictionary <int, IEnumerable<Comment>> commentsDict = new Dictionary<int, IEnumerable<Comment>>();
 
-            foreach (Guid productId in productIds)
+            foreach (int productId in productIds)
             {
                 taskList.Add(GetAllParentRelatedAsync(productId));
             }
@@ -159,7 +161,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
             return commentsDict;
         }
 
-        public async Task<bool> DeleteAllParentRelatedAsync(Guid productId)
+        public async Task<bool> DeleteAllParentRelatedAsync(int productId)
         {
             using (SqlConnection context = _sql.Connection)
             {

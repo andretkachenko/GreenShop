@@ -3,12 +3,11 @@ using System;
 
 namespace GreenShop.Catalog.Validators
 {
-    public class IdValidator : AbstractValidator<Guid>
+    public class IdValidator : AbstractValidator<int>
     {
         public IdValidator()
         {
-            RuleFor(id => id).NotNull();
-            RuleFor(id => id).NotEqual(Guid.Empty);
+            RuleFor(id => id).NotEqual(default(int));
         }
     }
 }

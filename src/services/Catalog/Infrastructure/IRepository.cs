@@ -12,9 +12,9 @@ namespace GreenShop.Catalog.Infrastructure
         void SetSqlTransaction(IDbTransaction transaction);
 
         Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<TEntity> GetAsync(string id);
-        Task<bool> DeleteAsync(string id);
-        Task<bool> CreateAsync(TEntity entity);
+        Task<TEntity> GetAsync(int id);
+        Task<bool> DeleteAsync(int id);
+        Task<int> CreateAsync(TEntity entity);
         Task<bool> UpdateAsync(TEntity entity);
     }
 }
