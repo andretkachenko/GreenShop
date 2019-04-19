@@ -33,12 +33,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                IEnumerable<Product> products = await context.GetAllAsync<Product>();
+                IEnumerable<Product> products = await _sql.Connection.GetAllAsync<Product>();
 
                 return products;
-            }
         }
 
         /// <summary>
@@ -48,12 +45,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with specified Product</returns>
         public async Task<Product> GetAsync(int id)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                Product product = await context.GetAsync<Product>(id);
+                Product product = await _sql.Connection.GetAsync<Product>(id);
 
                 return product;
-            }
         }
 
         /// <summary>
@@ -63,9 +57,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>MongoId</returns>
         public async Task<string> GetMongoIdAsync(int id)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                IEnumerable<string> result = await context.QueryAsync<string>(@"
+                IEnumerable<string> result = await _sql.Connection.QueryAsync<string>(@"
                     SELECT [MongoId]
                     FROM [Products]
                     WHERE [Id] = @id
@@ -77,7 +69,6 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 string mongoId = result.FirstOrDefault();
 
                 return mongoId;
-            }
         }
 
         /// <summary>
@@ -87,12 +78,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Result flag</returns>
         public async Task<int> CreateAsync(Product product)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                int id = await context.InsertAsync(product, transaction: Transaction);
+                int id = await _sql.Connection.InsertAsync(product, transaction: Transaction);
 
                 return id;
-            }
         }
 
         /// <summary>
@@ -102,9 +90,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Result flag</returns>
         public async Task<bool> DeleteAsync(int id)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                await context.ExecuteAsync(@"
+                await _sql.Connection.ExecuteAsync(@"
                     DELETE
                     FROM [Products]
                     WHERE [Id] = @id
@@ -115,7 +101,6 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 transaction: Transaction);
 
                 return true;
-            }
         }
 
         /// <summary>
@@ -125,8 +110,6 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Result flag</returns>
         public async Task<bool> UpdateAsync(Product product)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
                 string query = @"
                     UPDATE [Products]
                     SET
@@ -155,7 +138,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
 
                 query += " WHERE [Id] = @id";
 
-                int affectedRows = await context.ExecuteAsync(query, new
+                int affectedRows = await _sql.Connection.ExecuteAsync(query, new
                 {
                     id = product.Id,
                     name = product.Name,
@@ -167,7 +150,6 @@ namespace GreenShop.Catalog.Infrastructure.Products
                 transaction: Transaction);
 
                 return true;
-            }
         }
     }
 }

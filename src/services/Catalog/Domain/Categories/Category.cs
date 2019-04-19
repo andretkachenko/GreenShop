@@ -1,4 +1,6 @@
-﻿namespace GreenShop.Catalog.Domain.Categories
+﻿using Dapper.Contrib.Extensions;
+
+namespace GreenShop.Catalog.Domain.Categories
 {
     [Table("Categories")]
     public class Category : IAggregate

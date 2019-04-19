@@ -251,18 +251,21 @@ namespace GreenShop.Catalog.Service.Products
             CommentValidator validator = new CommentValidator();
             validator.ValidateAndThrow(commentDto);
 
-            Scope.Begin();
-            try
+            using (Scope)
             {
-                Comment comment = new Comment(commentDto.AuthorId, commentDto.Message, commentDto.ProductId);
-                await Scope.Comments.CreateAsync(comment);
-                Scope.Commit();
-                return comment.Id;
-            }
-            catch (Exception e)
-            {
-                Scope.Rollback();
-                throw e;
+                try
+                {
+                    Scope.Begin();
+                    Comment comment = new Comment(commentDto.AuthorId, commentDto.Message, commentDto.ProductId);
+                    await Scope.Comments.CreateAsync(comment);
+                    Scope.Commit();
+                    return comment.Id;
+                }
+                catch (Exception e)
+                {
+                    Scope.Rollback();
+                    throw e;
+                }
             }
         }
 
@@ -275,17 +278,21 @@ namespace GreenShop.Catalog.Service.Products
         {
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
-            Scope.Begin();
-            try
+
+            using (Scope)
             {
-                bool result = await Scope.Comments.DeleteAsync(id);
-                Scope.Commit();
-                return result;
-            }
-            catch (Exception e)
-            {
-                Scope.Rollback();
-                throw e;
+                try
+                {
+                    Scope.Begin();
+                    bool result = await Scope.Comments.DeleteAsync(id);
+                    Scope.Commit();
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Scope.Rollback();
+                    throw e;
+                }
             }
         }
 
@@ -301,17 +308,21 @@ namespace GreenShop.Catalog.Service.Products
             idValidator.ValidateAndThrow(id);
             CommentMessageValidator messageValidator = new CommentMessageValidator();
             messageValidator.ValidateAndThrow(message);
-            Scope.Begin();
-            try
+
+            using (Scope)
             {
-                bool result = await Scope.Comments.UpdateAsync(id, message);
-                Scope.Commit();
-                return result;
-            }
-            catch (Exception e)
-            {
-                Scope.Rollback();
-                throw e;
+                try
+                {
+                    Scope.Begin();
+                    bool result = await Scope.Comments.UpdateAsync(id, message);
+                    Scope.Commit();
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Scope.Rollback();
+                    throw e;
+                }
             }
         }
 

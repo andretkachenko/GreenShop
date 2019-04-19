@@ -5,7 +5,6 @@ using GreenShop.Catalog.Domain.Categories;
 using GreenShop.Catalog.Infrastructure;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.DataAccessor
@@ -32,12 +31,9 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Task with list of all Categories</returns>
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                IEnumerable<Category> categories = await context.GetAllAsync<Category>();
+            IEnumerable<Category> categories = await _sql.Connection.GetAllAsync<Category>();
 
-                return categories;
-            }
+            return categories;
         }
 
         /// <summary>
@@ -47,12 +43,9 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Task with specified Category</returns>
         public async Task<Category> GetAsync(int id)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                Category category = await context.GetAsync<Category>(id);
+            Category category = await _sql.Connection.GetAsync<Category>(id);
 
-                return category;
-            }
+            return category;
         }
 
         /// <summary>
@@ -62,12 +55,9 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Category Id</returns>
         public async Task<int> CreateAsync(Category category)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                int id = await context.InsertAsync(category, transaction: Transaction);
+            int id = await _sql.Connection.InsertAsync(category, transaction: Transaction);
 
-                return id;
-            }
+            return id;
         }
 
         /// <summary>
@@ -77,19 +67,16 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<bool> DeleteAsync(int id)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                int affectedRows = await context.ExecuteAsync(@"
+            int affectedRows = await _sql.Connection.ExecuteAsync(@"
                     DELETE
                     FROM [Categories]
                     WHERE [Id] = @id
                 ", new
-                {
-                    id
-                }, transaction: Transaction);
+            {
+                id
+            }, transaction: Transaction);
 
-                return affectedRows == 1;
-            }
+            return affectedRows == 1;
         }
 
         /// <summary>
@@ -99,33 +86,30 @@ namespace GreenShop.Catalog.DataAccessor
         /// <returns>Number of rows affected</returns>
         public async Task<bool> UpdateAsync(Category category)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                string query = @"
+            string query = @"
                     UPDATE [Categories]
                     SET
                 ";
 
-                if (!string.IsNullOrWhiteSpace(category.Name))
-                {
-                    query += " [Name] = @name";
-                }
-                if (category.ParentCategoryId != default(int))
-                {
-                    query += " [ParentCategoryId] = @parentId";
-                }
-
-                query += " WHERE [Id] = @id";
-
-                int affectedRows = await context.ExecuteAsync(query, new
-                {
-                    id = category.Id,
-                    name = category.Name,
-                    parentId = category.ParentCategoryId
-                }, transaction: Transaction);
-
-                return affectedRows == 1;
+            if (!string.IsNullOrWhiteSpace(category.Name))
+            {
+                query += " [Name] = @name";
             }
+            if (category.ParentCategoryId != default(int))
+            {
+                query += " [ParentCategoryId] = @parentId";
+            }
+
+            query += " WHERE [Id] = @id";
+
+            int affectedRows = await _sql.Connection.ExecuteAsync(query, new
+            {
+                id = category.Id,
+                name = category.Name,
+                parentId = category.ParentCategoryId
+            }, transaction: Transaction);
+
+            return affectedRows == 1;
         }
     }
 }

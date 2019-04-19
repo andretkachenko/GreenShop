@@ -6,7 +6,6 @@ using GreenShop.Catalog.Infrastructure.Products.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,11 +35,8 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with Id of the Comment</returns>
         public async Task<int> CreateAsync(Comment comment)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                int result = await context.InsertAsync(comment, transaction: Transaction);
-                return result;
-            }
+            int result = await _sql.Connection.InsertAsync(comment, transaction: Transaction);
+            return result;
         }
 
         public async Task<IEnumerable<int>> CreateAsync(IEnumerable<Comment> comments)
@@ -64,37 +60,31 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with number of deleted rows</returns>
         public async Task<bool> DeleteAsync(int id)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                string query = @"
+            string query = @"
                         DELETE
                         FROM [Comments]
                         WHERE [Id] = @id";
-                int affectedRows = await context.ExecuteAsync(query, new
-                {
-                    id
-                },
-                transaction: Transaction);
-                return affectedRows == 1;
-            }
+            int affectedRows = await _sql.Connection.ExecuteAsync(query, new
+            {
+                id
+            },
+            transaction: Transaction);
+            return affectedRows == 1;
         }
 
         public async Task<bool> UpdateAsync(int id, string message)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                string query = @"
+            string query = @"
                         UPDATE [Comments]
                         SET [Message] = @message
                         WHERE [Id] = @id";
-                int affectedRows = await context.ExecuteAsync(query, new
-                {
-                    id,
-                    message,
-                },
-                transaction: Transaction);
-                return affectedRows == 1;
-            }
+            int affectedRows = await _sql.Connection.ExecuteAsync(query, new
+            {
+                id,
+                message,
+            },
+            transaction: Transaction);
+            return affectedRows == 1;
         }
 
         /// <summary>
@@ -112,12 +102,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with Comment</returns>
         public async Task<Comment> GetAsync(int id)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                Comment comment = await context.GetAsync<Comment>(id);
+            Comment comment = await _sql.Connection.GetAsync<Comment>(id);
 
-                return comment;
-            }
+            return comment;
         }
 
         /// <summary>
@@ -128,9 +115,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
 
         public async Task<IEnumerable<Comment>> GetAllParentRelatedAsync(int productId)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                IEnumerable<Comment> comments = await context.QueryAsync<Comment>(@"
+            IEnumerable<Comment> comments = await _sql.Connection.QueryAsync<Comment>(@"
                     SELECT [Id]
                         ,[AuthorId]
                         ,[Message]
@@ -138,12 +123,11 @@ namespace GreenShop.Catalog.Infrastructure.Products
                     FROM [Comments]
                     WHERE [ProductId] = @productId
                 ", new
-                {
-                    productId
-                });
+            {
+                productId
+            });
 
-                return comments;
-            }
+            return comments;
         }
 
         public async Task<Dictionary<int, IEnumerable<Comment>>> GetAllParentRelatedAsync(IEnumerable<int> productIds)
@@ -163,19 +147,16 @@ namespace GreenShop.Catalog.Infrastructure.Products
 
         public async Task<bool> DeleteAllParentRelatedAsync(int productId)
         {
-            using (SqlConnection context = _sql.Connection)
-            {
-                string query = @"
+            string query = @"
                         DELETE
                         FROM [Comments]
                         WHERE [ProductId] = @productId";
-                int affectedRows = await context.ExecuteAsync(query, new
-                {
-                    productId
-                },
-                transaction: Transaction);
-                return affectedRows != 0;
-            }
+            int affectedRows = await _sql.Connection.ExecuteAsync(query, new
+            {
+                productId
+            },
+            transaction: Transaction);
+            return affectedRows != 0;
         }
     }
 }

@@ -61,18 +61,21 @@ namespace GreenShop.Catalog.Service.Categories
 
             Category category = new Category(categoryDto.Name, categoryDto.ParentCategoryId);
 
-            Scope.Begin();
-            try
+            using (Scope)
             {
-                int id = await Scope.CategoryRepository.CreateAsync(category);
-                Scope.Commit();
+                try
+                {
+                    Scope.Begin();
+                    int id = await Scope.CategoryRepository.CreateAsync(category);
+                    Scope.Commit();
 
-                return id;
-            }
-            catch (Exception e)
-            {
-                Scope.Rollback();
-                throw e;
+                    return id;
+                }
+                catch (Exception e)
+                {
+                    Scope.Rollback();
+                    throw e;
+                }
             }
         }
 
@@ -88,18 +91,21 @@ namespace GreenShop.Catalog.Service.Categories
 
             Category category = new Category(categoryDto.Name, categoryDto.ParentCategoryId);
 
-            Scope.Begin();
-            try
+            using (Scope)
             {
-                bool success = await Scope.CategoryRepository.UpdateAsync(category);
-                Scope.Commit();
+                try
+                {
+                    Scope.Begin();
+                    bool success = await Scope.CategoryRepository.UpdateAsync(category);
+                    Scope.Commit();
 
-                return success;
-            }
-            catch (Exception e)
-            {
-                Scope.Rollback();
-                throw e;
+                    return success;
+                }
+                catch (Exception e)
+                {
+                    Scope.Rollback();
+                    throw e;
+                }
             }
         }
 
@@ -113,18 +119,21 @@ namespace GreenShop.Catalog.Service.Categories
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(id);
 
-            Scope.Begin();
-            try
+            using (Scope)
             {
-                bool success = await Scope.CategoryRepository.DeleteAsync(id);
-                Scope.Commit();
+                try
+                {
+                    Scope.Begin();
+                    bool success = await Scope.CategoryRepository.DeleteAsync(id);
+                    Scope.Commit();
 
-                return success;
-            }
-            catch (Exception e)
-            {
-                Scope.Rollback();
-                throw e;
+                    return success;
+                }
+                catch (Exception e)
+                {
+                    Scope.Rollback();
+                    throw e;
+                }
             }
         }
     }
