@@ -11,10 +11,12 @@ namespace GreenShop.Catalog.Service.Categories
 {
     public class CategoryService : ICategoryService
     {
+        private readonly IMapper _mapper;
         private IDomainScope Scope;
 
-        public CategoryService(IDomainScope unitOfWork)
+        public CategoryService(IMapper mapper, IDomainScope unitOfWork)
         {
+            _mapper = mapper;
             Scope = unitOfWork;
         }
 
@@ -28,7 +30,7 @@ namespace GreenShop.Catalog.Service.Categories
             {
                 IEnumerable<Category> categories = await Scope.CategoryRepository.GetAllAsync();
 
-                IEnumerable<CategoryDto> result = Mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDto>>(categories);
+                IEnumerable<CategoryDto> result = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDto>>(categories);
                 return result;
             }
         }
@@ -44,7 +46,7 @@ namespace GreenShop.Catalog.Service.Categories
             {
                 Category category = await Scope.CategoryRepository.GetAsync(id);
 
-                CategoryDto result = Mapper.Map<Category, CategoryDto>(category);
+                CategoryDto result = _mapper.Map<Category, CategoryDto>(category);
                 return result;
             }
         }

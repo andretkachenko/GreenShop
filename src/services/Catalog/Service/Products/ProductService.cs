@@ -15,10 +15,12 @@ namespace GreenShop.Catalog.Service.Products
 {
     public class ProductService : IProductService
     {
+        private readonly IMapper _mapper;
         private IDomainScope Scope;
 
-        public ProductService(IDomainScope unitOfWork)
+        public ProductService(IMapper mapper, IDomainScope unitOfWork)
         {
+            _mapper = mapper;
             Scope = unitOfWork;
         }
 
@@ -42,7 +44,7 @@ namespace GreenShop.Catalog.Service.Products
                 Dictionary<int, IEnumerable<Comment>> commentsDict = await Scope.Comments.GetAllParentRelatedAsync(products.Select(x => x.Id));
                 products.ToList().ForEach(x => x.Comments = commentsDict[x.Id]);
 
-                IEnumerable<ProductDto> result = Mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(products);
+                IEnumerable<ProductDto> result = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(products);
                 return result;
             }
         }
@@ -74,7 +76,7 @@ namespace GreenShop.Catalog.Service.Products
                 Product product = MergeProduct(sqlGetTask.Result, mongoGetTask.Result);
                 product.Comments = getCommentsTask.Result;
 
-                ProductDto result = Mapper.Map<Product, ProductDto>(product);
+                ProductDto result = _mapper.Map<Product, ProductDto>(product);
                 return result;
             }
         }

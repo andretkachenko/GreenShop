@@ -2,18 +2,30 @@
 {
     public class Comment : IEntity
     {
+        #region Constructors
+        /// <summary>
+        /// Controller used by the Dapper in order to map obtain from DB
+        /// values into thr Enitty model.
+        /// Apart from this use-case, it should never be called.
+        /// </summary>
+        private Comment() { }
+
         public Comment(int authorId, string message, int productId)
         {
             AuthorId = authorId;
             Message = message;
             ProductId = productId;
         }
+        #endregion
 
+        #region Properties
         public int Id { get; protected set; }
         public int AuthorId { get; protected set; }
         public string Message { get; protected set; }
         public int ProductId { get; protected set; }
+        #endregion
 
+        #region Setters
         /// <summary>
         /// Edit message of the Comment
         /// </summary>
@@ -23,5 +35,6 @@
         {
             Message = newMessage;
         }
+        #endregion
     }
 }

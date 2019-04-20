@@ -5,12 +5,13 @@ namespace GreenShop.Catalog.Domain.Products
 {
     public class Specification : IValueObject
     {
-        [BsonElement("name")]
-        public string Name { get; protected set; }
-        [BsonElement("max_selection_available")]
-        public int MaxSelectionAvailable { get; protected set; }
-        [BsonElement("options")]
-        public IEnumerable<string> Options { get; protected set; }
+        #region Constructors
+        /// <summary>
+        /// Controller used by the Dapper in order to map obtain from DB
+        /// values into thr Enitty model.
+        /// Apart from this use-case, it should never be called.
+        /// </summary>
+        private Specification() { }
 
         public Specification(string name, int maxSelect, IEnumerable<string> options)
         {
@@ -18,5 +19,15 @@ namespace GreenShop.Catalog.Domain.Products
             MaxSelectionAvailable = maxSelect;
             Options = options;
         }
+        #endregion
+
+        #region Properties
+        [BsonElement("name")]
+        public string Name { get; protected set; }
+        [BsonElement("max_selection_available")]
+        public int MaxSelectionAvailable { get; protected set; }
+        [BsonElement("options")]
+        public IEnumerable<string> Options { get; protected set; }
+        #endregion
     }
 }

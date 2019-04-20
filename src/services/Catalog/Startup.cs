@@ -1,4 +1,5 @@
-﻿using GreenShop.Catalog.Config.Interfaces;
+﻿using AutoMapper;
+using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.DataAccessor;
 using GreenShop.Catalog.Domain.Categories;
 using GreenShop.Catalog.Infrastructure;
@@ -28,6 +29,7 @@ namespace GreenShop.Catalog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("api-version"));
             services.AddSingleton(Configuration);

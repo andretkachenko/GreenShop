@@ -9,6 +9,14 @@ namespace GreenShop.Catalog.Domain.Products
 {
     public class Product : IAggregate
     {
+        #region Constructors
+        /// <summary>
+        /// Controller used by the Dapper in order to map obtain from DB
+        /// values into thr Enitty model.
+        /// Apart from this use-case, it should never be called.
+        /// </summary>
+        private Product() { }
+
         public Product(string name, int categoryId) : this(name, categoryId, null) { }
         public Product(string name, int categoryId, string description)
         {
@@ -16,7 +24,9 @@ namespace GreenShop.Catalog.Domain.Products
             CategoryId = categoryId;
             Description = description;
         }
+        #endregion
 
+        #region Properties
         [BsonIgnore]
         public int Id { get; protected set; }
         [BsonId]
@@ -40,7 +50,9 @@ namespace GreenShop.Catalog.Domain.Products
         public IEnumerable<Comment> Comments { get; set; }
         [BsonElement("specifications"), Write(false)]
         public IEnumerable<Specification> Specifications { get; set; }
+        #endregion
 
+        #region Setters
         /// <summary>
         /// Change Rating of the Product to the specified value
         /// </summary>
@@ -104,7 +116,9 @@ namespace GreenShop.Catalog.Domain.Products
         {
             MongoId = id;
         }
+        #endregion
 
+        #region State Checkers
         /// <summary>
         /// Check if specified Product has any properties filled, that are stored in MongoDB
         /// </summary>
@@ -124,5 +138,6 @@ namespace GreenShop.Catalog.Domain.Products
                     || BasePrice != 0
                     || Rating != 0;
         }
+        #endregion
     }
 }
