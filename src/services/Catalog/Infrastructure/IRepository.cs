@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure
 {
-    public interface IRepository<TEntity> where TEntity : IEntity
+    public interface IRepository<TEntity, TDto> 
+        where TEntity : IEntity
     {
         IDbTransaction Transaction { get; }
 
@@ -15,6 +16,6 @@ namespace GreenShop.Catalog.Infrastructure
         Task<TEntity> GetAsync(int id);
         Task<bool> DeleteAsync(int id);
         Task<int> CreateAsync(TEntity entity);
-        Task<bool> UpdateAsync(TEntity entity);
+        Task<bool> UpdateAsync(TDto entity);
     }
 }

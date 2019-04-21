@@ -1,5 +1,6 @@
 ﻿using GreenShop.Catalog.Domain.Categories;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
+using GreenShop.Catalog.Service.Categories;
 
 namespace GreenShop.Catalog.Infrastructure
 {
@@ -7,7 +8,7 @@ namespace GreenShop.Catalog.Infrastructure
     {
         ISqlProductRepository SqlProductRepository { get; }
         IMongoProductRepository MongoProductRepository { get; }
-        IRepository<Category> CategoryRepository { get; }
+        IRepository<Category, CategoryDto> CategoryRepository { get; }
         ICommentRepository Comments { get; }
     }
 }

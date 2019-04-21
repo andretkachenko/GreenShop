@@ -3,6 +3,7 @@ using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
+using GreenShop.Catalog.Service.Products;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -93,7 +94,7 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="comment">Comment to edit</param>
         /// <returns>Task with the number of proceeded rows</returns>
-        public async Task<bool> UpdateAsync(Comment comment) => await UpdateAsync(comment.Id, comment.Message);
+        public async Task<bool> UpdateAsync(CommentDto comment) => await UpdateAsync(comment.Id, comment.Message);
 
         /// <summary>
         /// Asynchronously Get Comment by ID

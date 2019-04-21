@@ -1,10 +1,11 @@
 ﻿using GreenShop.Catalog.Domain.Products;
+using GreenShop.Catalog.Service.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Infrastructure.Products.Interfaces
 {
-    public interface ICommentRepository : IRepository<Comment>
+    public interface ICommentRepository : IRepository<Comment, CommentDto>
     {
         /// <summary>
         /// Asynchronously add List of the Comments

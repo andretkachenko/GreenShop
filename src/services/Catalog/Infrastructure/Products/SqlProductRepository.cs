@@ -3,9 +3,9 @@ using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Domain.Products;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
+using GreenShop.Catalog.Service.Products;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,9 +33,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with list of all Products</returns>
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-                IEnumerable<Product> products = await _sql.Connection.GetAllAsync<Product>();
+            IEnumerable<Product> products = await _sql.Connection.GetAllAsync<Product>();
 
-                return products;
+            return products;
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Task with specified Product</returns>
         public async Task<Product> GetAsync(int id)
         {
-                Product product = await _sql.Connection.GetAsync<Product>(id);
+            Product product = await _sql.Connection.GetAsync<Product>(id);
 
-                return product;
+            return product;
         }
 
         /// <summary>
@@ -57,18 +57,18 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>MongoId</returns>
         public async Task<string> GetMongoIdAsync(int id)
         {
-                IEnumerable<string> result = await _sql.Connection.QueryAsync<string>(@"
+            IEnumerable<string> result = await _sql.Connection.QueryAsync<string>(@"
                     SELECT [MongoId]
                     FROM [Products]
                     WHERE [Id] = @id
                 ", new
-                {
-                    id
-                });
+            {
+                id
+            });
 
-                string mongoId = result.FirstOrDefault();
+            string mongoId = result.FirstOrDefault();
 
-                return mongoId;
+            return mongoId;
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Result flag</returns>
         public async Task<int> CreateAsync(Product product)
         {
-                int id = await _sql.Connection.InsertAsync(product, transaction: Transaction);
+            int id = await _sql.Connection.InsertAsync(product, transaction: Transaction);
 
-                return id;
+            return id;
         }
 
         /// <summary>
@@ -90,17 +90,17 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// <returns>Result flag</returns>
         public async Task<bool> DeleteAsync(int id)
         {
-                await _sql.Connection.ExecuteAsync(@"
+            await _sql.Connection.ExecuteAsync(@"
                     DELETE
                     FROM [Products]
                     WHERE [Id] = @id
                 ", new
-                {
-                    id
-                },
-                transaction: Transaction);
+            {
+                id
+            },
+            transaction: Transaction);
 
-                return true;
+            return true;
         }
 
         /// <summary>
@@ -108,48 +108,48 @@ namespace GreenShop.Catalog.Infrastructure.Products
         /// </summary>
         /// <param name="product">Product, that contains id of entity that should be changed, and all changed values</param>
         /// <returns>Result flag</returns>
-        public async Task<bool> UpdateAsync(Product product)
+        public async Task<bool> UpdateAsync(ProductDto product)
         {
-                string query = @"
+            string query = @"
                     UPDATE [Products]
                     SET
                     ";
 
-                if (!string.IsNullOrWhiteSpace(product.Name))
-                {
-                    query += " [Name] = @name";
-                }
-                if (product.CategoryId != default(int))
-                {
-                    query += " [CategoryId] = @categoryId";
-                }
-                if (!string.IsNullOrWhiteSpace(product.Description))
-                {
-                    query += " [Description] = @description";
-                }
-                if (product.BasePrice != 0)
-                {
-                    query += " [BasePrice] = @basePrice";
-                }
-                if (product.Rating != 0)
-                {
-                    query += " [Rating] = @rating";
-                }
+            if (!string.IsNullOrWhiteSpace(product.Name))
+            {
+                query += " [Name] = @name";
+            }
+            if (product.CategoryId != default(int))
+            {
+                query += " [CategoryId] = @categoryId";
+            }
+            if (!string.IsNullOrWhiteSpace(product.Description))
+            {
+                query += " [Description] = @description";
+            }
+            if (product.BasePrice != 0)
+            {
+                query += " [BasePrice] = @basePrice";
+            }
+            if (product.Rating != 0)
+            {
+                query += " [Rating] = @rating";
+            }
 
-                query += " WHERE [Id] = @id";
+            query += " WHERE [Id] = @id";
 
-                int affectedRows = await _sql.Connection.ExecuteAsync(query, new
-                {
-                    id = product.Id,
-                    name = product.Name,
-                    parentId = product.CategoryId,
-                    description = product.Description,
-                    basePrice = product.BasePrice,
-                    rating = product.Rating
-                },
-                transaction: Transaction);
+            int affectedRows = await _sql.Connection.ExecuteAsync(query, new
+            {
+                id = product.Id,
+                name = product.Name,
+                parentId = product.CategoryId,
+                description = product.Description,
+                basePrice = product.BasePrice,
+                rating = product.Rating
+            },
+            transaction: Transaction);
 
-                return true;
+            return true;
         }
     }
 }

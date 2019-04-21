@@ -3,13 +3,14 @@ using Dapper.Contrib.Extensions;
 using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Domain.Categories;
 using GreenShop.Catalog.Infrastructure;
+using GreenShop.Catalog.Service.Categories;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.DataAccessor
 {
-    public class CategoryRepository : IRepository<Category>
+    public class CategoryRepository : IRepository<Category, CategoryDto>
     {
         public readonly ISqlContext _sql;
 
@@ -82,20 +83,20 @@ namespace GreenShop.Catalog.DataAccessor
         /// <summary>
         /// Asynchronously edits specified Category
         /// </summary>
-        /// <param name="category">Category, that contains id of entity that should be changed, and all changed values</param>
+        /// <param name="categoryDto">Category, that contains id of entity that should be changed, and all changed values</param>
         /// <returns>Number of rows affected</returns>
-        public async Task<bool> UpdateAsync(Category category)
+        public async Task<bool> UpdateAsync(CategoryDto categoryDto)
         {
             string query = @"
                     UPDATE [Categories]
                     SET
                 ";
 
-            if (!string.IsNullOrWhiteSpace(category.Name))
+            if (!string.IsNullOrWhiteSpace(categoryDto.Name))
             {
                 query += " [Name] = @name";
             }
-            if (category.ParentCategoryId != default(int))
+            if (categoryDto.ParentCategoryId != default(int))
             {
                 query += " [ParentCategoryId] = @parentId";
             }
@@ -104,9 +105,9 @@ namespace GreenShop.Catalog.DataAccessor
 
             int affectedRows = await _sql.Connection.ExecuteAsync(query, new
             {
-                id = category.Id,
-                name = category.Name,
-                parentId = category.ParentCategoryId
+                id = categoryDto.Id,
+                name = categoryDto.Name,
+                parentId = categoryDto.ParentCategoryId
             }, transaction: Transaction);
 
             return affectedRows == 1;

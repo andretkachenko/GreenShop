@@ -179,7 +179,7 @@ namespace GreenShop.Catalog.Service.Products
                     List<Task<bool>> taskList = new List<Task<bool>>();
                     if (sqlTaskNeeded)
                     {
-                        taskList.Add(Scope.SqlProductRepository.UpdateAsync(product));
+                        taskList.Add(Scope.SqlProductRepository.UpdateAsync(productDto));
                     }
                     if (mongoTaskNeeded)
                     {

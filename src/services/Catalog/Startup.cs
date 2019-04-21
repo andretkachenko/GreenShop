@@ -69,7 +69,7 @@ namespace GreenShop.Catalog
             services.AddScoped<IMongoProductRepository, MongoProductRepository>();
             services.AddScoped<ISqlProductRepository, SqlProductRepository>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IRepository<Category>, CategoryRepository>();
+            services.AddScoped<IRepository<Category, CategoryDto>, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddTransient<IDomainScope, DomainScope>();

@@ -1,6 +1,7 @@
 ﻿using GreenShop.Catalog.Config.Interfaces;
 using GreenShop.Catalog.Domain.Categories;
 using GreenShop.Catalog.Infrastructure.Products.Interfaces;
+using GreenShop.Catalog.Service.Categories;
 using MongoDB.Driver;
 using System;
 using System.Data;
@@ -15,7 +16,7 @@ namespace GreenShop.Catalog.Infrastructure
         private IClientSessionHandle MongoSession;
         public ISqlProductRepository SqlProductRepository { get; private set; }
         public IMongoProductRepository MongoProductRepository { get; private set; }
-        public IRepository<Category> CategoryRepository { get; private set; }
+        public IRepository<Category, CategoryDto> CategoryRepository { get; private set; }
         public ICommentRepository Comments { get; private set; }
         private bool _disposed = false;
 
@@ -23,7 +24,7 @@ namespace GreenShop.Catalog.Infrastructure
             IMongoContext mongoContext,
             ISqlProductRepository sqlProductRepository,
             IMongoProductRepository mongoProductRepository,
-            IRepository<Category> categoryRepository,
+            IRepository<Category, CategoryDto> categoryRepository,
             ICommentRepository comments)
         {
             SqlContext = sqlContext;

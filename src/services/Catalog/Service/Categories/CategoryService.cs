@@ -91,14 +91,12 @@ namespace GreenShop.Catalog.Service.Categories
             IdValidator validator = new IdValidator();
             validator.ValidateAndThrow(categoryDto.Id);
 
-            Category category = new Category(categoryDto.Name, categoryDto.ParentCategoryId);
-
             using (Scope)
             {
                 try
                 {
                     Scope.Begin();
-                    bool success = await Scope.CategoryRepository.UpdateAsync(category);
+                    bool success = await Scope.CategoryRepository.UpdateAsync(categoryDto);
                     Scope.Commit();
 
                     return success;
