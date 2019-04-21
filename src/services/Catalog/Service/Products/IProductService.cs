@@ -13,6 +13,6 @@ namespace GreenShop.Catalog.Service.Products
 
         Task<int> AddCommentAsync(CommentDto commentDto);
         Task<bool> DeleteCommentAsync(int id);
-        Task<bool> EditComment(int id, string message);
+        Task<bool> EditCommentAsync(int id, string message);
     }
 }

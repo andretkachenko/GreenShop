@@ -1,5 +1,6 @@
 ﻿using GreenShop.Catalog.Service.Products;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace GreenShop.Catalog.Controllers
@@ -19,29 +20,47 @@ namespace GreenShop.Catalog.Controllers
 
         // PUT api/comment/5
         [HttpPut("{id}")]
-        public async Task<bool> EditComment(int id, [FromBody] string message)
+        public async Task<ActionResult<bool>> EditComment(int id, [FromBody] string message)
         {
-            bool success = await _productsService.EditComment(id, message);
-
-            return success;
+            try
+            {
+                bool success = await _productsService.EditCommentAsync(id, message);
+                return Ok(success);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE api/comment/5
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteComment(int id)
+        public async Task<ActionResult<bool>> DeleteCommentAsync(int id)
         {
-            bool success = await _productsService.DeleteCommentAsync(id);
-
-            return success;
+            try
+            {
+                bool success = await _productsService.DeleteCommentAsync(id);
+                return Ok(success);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         // POST api/comment
         [HttpPost]
-        public async Task<int> AddComment([FromBody] CommentDto comment)
+        public async Task<ActionResult<int>> AddCommentAsync([FromBody] CommentDto comment)
         {
-            int id = await _productsService.AddCommentAsync(comment);
-
-            return id;
+            try
+            {
+                int id = await _productsService.AddCommentAsync(comment);
+                return Ok(id);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

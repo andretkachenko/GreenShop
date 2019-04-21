@@ -1,5 +1,6 @@
 ﻿using GreenShop.Catalog.Service.Categories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,47 +21,79 @@ namespace GreenShop.Catalog.Controllers
 
         // GET api/categories
         [HttpGet]
-        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync()
+        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAllCategoriesAsync()
         {
-            IEnumerable<CategoryDto> categories = await _categoriesService.GetAllAsync();
-
-            return categories;
+            try
+            {
+                IEnumerable<CategoryDto> categories = await _categoriesService.GetAllAsync();
+                if (categories == null) throw new ArgumentNullException();
+                return Ok(categories);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
         }
 
         // GET api/categories/5
         [HttpGet("{id}")]
-        public async Task<CategoryDto> GetCategoryAsync(int id)
+        public async Task<ActionResult<CategoryDto>> GetCategoryAsync(int id)
         {
-            CategoryDto category = await _categoriesService.GetAsync(id);
-
-            return category;
+            try
+            {
+                CategoryDto category = await _categoriesService.GetAsync(id);
+                if (category == null) throw new ArgumentNullException();
+                return Ok(category);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
         }
 
         // POST api/categories
         [HttpPost]
-        public async Task<int> AddCategoryAsync([FromBody] CategoryDto category)
+        public async Task<ActionResult<int>> AddCategoryAsync([FromBody] CategoryDto product)
         {
-            int id = await _categoriesService.CreateAsync(category);
-
-            return id;
+            try
+            {
+                int id = await _categoriesService.CreateAsync(product);
+                return Ok(id);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         // PUT api/categories/5
         [HttpPut]
-        public async Task<bool> EditCategoryAsync([FromBody] CategoryDto category)
+        public async Task<ActionResult<bool>> EditCategoryAsync([FromBody] CategoryDto product)
         {
-            bool success = await _categoriesService.UpdateAsync(category);
-
-            return success;
+            try
+            {
+                bool success = await _categoriesService.UpdateAsync(product);
+                return Ok(success);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE api/categories/5
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteCategoryAsync(int id)
+        public async Task<ActionResult<bool>> DeleteCategoryAsync(int id)
         {
-            bool success = await _categoriesService.DeleteAsync(id);
-
-            return success;
+            try
+            {
+                bool success = await _categoriesService.DeleteAsync(id);
+                return Ok(success);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

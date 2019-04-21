@@ -304,7 +304,7 @@ namespace GreenShop.Catalog.Service.Products
         /// <param name="id">Id of the Comment to edit</param>
         /// <param name="message">Updated message for the comment</param>
         /// <returns>True if succeeded</returns>
-        public async Task<bool> EditComment(int id, string message)
+        public async Task<bool> EditCommentAsync(int id, string message)
         {
             IdValidator idValidator = new IdValidator();
             idValidator.ValidateAndThrow(id);

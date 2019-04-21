@@ -21,11 +21,18 @@ namespace GreenShop.Catalog.Controllers
 
         // GET api/products
         [HttpGet]
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProductsAsync()
         {
-            IEnumerable<ProductDto> products = await _productsService.GetAllAsync();
-
-            return products;
+            try
+            {
+                IEnumerable<ProductDto> products = await _productsService.GetAllAsync();
+                if (products == null) throw new ArgumentNullException();
+                return Ok(products);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
         }
 
         // GET api/products/5
@@ -46,29 +53,47 @@ namespace GreenShop.Catalog.Controllers
 
         // POST api/products
         [HttpPost]
-        public async Task<int> AddProductAsync([FromBody] ProductDto product)
+        public async Task<ActionResult<int>> AddProductAsync([FromBody] ProductDto product)
         {
-            int id = await _productsService.CreateAsync(product);
-
-            return id;
+            try
+            {
+                int id = await _productsService.CreateAsync(product);
+                return Ok(id);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         // PUT api/products/5
         [HttpPut]
-        public async Task<bool> EditProductAsync([FromBody] ProductDto product)
+        public async Task<ActionResult<bool>> EditProductAsync([FromBody] ProductDto product)
         {
-            bool success = await _productsService.UpdateAsync(product);
-
-            return success;
+            try
+            {
+                bool success = await _productsService.UpdateAsync(product);
+                return Ok(success);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE api/products/5
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteProductAsync(int id)
+        public async Task<ActionResult<bool>> DeleteProductAsync(int id)
         {
-            bool success = await _productsService.DeleteAsync(id);
-
-            return success;
+            try
+            {
+                bool success = await _productsService.DeleteAsync(id);
+                return Ok(success);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }
