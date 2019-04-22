@@ -7,6 +7,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Catalog\**" />
+    <EmbeddedResource Remove="Catalog\**" />
+    <None Remove="Catalog\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Catalog\Extensions\ProductExtensions\HasMongoPropertiesTests.cs" />
+    <Compile Include="Catalog\Extensions\ProductExtensions\HasSqlPropertiesTests.cs" />
+    <Compile Include="Catalog\Services\CategoriesRepository\AddCategoryTests.cs" />
+    <Compile Include="Catalog\Services\CategoriesRepository\DeleteCategoryTests.cs" />
+    <Compile Include="Catalog\Services\CategoriesRepository\EditCategoryTests.cs" />
+    <Compile Include="Catalog\Services\CategoriesRepository\GetAllCategoriesTests.cs" />
+    <Compile Include="Catalog\Services\CategoriesRepository\GetCategoryTests.cs" />
+    <Compile Include="Catalog\Services\CommentsRepository\AddCommentTests.cs" />
+    <Compile Include="Catalog\Services\CommentsRepository\DeleteCommentTests.cs" />
+    <Compile Include="Catalog\Services\CommentsRepository\EditCommentTests.cs" />
+    <Compile Include="Catalog\Services\CommentsRepository\GetAllCommentsTests.cs" />
+    <Compile Include="Catalog\Services\CommentsRepository\GetCommentTests.cs" />
+    <Compile Include="Catalog\Services\ProductMerger\MergeProductTests.cs" />
+    <Compile Include="Catalog\Services\ProductsRepository\AddProductTests.cs" />
+    <Compile Include="Catalog\Services\ProductsRepository\DeleteProductTests.cs" />
+    <Compile Include="Catalog\Services\ProductsRepository\EditProductTests.cs" />
+    <Compile Include="Catalog\Services\ProductsRepository\GetAllProductsTests.cs" />
+    <Compile Include="Catalog\Services\ProductsRepository\GetProductsTests.cs" />
+    <Compile Include="Catalog\Service\Categores\CategoryService.cs\GetAllAsyncTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
@@ -23,7 +51,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="WebBffShopping\Services\Catalog\CommentService\" />
+    <Folder Include="MVC\Services\Products\" />
+    <Folder Include="WebBffShopping\Services\Products\" />
   </ItemGroup>
 
 </Project>
