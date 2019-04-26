@@ -1,23 +1,37 @@
-﻿using FluentValidation;
-using GreenShop.Catalog.DataAccessors.Interfaces;
-using GreenShop.Catalog.Models.Categories;
+﻿using AutoMapper;
+using FluentValidation;
+using GreenShop.Catalog.Domain.Categories;
+using GreenShop.Catalog.Infrastructure;
+using GreenShop.Catalog.Service.Categories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Threading.Tasks;
-using Target = GreenShop.Catalog.Services.Categories.CategoriesRepository;
+using Target = GreenShop.Catalog.Service.Categories.CategoryService;
 
-namespace UnitTests.Catalog.Services.CategoriesRepository
+namespace UnitTests.Catalog.Service.Categories.CategoryService
 {
     [TestClass]
-    public class EditCategoryTests
+    public class UpdateAsyncTests
     {
-        private Mock<ISqlDataAccessor<Category>> CategoriesAccessorStub;
+        private Mock<IDomainScope> UnitOfWorkStub;
+        private Mock<IRepository<Category, CategoryDto>> CategoriesAccessorStub;
         private Target Service;
 
-        public EditCategoryTests()
+        public UpdateAsyncTests()
         {
-            CategoriesAccessorStub = new Mock<ISqlDataAccessor<Category>>();
-            Service = new Target(CategoriesAccessorStub.Object);
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.CreateMap<Category, CategoryDto>());
+            Mapper mapper = new Mapper(config);
+            UnitOfWorkStub = new Mock<IDomainScope>();
+            CategoriesAccessorStub = new Mock<IRepository<Category, CategoryDto>>();
+            Service = new Target(mapper, UnitOfWorkStub.Object);
+        }
+
+        [TestInitialize]
+        public void Setup()
+        {
+            UnitOfWorkStub.Setup(x => x.CategoryRepository)
+                    .Returns(CategoriesAccessorStub.Object);
         }
 
         [TestMethod]
@@ -29,7 +43,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
             int parentId = 3;
             bool expectedResult = true;
 
-            Category category = new Category
+            CategoryDto categoryDto = new CategoryDto
             {
                 Id = id,
                 Name = name,
@@ -37,11 +51,11 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
             };
 
             CategoriesAccessorStub
-                .Setup(categories => categories.Edit(category))
-                .Returns(Task.FromResult(1));
+                .Setup(categories => categories.UpdateAsync(categoryDto))
+                .Returns(Task.FromResult(expectedResult));
 
             // Act
-            Task<bool> result = Service.EditCategory(category);
+            Task<bool> result = Service.UpdateAsync(categoryDto);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -56,7 +70,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
             string name = "RenamedTestCategory";
             int parentId = 3;
 
-            Category category = new Category
+            CategoryDto categoryDto = new CategoryDto
             {
                 Id = id,
                 Name = name,
@@ -64,7 +78,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
             };
 
             // Act
-            Task<bool> result = Service.EditCategory(category);
+            Task<bool> result = Service.UpdateAsync(categoryDto);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -80,7 +94,7 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
             int parentId = 3;
             bool expectedResult = false;
 
-            Category category = new Category
+            CategoryDto categoryDto = new CategoryDto
             {
                 Id = id,
                 Name = name,
@@ -88,11 +102,11 @@ namespace UnitTests.Catalog.Services.CategoriesRepository
             };
 
             CategoriesAccessorStub
-                .Setup(categories => categories.Edit(category))
-                .Returns(Task.FromResult(0));
+                .Setup(categories => categories.UpdateAsync(categoryDto))
+                .Returns(Task.FromResult(expectedResult));
 
             // Act
-            Task<bool> result = Service.EditCategory(category);
+            Task<bool> result = Service.UpdateAsync(categoryDto);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

@@ -20,8 +20,10 @@
 
   <ItemGroup>
     <Compile Include="Catalog\Service\Categories\CategoryService\CreateAsyncTests.cs" />
+    <Compile Include="Catalog\Service\Categories\CategoryService\DeleteAsyncTests.cs" />
     <Compile Include="Catalog\Service\Categories\CategoryService\GetAllAsyncTests.cs" />
     <Compile Include="Catalog\Service\Categories\CategoryService\GetAsyncTests.cs" />
+    <Compile Include="Catalog\Service\Categories\CategoryService\UpdateAsyncTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
