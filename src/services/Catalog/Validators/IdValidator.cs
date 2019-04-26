@@ -6,7 +6,7 @@ namespace GreenShop.Catalog.Validators
     {
         public IdValidator()
         {
-            RuleFor(id => id).NotEqual(default(int));
+            RuleFor(id => id).GreaterThan(default(int));
         }
     }
 }
