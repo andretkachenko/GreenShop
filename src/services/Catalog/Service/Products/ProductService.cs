@@ -42,7 +42,14 @@ namespace GreenShop.Catalog.Service.Products
                 await Task.WhenAll(taskList);
                 IEnumerable<Product> products = MergeProducts(sqlGetAllTask.Result, mongoGetAllTask.Result);
                 Dictionary<int, IEnumerable<Comment>> commentsDict = await Scope.Comments.GetAllParentRelatedAsync(products.Select(x => x.Id));
-                products.ToList().ForEach(x => x.Comments = commentsDict[x.Id]);
+
+                foreach(var product in products)
+                {
+                    if(commentsDict.ContainsKey(product.Id))
+                    {
+                        product.Comments = commentsDict[product.Id];
+                    }                    
+                }
 
                 IEnumerable<ProductDto> result = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(products);
                 return result;
