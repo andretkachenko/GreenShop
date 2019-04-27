@@ -24,6 +24,7 @@
     <Compile Include="Catalog\Service\Categories\CategoryService\GetAllAsyncTests.cs" />
     <Compile Include="Catalog\Service\Categories\CategoryService\GetAsyncTests.cs" />
     <Compile Include="Catalog\Service\Categories\CategoryService\UpdateAsyncTests.cs" />
+    <Compile Include="Catalog\Service\Products\ProductService\GetAllAsyncTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
