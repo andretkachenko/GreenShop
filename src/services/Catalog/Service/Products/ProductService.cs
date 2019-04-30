@@ -169,17 +169,23 @@ namespace GreenShop.Catalog.Service.Products
                 product.UpdateRating(productDto.Rating);
                 product.SetMongoId(MongoHelper.GenerateMongoId());
 
-                List<Specification> specs = new List<Specification>();
-                foreach (SpecificationDto specDto in productDto.Specifications)
+                if (productDto.Specifications != null && productDto.Specifications.Count() > 0)
                 {
-                    specs.Add(new Specification(specDto.Name, specDto.MaxSelectionAvailable, specDto.Options));
+                    List<Specification> specs = new List<Specification>();
+                    foreach (SpecificationDto specDto in productDto.Specifications)
+                    {
+                        specs.Add(new Specification(specDto.Name, specDto.MaxSelectionAvailable, specDto.Options));
+                    }
+                    product.UpdateSpecifications(specs);
                 }
-                product.UpdateSpecifications(specs);
 
-                foreach (CommentDto commentDto in productDto.Comments)
+                if (productDto.Comments != null && productDto.Comments.Count() > 0)
                 {
-                    Comment comment = new Comment(commentDto.AuthorId, commentDto.Message, commentDto.ProductId);
-                    product.AddComment(comment);
+                    foreach (CommentDto commentDto in productDto.Comments)
+                    {
+                        Comment comment = new Comment(commentDto.AuthorId, commentDto.Message, commentDto.ProductId);
+                        product.AddComment(comment);
+                    }
                 }
 
                 bool sqlTaskNeeded = product.HasSqlProperties();
