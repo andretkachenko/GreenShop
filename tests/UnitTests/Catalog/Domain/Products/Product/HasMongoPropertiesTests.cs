@@ -1,9 +1,9 @@
-﻿using GreenShop.Catalog.Models.Products;
-using GreenShop.Catalog.Models.Specifications;
+﻿using GreenShop.Catalog.Domain.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using UnitTests.Wrappers;
 
-namespace UnitTests.Catalog.Extensions.ProductExtensions
+namespace UnitTests.Catalog.Domain.Products.Product
 {
     [TestClass]
     public class HasMongoPropertiesTests
@@ -12,16 +12,11 @@ namespace UnitTests.Catalog.Extensions.ProductExtensions
         public void ProductWithSpecifications_ReturnTrue()
         {
             // Assign
-            var validProduct = new Product
+            var validProduct = new ProductWrapper
             {
-                Specifications = new List<Specification>
+                WrapSpecifications = new List<Specification>
                 {
-                    new Specification
-                    {
-                        Name = "sampleSpecName",
-                        MaxSelectionAvailable = 1,
-                        Options = new List<string>{ "opt1", "opt2", "opt3"}
-                    }
+                    new Specification("sampleSpecName", 1, new List<string>{ "opt1", "opt2", "opt3"})
                 }
             };
 
@@ -36,10 +31,10 @@ namespace UnitTests.Catalog.Extensions.ProductExtensions
         public void ProductWithoutSpecifications_ReturnFalse()
         {
             // Assign
-            var invalidProduct = new Product
+            var invalidProduct = new ProductWrapper
             {
-                Id = 1,
-                MongoId = "placeholder"
+                WrapId = 1,
+                WrapMongoId = "placeholder"
             };
 
             // Act

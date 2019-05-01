@@ -8,17 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Catalog\**" />
-    <Compile Remove="MVC\**" />
-    <Compile Remove="WebBffShopping\**" />
     <EmbeddedResource Remove="Catalog\**" />
-    <EmbeddedResource Remove="MVC\**" />
-    <EmbeddedResource Remove="WebBffShopping\**" />
     <None Remove="Catalog\**" />
-    <None Remove="MVC\**" />
-    <None Remove="WebBffShopping\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Catalog\Domain\Products\Product\HasMongoPropertiesTests.cs" />
+    <Compile Include="Catalog\Domain\Products\Product\HasSqlPropertiesTests.cs" />
     <Compile Include="Catalog\Service\Categories\CategoryService\CreateAsyncTests.cs" />
     <Compile Include="Catalog\Service\Categories\CategoryService\DeleteAsyncTests.cs" />
     <Compile Include="Catalog\Service\Categories\CategoryService\GetAllAsyncTests.cs" />
@@ -45,6 +41,11 @@
     <ProjectReference Include="..\..\src\api\Web.Bff.Shopping\Web.Bff.Shopping.csproj" />
     <ProjectReference Include="..\..\src\services\Catalog\Catalog.csproj" />
     <ProjectReference Include="..\..\src\web\MVC\MVC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MVC\Services\Products\" />
+    <Folder Include="WebBffShopping\Services\Products\" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
-﻿using GreenShop.Catalog.Models.Products;
-using GreenShop.Catalog.Models.Specifications;
+﻿using GreenShop.Catalog.Domain.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using UnitTests.Wrappers;
 
-namespace UnitTests.Catalog.Extensions.ProductExtensions
+namespace UnitTests.Catalog.Domain.Products.Product
 {
     [TestClass]
     public class HasSqlPropertiesTests
@@ -12,9 +12,9 @@ namespace UnitTests.Catalog.Extensions.ProductExtensions
         public void ProductWithCategoryId_ReturnTrue()
         {
             // Assign
-            var validProduct = new Product
+            var validProduct = new ProductWrapper
             {
-                CategoryId = 1
+                WrapCategoryId = 1
             };
 
             // Act
@@ -27,9 +27,9 @@ namespace UnitTests.Catalog.Extensions.ProductExtensions
         public void ProductWithDescription_ReturnTrue()
         {
             // Assign
-            var validProduct = new Product
+            var validProduct = new ProductWrapper
             {
-                Description = "Description"
+                WrapDescription = "Description"
             };
 
             // Act
@@ -42,9 +42,9 @@ namespace UnitTests.Catalog.Extensions.ProductExtensions
         public void ProductWithBasePrice_ReturnTrue()
         {
             // Assign
-            var validProduct = new Product
+            var validProduct = new ProductWrapper
             {
-                BasePrice = 1
+                WrapBasePrice = 1
             };
 
             // Act
@@ -57,9 +57,9 @@ namespace UnitTests.Catalog.Extensions.ProductExtensions
         public void ProductWithRating_ReturnTrue()
         {
             // Assign
-            var validProduct = new Product
+            var validProduct = new ProductWrapper
             {
-                Rating = 2
+                WrapRating = 2
             };
 
             // Act
@@ -73,16 +73,11 @@ namespace UnitTests.Catalog.Extensions.ProductExtensions
         public void ProductWithoutSqlProperties_ReturnFalse()
         {
             // Assign
-            var invalidProduct = new Product
+            var invalidProduct = new ProductWrapper
             {
-                Specifications = new List<Specification>
+                WrapSpecifications = new List<Specification>
                 {
-                    new Specification
-                    {
-                        Name = "sampleSpecName",
-                        MaxSelectionAvailable = 1,
-                        Options = new List<string>{ "opt1", "opt2", "opt3"}
-                    }
+                    new Specification("sampleSpecName", 1, new List<string>{ "opt1", "opt2", "opt3" })
                 }
             };
 
