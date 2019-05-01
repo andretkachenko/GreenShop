@@ -1,15 +1,12 @@
 ﻿using GreenShop.Catalog.Domain.Products;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace UnitTests.Wrappers
 {
     internal class CommentWrapper : Comment
     {
-        public CommentWrapper(int id, int authorId, string message, int productId) : base(authorId, message, productId)
-        {
-            Id = id;
-        }
+        public int WrapId { set => Id = value; }
+        public int WrapAuthorId { set => AuthorId = value; }
+        public string WrapMessage { set => Message = value; }
+        public int WrapProductId { set => ProductId = value; }
     }
 }

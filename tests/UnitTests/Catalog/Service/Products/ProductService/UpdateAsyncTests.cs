@@ -7,7 +7,6 @@ using GreenShop.Catalog.Service.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnitTests.Wrappers;
 using Target = GreenShop.Catalog.Service.Products.ProductService;
@@ -55,16 +54,16 @@ namespace UnitTests.Catalog.Service.Products.ProductService
         public void ValidProduct_ReturnsTrue()
         {
             // Arrange
-            var id = 1;
-            var name = "RenamedTestProduct";
-            var parentId = 3;
-            var description = "TestDescription";
-            var basePrice = 12m;
-            var rating = 4.5f;
+            int id = 1;
+            string name = "RenamedTestProduct";
+            int parentId = 3;
+            string description = "TestDescription";
+            decimal basePrice = 12m;
+            float rating = 4.5f;
             string mongoId = "TestMongoId";
-            var expectedResult = true;
+            bool expectedResult = true;
 
-            var productDto = new ProductDto
+            ProductDto productDto = new ProductDto
             {
                 Id = id,
                 Name = name,
@@ -74,7 +73,14 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 Rating = rating
             };
 
-            var productWrapper = new ProductWrapper(mongoId, new List<Specification>(), name, parentId, description);
+            ProductWrapper productWrapper = new ProductWrapper
+            {
+                WrapMongoId = mongoId,
+                WrapSpecifications = new List<Specification>(),
+                WrapName = name,
+                WrapCategoryId = parentId,
+                WrapDescription = description
+            };
 
             SqlProductRepositoryStub
                 .Setup(products => products.UpdateAsync(productDto))
@@ -84,7 +90,7 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 .Returns(Task.FromResult(expectedResult));
 
             // Act
-            var result = Service.UpdateAsync(productDto);
+            Task<bool> result = Service.UpdateAsync(productDto);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));
@@ -95,14 +101,14 @@ namespace UnitTests.Catalog.Service.Products.ProductService
         public void NegativeProductId_ThrowsValidationException()
         {
             // Arrange
-            var id = -1;
-            var name = "RenamedTestProduct";
-            var parentId = 3;
-            var description = "TestDescription";
-            var basePrice = 12m;
-            var rating = 4.5f;
+            int id = -1;
+            string name = "RenamedTestProduct";
+            int parentId = 3;
+            string description = "TestDescription";
+            decimal basePrice = 12m;
+            float rating = 4.5f;
 
-            var productDto = new ProductDto
+            ProductDto productDto = new ProductDto
             {
                 Id = id,
                 Name = name,
@@ -113,7 +119,7 @@ namespace UnitTests.Catalog.Service.Products.ProductService
             };
 
             // Act
-            var result = Service.UpdateAsync(productDto);
+            Task<bool> result = Service.UpdateAsync(productDto);
 
             // Assert
             Assert.AreEqual(result.Status, TaskStatus.Faulted);
@@ -124,16 +130,16 @@ namespace UnitTests.Catalog.Service.Products.ProductService
         public void InvalidProductId_ReturnsFalse()
         {
             // Arrange
-            var id = 99999;
-            var name = "NonExistingProduct";
-            var parentId = 3;
-            var description = "TestDescription";
-            var basePrice = 12m;
-            var rating = 4.5f;
+            int id = 99999;
+            string name = "NonExistingProduct";
+            int parentId = 3;
+            string description = "TestDescription";
+            decimal basePrice = 12m;
+            float rating = 4.5f;
             string mongoId = "TestMongoId";
-            var expectedResult = false;
+            bool expectedResult = false;
 
-            var productDto = new ProductDto
+            ProductDto productDto = new ProductDto
             {
                 Id = id,
                 Name = name,
@@ -143,7 +149,14 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 Rating = rating
             };
 
-            var productWrapper = new ProductWrapper(mongoId, new List<Specification>(), name, parentId, description);
+            ProductWrapper productWrapper = new ProductWrapper
+            {
+                WrapMongoId = mongoId,
+                WrapSpecifications = new List<Specification>(),
+                WrapName = name,
+                WrapCategoryId = parentId,
+                WrapDescription = description
+            };
 
             SqlProductRepositoryStub
                 .Setup(products => products.UpdateAsync(productDto))
@@ -153,7 +166,7 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 .Returns(Task.FromResult(expectedResult));
 
             // Act
-            var result = Service.UpdateAsync(productDto);
+            Task<bool> result = Service.UpdateAsync(productDto);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<bool>));

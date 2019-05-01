@@ -8,7 +8,7 @@
         /// values into thr Enitty model.
         /// Apart from this use-case, it should never be called.
         /// </summary>
-        private Comment() { }
+        protected Comment() { }
 
         public Comment(int authorId, string message, int productId)
         {

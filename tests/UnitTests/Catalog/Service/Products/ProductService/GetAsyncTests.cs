@@ -164,7 +164,16 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 decimal basePrice = 12m;
                 float rating = 4.5f;
 
-                ProductWrapper product = new ProductWrapper(id, mongoId, basePrice, rating, name, categoryId, description);
+                ProductWrapper product = new ProductWrapper
+                {
+                    WrapId = id,
+                    WrapMongoId = mongoId,
+                    WrapBasePrice = basePrice,
+                    WrapRating = rating,
+                    WrapName = name,
+                    WrapCategoryId = categoryId,
+                    WrapDescription = description
+                };
 
                 return product;
             }
@@ -182,13 +191,14 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 int categoryId = 3;
                 string description = "TestDescription";
 
-                ProductWrapper product = new ProductWrapper(
-                                      mongoId,
-                                      new List<Specification> { new Specification(specName, maxSelectionAvailable, specOptions) },
-                                      name,
-                                      categoryId,
-                                      description
-                                  );
+                ProductWrapper product = new ProductWrapper
+                {
+                    WrapMongoId = mongoId,
+                    WrapSpecifications = new List<Specification> { new Specification(specName, maxSelectionAvailable, specOptions) },
+                    WrapName = name,
+                    WrapCategoryId = categoryId,
+                    WrapDescription = description
+                };
 
                 return product;
             }

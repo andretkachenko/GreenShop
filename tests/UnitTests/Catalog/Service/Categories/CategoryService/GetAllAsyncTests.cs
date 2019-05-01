@@ -92,7 +92,12 @@ namespace UnitTests.Catalog.Service.Categories.CategoryService
                 int id = 1;
                 string name = "TestCategory";
                 int parentId = 2;
-                CategoryWrapper category = new CategoryWrapper(id, name, parentId);
+                CategoryWrapper category = new CategoryWrapper
+                {
+                    WrapId = id,
+                    WrapName = name,
+                    WrapParentCategoryId = parentId
+                };
 
                 return category;
             }

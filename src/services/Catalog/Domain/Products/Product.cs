@@ -15,7 +15,7 @@ namespace GreenShop.Catalog.Domain.Products
         /// values into thr Enitty model.
         /// Apart from this use-case, it should never be called.
         /// </summary>
-        private Product() { }
+        protected Product() { }
 
         public Product(string name, int categoryId) : this(name, categoryId, null) { }
         public Product(string name, int categoryId, string description)

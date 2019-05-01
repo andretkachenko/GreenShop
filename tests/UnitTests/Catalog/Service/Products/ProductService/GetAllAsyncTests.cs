@@ -24,14 +24,14 @@ namespace UnitTests.Catalog.Service.Products.ProductService
 
         public GetAllAsyncTests()
         {
-            var config = new MapperConfiguration(cfg =>
+            MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Product, ProductDto>();
                 cfg.CreateMap<Comment, CommentDto>();
                 cfg.CreateMap<Specification, SpecificationDto>();
             });
 
-            var mapper = new Mapper(config);
+            Mapper mapper = new Mapper(config);
             UnitOfWorkStub = new Mock<IDomainScope>();
             SqlProductRepositoryStub = new Mock<ISqlProductRepository>();
             MongoProductRepositoryStub = new Mock<IMongoProductRepository>();
@@ -62,7 +62,7 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 .Returns(Task.FromResult(ExpectedProductMongoList));
 
             // Act
-            var result = Service.GetAllAsync();
+            Task<IEnumerable<ProductDto>> result = Service.GetAllAsync();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Task<IEnumerable<ProductDto>>));
@@ -72,7 +72,7 @@ namespace UnitTests.Catalog.Service.Products.ProductService
         public void ReturnsExpectedProduct()
         {
             // Arrange
-            var expectedProduct = ExpectedMergedList.First();
+            Product expectedProduct = ExpectedMergedList.First();
             SqlProductRepositoryStub
                 .Setup(products => products.GetAllAsync())
                 .Returns(Task.FromResult(ExpectedProductSqlList));
@@ -84,8 +84,8 @@ namespace UnitTests.Catalog.Service.Products.ProductService
                 .Returns(Task.FromResult(EmptyCommentsList));
 
             // Act
-            var result = Service.GetAllAsync();
-            var actualProduct = result.Result.First();
+            Task<IEnumerable<ProductDto>> result = Service.GetAllAsync();
+            ProductDto actualProduct = result.Result.First();
 
             // Assert
             Assert.AreEqual(result.Result.Count(), ExpectedMergedList.Count());
@@ -106,17 +106,26 @@ namespace UnitTests.Catalog.Service.Products.ProductService
         {
             get
             {
-                var id = 1;
-                var name = "TestProduct";
-                var mongoId = "TestMongoId";
-                var parentId = 3;
-                var description = "TestDescription";
-                var basePrice = 12m;
-                var rating = 4.5f;
+                int id = 1;
+                string name = "TestProduct";
+                string mongoId = "TestMongoId";
+                int parentId = 3;
+                string description = "TestDescription";
+                decimal basePrice = 12m;
+                float rating = 4.5f;
 
-                var productsList = new List<Product>()
+                List<Product> productsList = new List<Product>()
                     {
-                        new ProductWrapper(id, mongoId, basePrice, rating, name, parentId, description)
+                        new ProductWrapper
+                        {
+                            WrapId = id,
+                            WrapMongoId = mongoId,
+                            WrapBasePrice = basePrice,
+                            WrapRating = rating,
+                            WrapName = name,
+                            WrapCategoryId = parentId,
+                            WrapDescription = description
+                        }
                     };
 
                 return productsList;
@@ -127,21 +136,24 @@ namespace UnitTests.Catalog.Service.Products.ProductService
         {
             get
             {
-                var name = "TestProduct";
-                var parentId = 3;
-                var description = "TestDescription";
-                var mongoId = "TestMongoId";
-                var specName = "sampleSpecification";
-                var maxSelectionAvailable = 1;
-                var specOptions = new List<string> { "opt1" };
+                string name = "TestProduct";
+                int parentId = 3;
+                string description = "TestDescription";
+                string mongoId = "TestMongoId";
+                string specName = "sampleSpecification";
+                int maxSelectionAvailable = 1;
+                List<string> specOptions = new List<string> { "opt1" };
 
-                var productsList = new List<Product>()
+                List<Product> productsList = new List<Product>()
                 {
-                    new ProductWrapper(mongoId, 
-                                       new List<Specification> { new Specification(specName, maxSelectionAvailable, specOptions) }, 
-                                       name, 
-                                       parentId, 
-                                       description)
+                    new ProductWrapper
+                    {
+                        WrapMongoId = mongoId,
+                        WrapSpecifications = new List<Specification> { new Specification(specName, maxSelectionAvailable, specOptions) },
+                        WrapName = name,
+                        WrapCategoryId = parentId,
+                        WrapDescription = description
+                    }
                 };
 
                 return productsList;
@@ -152,7 +164,7 @@ namespace UnitTests.Catalog.Service.Products.ProductService
         {
             get
             {
-                var expectedProduct = ExpectedProductSqlList.First();
+                Product expectedProduct = ExpectedProductSqlList.First();
                 expectedProduct.Specifications = ExpectedProductMongoList.First().Specifications;
 
                 return new List<Product> { expectedProduct };

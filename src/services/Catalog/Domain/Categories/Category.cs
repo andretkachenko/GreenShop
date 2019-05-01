@@ -11,7 +11,7 @@ namespace GreenShop.Catalog.Domain.Categories
         /// values into thr Enitty model.
         /// Apart from this use-case, it should never be called.
         /// </summary>
-        private Category() { }
+        protected Category() { }
 
         public Category(string name)
         {

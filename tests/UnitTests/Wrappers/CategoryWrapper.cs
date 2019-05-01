@@ -4,9 +4,8 @@ namespace UnitTests.Wrappers
 {
     internal class CategoryWrapper : Category
     {
-        public CategoryWrapper(int id, string name, int parentId) : base(name, parentId)
-        {
-            Id = id;
-        }
+        public int WrapId { set => Id = value; }
+        public string WrapName { set => Name = value; }
+        public int WrapParentCategoryId { set => ParentCategoryId = value; }
     }
 }

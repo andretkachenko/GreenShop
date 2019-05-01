@@ -5,20 +5,14 @@ namespace UnitTests.Wrappers
 {
     internal class ProductWrapper : Product
     {
-        public ProductWrapper(int id, string mongoId, decimal basePrice, float rating, string name, int categoryId, string description) 
-            : base(name, categoryId, description)
-        {
-            Id = id;
-            MongoId = mongoId;
-            BasePrice = basePrice;
-            Rating = rating;
-        }
-
-        public ProductWrapper(string mongoId, IEnumerable<Specification> specifications, string name, int categoryId, string description)
-            : base(name, categoryId, description)
-        {
-            MongoId = mongoId;
-            Specifications = specifications;
-        }
+        public int WrapId { set => Id = value; }
+        public string WrapMongoId { set => MongoId = value; }
+        public string WrapName { set => Name = value; }
+        public string WrapDescription { set => Description = value; }
+        public decimal WrapBasePrice { set => BasePrice = value; }
+        public float WrapRating { set => Rating = value; }
+        public int WrapCategoryId { set => CategoryId = value; }
+        public List<Specification> WrapSpecifications { set => Specifications = value; }
+        public List<Comment> WrapComments { set => Comments = value; }
     }
 }
