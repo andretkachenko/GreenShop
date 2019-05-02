@@ -7,27 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Catalog\**" />
-    <EmbeddedResource Remove="Catalog\**" />
-    <None Remove="Catalog\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Catalog\Domain\Products\Product\HasMongoPropertiesTests.cs" />
-    <Compile Include="Catalog\Domain\Products\Product\HasSqlPropertiesTests.cs" />
-    <Compile Include="Catalog\Service\Categories\CategoryService\CreateAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Categories\CategoryService\DeleteAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Categories\CategoryService\GetAllAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Categories\CategoryService\GetAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Categories\CategoryService\UpdateAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Products\ProductService\CreateAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Products\ProductService\DeleteAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Products\ProductService\GetAllAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Products\ProductService\GetAsyncTests.cs" />
-    <Compile Include="Catalog\Service\Products\ProductService\UpdateAsyncTests.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
@@ -39,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\api\Web.Bff.Shopping\Web.Bff.Shopping.csproj" />
-    <ProjectReference Include="..\..\src\services\Catalog\Catalog.csproj" />
     <ProjectReference Include="..\..\src\web\MVC\MVC.csproj" />
   </ItemGroup>
 
