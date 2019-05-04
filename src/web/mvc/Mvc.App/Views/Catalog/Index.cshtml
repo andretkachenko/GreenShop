@@ -1,0 +1,20 @@
+﻿@using GreenShop.Web.Mvc.App.ViewModels.Catalog
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<h1>Categories:</h1>
+<div class="container">
+    <div class="row">
+        <ul>
+            @foreach (var category in Model.Categories)
+            {
+                <li>
+                    @Html.ActionLink(category.Name, "Category", "Catalog", new { id = category.Id }, null)
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
