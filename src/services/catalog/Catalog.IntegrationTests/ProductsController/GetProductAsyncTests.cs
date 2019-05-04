@@ -1,5 +1,5 @@
-﻿using GreenShop.Catalog;
-using GreenShop.Catalog.Models.Products;
+﻿using GreenShop.Catalog.Api;
+using GreenShop.Catalog.Api.Service.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System.Net;
@@ -30,7 +30,7 @@ namespace GreenShop.Catalog.IntegrationTests.ProductsController
             HttpResponseMessage httpResponse = await _client.GetAsync("/api/products/" + id);
             httpResponse.EnsureSuccessStatusCode();
             string stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            Product product = JsonConvert.DeserializeObject<Product>(stringResponse);
+            ProductDto product = JsonConvert.DeserializeObject<ProductDto>(stringResponse);
 
             // Assign
             Assert.IsTrue(product != null);

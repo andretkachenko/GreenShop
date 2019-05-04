@@ -1,6 +1,4 @@
-﻿using GreenShop.Catalog;
-using GreenShop.Catalog.Models.Products;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +30,7 @@ namespace GreenShop.Catalog.IntegrationTests.ProductsController
 
             // Deserialize and examine results.
             string stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            IEnumerable<Product> products = JsonConvert.DeserializeObject<IEnumerable<Product>>(stringResponse);
+            IEnumerable<ProductDto> products = JsonConvert.DeserializeObject<IEnumerable<ProductDto>>(stringResponse);
             Assert.IsTrue(products.First() != null);
             Assert.IsTrue(products.First().Name == "First Integration Product Name");
             Assert.IsTrue(products.First().Description == "First Integration Product Description");
