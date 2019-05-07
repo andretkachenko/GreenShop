@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace GreenShop.Catalog.Api
 {
@@ -34,6 +35,12 @@ namespace GreenShop.Catalog.Api
             services.AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("api-version"));
             services.AddSingleton(Configuration);
 
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Catalog.API", Version = "v1" });
+            });
+
             // Dependency injection block
             InjectDependencies(services);
         }
@@ -49,6 +56,16 @@ namespace GreenShop.Catalog.Api
             {
                 app.UseHsts();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.API V1");
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();
