@@ -8,8 +8,12 @@ using GreenShop.Catalog.Api.Infrastructure.Products.Interfaces;
 using GreenShop.Catalog.Api.Service.Categories;
 using GreenShop.Catalog.Api.Service.Products;
 using GreenShop.Catalog.Api.Utils;
+using GreenShop.Catalog.HealthChecks;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
@@ -30,16 +34,23 @@ namespace GreenShop.Catalog.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("api-version"));
-            services.AddSingleton(Configuration);
-
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Catalog.API", Version = "v1" });
-            });
+            services.AddAutoMapper(typeof(Startup))
+                    .AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("api-version"))
+                    .AddSingleton(Configuration)
+                    // Register the Swagger generator, defining 1 or more Swagger documents
+                    .AddSwaggerGen(c =>
+                    {
+                        c.SwaggerDoc("v1", new Info { Title = "Catalog.API", Version = "v1" });
+                    })
+                    // Registers required services for health checks
+                    .AddHealthChecksUI()
+                    // Register required services for health checks
+                    .AddHealthChecks()
+                    // Add a health check for a SQL database
+                    .AddCheck("SQL Database", new SqlConnectionHealthCheck(new SqlContext(Configuration).ConnectionString))
+                    .Services
+                    .AddMvc()
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Dependency injection block
             InjectDependencies(services);
@@ -57,18 +68,26 @@ namespace GreenShop.Catalog.Api
                 app.UseHsts();
             }
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.API V1");
-            });
-
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseHealthChecks("/health", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                })
+                .UseHealthChecksUI(config =>
+                {
+                    config.ApiPath = "/health-app";
+                    config.UIPath = "/health-ui";
+                })
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                .UseSwagger()
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+                // specifying the Swagger JSON endpoint.
+                .UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.API V1");
+                })
+                .UseHttpsRedirection()
+                .UseMvc();
         }
 
         /// <summary>

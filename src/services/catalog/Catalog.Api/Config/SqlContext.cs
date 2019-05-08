@@ -16,7 +16,7 @@ namespace GreenShop.Catalog.Api.Utils
         }
 
         /// <summary>
-        /// Reads environment variables that store database source and name
+        /// Read environment variables that store database source and name
         /// </summary>
         public SqlConnection Connection
         {
@@ -24,13 +24,24 @@ namespace GreenShop.Catalog.Api.Utils
             {
                 if (_connection == null)
                 {
-                    IConfigurationSection section = _configuration.GetSection($"{Resources.Connection}:{Resources.SqlSection}");
-                    string dataSource = section.GetSection($"{Resources.DataSource}").Value;
-                    string initialCatalog = section.GetSection($"{Resources.InitialCatalog}").Value;
-                    string connectionString = AssembleConnectionString(dataSource, initialCatalog);
-                    _connection = new SqlConnection(connectionString);
+                    _connection = new SqlConnection(ConnectionString);
                 }
                 return _connection;
+            }
+        }
+
+        /// <summary>
+        /// Assemble Connection String from the appsettings.json file
+        /// </summary>
+        internal string ConnectionString
+        {
+            get
+            {
+                IConfigurationSection section = _configuration.GetSection($"{Resources.Connection}:{Resources.SqlSection}");
+                string dataSource = section.GetSection($"{Resources.DataSource}").Value;
+                string initialCatalog = section.GetSection($"{Resources.InitialCatalog}").Value;
+                string connectionString = AssembleConnectionString(dataSource, initialCatalog);
+                return connectionString;
             }
         }
 

@@ -342,3 +342,4 @@ ASALocalRun/
 appsettings.[Dd]evelopment.json
 appsettings.[Ss]taging.json
 appsettings.[Pp]roduction.json
+/src/services/catalog/Catalog.Api/healthchecksdb
