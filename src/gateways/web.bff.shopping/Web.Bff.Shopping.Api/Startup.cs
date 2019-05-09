@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using GreenShop.Web.Bff.Shopping.Api.Config;
 using GreenShop.Web.Bff.Shopping.Api.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using GreenShop.Web.Bff.Shopping.Api.HealthChecks;
+using Microsoft.AspNetCore.Http;
 
 namespace GreenShop.Web.Bff.Shopping
 {
@@ -27,10 +31,18 @@ namespace GreenShop.Web.Bff.Shopping
             services.AddSingleton(Configuration);
             services.Configure<UrlsConfig>(options => Configuration.GetSection("urls").Bind(options));
 
+            services
+                    // Registers required services for health checks
+                    .AddHealthChecksUI()
+                    // Register required services for health checks
+                    .AddHealthChecks()
+                    // Add a health check for a SQL database
+                    .AddCheck("Catalog API", new CatalogHealthCheck(Configuration.GetSection("urls").GetSection("catalog").Value));
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Catalog.API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "Web.Bff.Shopping.API", Version = "v1" });
             });
 
             services.RegisterHttpServices();
@@ -49,6 +61,17 @@ namespace GreenShop.Web.Bff.Shopping
                 app.UseHsts();
             }
 
+            app.UseHealthChecks("/health", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                })
+                .UseHealthChecksUI(config =>
+                {
+                    config.ApiPath = "/health-app";
+                    config.UIPath = "/health-ui";
+                });
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -56,7 +79,14 @@ namespace GreenShop.Web.Bff.Shopping
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web.Bff.Shopping.API V1");
+            });
+
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync(
+                    "Navigate to /health to see the health status.\n" +
+                    "Navigate to /swagger to see API documentation");
             });
 
             app.UseHttpsRedirection();

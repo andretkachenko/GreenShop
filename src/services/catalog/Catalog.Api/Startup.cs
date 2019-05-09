@@ -88,6 +88,13 @@ namespace GreenShop.Catalog.Api
                 })
                 .UseHttpsRedirection()
                 .UseMvc();
+
+            app.Run(async (context) =>
+                {
+                    await context.Response.WriteAsync(
+                        "Navigate to /health to see the health status.\n" +
+                        "Navigate to /swagger to see API documentation");
+                });
         }
 
         /// <summary>
