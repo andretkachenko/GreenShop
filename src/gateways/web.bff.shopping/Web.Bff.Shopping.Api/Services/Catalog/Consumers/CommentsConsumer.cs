@@ -1,4 +1,5 @@
 ﻿using GreenShop.Web.Bff.Shopping.Api.Config;
+using GreenShop.Web.Bff.Shopping.Api.Extensions;
 using GreenShop.Web.Bff.Shopping.Api.Helpers;
 using GreenShop.Web.Bff.Shopping.Api.Models.Comments;
 using GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Interfaces;
@@ -29,7 +30,7 @@ namespace GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Consumers
         public async Task<int> AddAsync(Comment comment)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.AddComment, Method.POST, comment);
-            IRestResponse<int> response = await ExecuteAsync<int>(request);
+            IRestResponse<int> response = await _client.ExecuteAsync<int>(request);
             int id = response.Data;
             return id;
         }
@@ -42,7 +43,7 @@ namespace GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Consumers
         public async Task<bool> DeleteAsync(int id)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.DeleteComment(id), Method.DELETE);
-            IRestResponse<bool> response = await ExecuteAsync<bool>(request);
+            IRestResponse<bool> response = await _client.ExecuteAsync<bool>(request);
             bool result = response.Data;
 
             return result;
@@ -65,7 +66,7 @@ namespace GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Consumers
         public async Task<bool> EditAsync(int id, string message)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.EditComment(id), Method.PUT, message);
-            IRestResponse<bool> response = await ExecuteAsync<bool>(request);
+            IRestResponse<bool> response = await _client.ExecuteAsync<bool>(request);
             bool result = response.Data;
 
             return result;
@@ -79,7 +80,7 @@ namespace GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Consumers
         public async Task<IEnumerable<Comment>> GetAllProductRelatedCommentsAsync(int productId)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.GetAllProductComments(productId), Method.GET);
-            IRestResponse<List<Comment>> response = await ExecuteAsync<List<Comment>>(request);
+            IRestResponse<List<Comment>> response = await _client.ExecuteAsync<List<Comment>>(request);
             List<Comment> comment = response.Data;
 
             return comment;
@@ -99,27 +100,10 @@ namespace GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Consumers
         public async Task<Comment> GetAsync(int id)
         {
             RestRequest request = RestSharpHelpers.AssembleRestRequest(UrlsConfig.CommentApiOperations.GetComment(id), Method.GET);
-            IRestResponse<Comment> response = await ExecuteAsync<Comment>(request);
+            IRestResponse<Comment> response = await _client.ExecuteAsync<Comment>(request);
             Comment comment = response.Data;
 
             return comment;
-        }
-
-        /// <summary>
-        /// Asynchronously execute request using the consumer's client
-        /// </summary>
-        /// <typeparam name="T">Response object type</typeparam>
-        /// <param name="request">Request to execute</param>
-        /// <returns>Response, returned by API</returns>
-        private async Task<IRestResponse<T>> ExecuteAsync<T>(RestRequest request) where T : new()
-        {
-            TaskCompletionSource<IRestResponse<T>> taskCompletionSource = new TaskCompletionSource<IRestResponse<T>>();
-            _client.ExecuteAsync<T>(request, restResponse =>
-            {
-                taskCompletionSource.SetResult(restResponse);
-            });
-
-            return await taskCompletionSource.Task;
         }
     }
 }

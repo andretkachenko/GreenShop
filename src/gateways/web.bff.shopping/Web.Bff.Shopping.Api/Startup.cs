@@ -11,6 +11,15 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using GreenShop.Web.Bff.Shopping.Api.HealthChecks;
 using Microsoft.AspNetCore.Http;
+using Polly;
+using System.Net.Http;
+using Polly.Extensions.Http;
+using GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Interfaces;
+using GreenShop.Web.Bff.Shopping.Api.Models.Categories;
+using GreenShop.Web.Bff.Shopping.Api.Services.Catalog.Consumers;
+using GreenShop.Web.Bff.Shopping.Api.Models.Products;
+using GreenShop.Web.Bff.Shopping.Api.Services;
+using System;
 
 namespace GreenShop.Web.Bff.Shopping
 {
@@ -45,8 +54,8 @@ namespace GreenShop.Web.Bff.Shopping
                 c.SwaggerDoc("v1", new Info { Title = "Web.Bff.Shopping.API", Version = "v1" });
             });
 
-            services.RegisterHttpServices();
-            services.InjectDependencies();
+            RegisterHttpServices(services);
+            InjectDependencies(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +100,48 @@ namespace GreenShop.Web.Bff.Shopping
 
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        private IServiceCollection RegisterHttpServices(IServiceCollection services)
+        {
+            services.AddHttpClient<ICatalogService, CatalogService>()
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy());
+
+            return services;
+        }
+
+        /// <summary>
+        /// Distinct Dependency Injection Block
+        /// <para>Singleton objects are the same for every object and every request.</para>
+        /// <para>Scoped objects are the same within a request, but different across different requests.</para>
+        /// <para>Transient objects are provided as a new instance to every controller and every service.</para>
+        /// </summary>
+        /// <param name="services">Service Collection to inject dependencies into.</param>
+        private void InjectDependencies(IServiceCollection services)
+        {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddTransient<IConsumer<Category>, CategoriesConsumer>();
+            services.AddTransient<IConsumer<Product>, ProductsConsumer>();
+            services.AddTransient<ICommentsConsumer, CommentsConsumer>();
+            services.AddTransient<ICatalogService, CatalogService>();
+        }
+
+        private IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+              .HandleTransientHttpError()
+              .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+              .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+        }
+
+        private IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
         }
     }
 }
