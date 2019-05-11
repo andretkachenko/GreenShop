@@ -16,7 +16,7 @@ namespace GreenShop.Catalog.Api.Service.Products
     public class ProductService : IProductService
     {
         private readonly IMapper _mapper;
-        private IDomainScope Scope;
+        private readonly IDomainScope Scope;
 
         public ProductService(IMapper mapper, IDomainScope unitOfWork)
         {
@@ -345,25 +345,6 @@ namespace GreenShop.Catalog.Api.Service.Products
                     throw e;
                 }
             }
-        }
-
-        /// <summary>
-        /// Compare two Products to have similar Mongo properties
-        /// </summary>
-        /// <param name="expected">Expected Product</param>
-        /// <param name="actual">Actual Product</param>
-        /// <returns>Comparison result</returns>
-        private bool CheckProductUpdated(Product expected, Product actual)
-        {
-            if (expected.MongoId != actual.MongoId) return false;
-            foreach (Specification spec in expected.Specifications)
-            {
-                if (actual.Specifications.Any(s => s.Name != spec.Name ||
-                                              s.MaxSelectionAvailable != spec.MaxSelectionAvailable ||
-                                              s.Options.Except(spec.Options).Any() ||
-                                              spec.Options.Except(s.Options).Any())) return false;
-            }
-            return true;
         }
 
         /// <summary>

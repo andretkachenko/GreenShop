@@ -10,7 +10,7 @@ namespace GreenShop.Catalog.Api.Infrastructure.Products.Interfaces
         /// <summary>
         /// Asynchronously add List of the Comments
         /// </summary>
-        /// <param name="comment">List of the Comments to insert to the database</param>
+        /// <param name="comments">List of the Comments to insert to the database</param>
         /// <returns>Task with summary result for all list</returns>
         Task<IEnumerable<int>> CreateAsync(IEnumerable<Comment> comments);
 
@@ -32,14 +32,14 @@ namespace GreenShop.Catalog.Api.Infrastructure.Products.Interfaces
         /// <summary>
         /// Asynchronously Get all Comments for the Products, which IDs are presented in the list
         /// </summary>
-        /// <param name="productId">List of Ids of the products</param>
+        /// <param name="productIds">List of Ids of the products</param>
         /// <returns>Task with list of comments</returns>
         Task<Dictionary<int, IEnumerable<Comment>>> GetAllParentRelatedAsync(IEnumerable<int> productIds);
 
         /// <summary>
         /// Asynchronously Delete all Comments for the specified Product
         /// </summary>
-        /// <param name="productIds">Product Id</param>
+        /// <param name="productId">Product Id</param>
         /// <returns>Result flag</returns>
         Task<bool> DeleteAllParentRelatedAsync(int productId);
     }

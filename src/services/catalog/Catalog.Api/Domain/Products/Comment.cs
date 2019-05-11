@@ -29,7 +29,7 @@
         /// <summary>
         /// Edit message of the Comment
         /// </summary>
-        /// <param name="Message">New variant of the message</param>
+        /// <param name="newMessage">New variant of the message</param>
         /// <returns>Result flag</returns>
         public void UpdateMessage(string newMessage)
         {

@@ -19,6 +19,9 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace GreenShop.Catalog.Api
 {
@@ -41,6 +44,11 @@ namespace GreenShop.Catalog.Api
                     .AddSwaggerGen(c =>
                     {
                         c.SwaggerDoc("v1", new Info { Title = "Catalog.API", Version = "v1" });
+
+                        // Set the comments path for the Swagger JSON and UI.
+                        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                        c.IncludeXmlComments(xmlPath);
                     })
                     // Registers required services for health checks
                     .AddHealthChecksUI()
@@ -69,10 +77,10 @@ namespace GreenShop.Catalog.Api
             }
 
             app.UseHealthChecks("/health", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                })
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            })
                 .UseHealthChecksUI(config =>
                 {
                     config.ApiPath = "/health-app";
