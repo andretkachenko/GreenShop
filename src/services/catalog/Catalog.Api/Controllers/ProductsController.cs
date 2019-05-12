@@ -1,4 +1,5 @@
-﻿using GreenShop.Catalog.Api.Service.Products;
+﻿using GreenShop.Catalog.Api.Properties;
+using GreenShop.Catalog.Api.Service.Products;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace GreenShop.Catalog.Api.Controllers
         /// </remarks>
         /// <returns>List of Products, which are presented in the system</returns>
         /// <response code="200">Return the list of all Products</response>
-        /// <response code="404">None of the Products are not presented in the system </response>  
+        /// <response code="404">None of the Products are not presented in the system</response>  
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -57,7 +58,7 @@ namespace GreenShop.Catalog.Api.Controllers
         ///     GET api/products/5
         ///     
         /// </remarks>
-        /// <returns>Product with the specified D</returns>
+        /// <returns>Product with the specified Id</returns>
         /// <response code="200">Return the Product</response>
         /// <response code="404">Product with the specified Id was not found</response>
         [ProducesResponseType(200)]
@@ -143,10 +144,12 @@ namespace GreenShop.Catalog.Api.Controllers
         /// 
         /// </remarks>
         /// <param name="product">Product with the specified Id and values, that should be changed</param>
-        /// <response code="200">Product was update successfully</response>
-        /// <response code="400">Unable to successfully update the Product</response>         
+        /// <response code="200">Product was updated successfully</response>
+        /// <response code="404">Unable to found the Product</response>  
+        /// <response code="500">Internal Server Error occured while processing the request</response>        
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         [Consumes("application/json")]
         [HttpPut]
         public async Task<ActionResult> EditProductAsync([FromBody] ProductDto product)
@@ -154,11 +157,15 @@ namespace GreenShop.Catalog.Api.Controllers
             try
             {
                 bool success = await _productsService.UpdateAsync(product);
-                return Ok();
+
+                if (success)
+                    return Ok(success);
+                else
+                    return NotFound(string.Format(Resources.FailureResponse, Resources.Update, Resources.Product, Resources.EntityNotFound));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return StatusCode(500, string.Format(Resources.FailureResponse, Resources.Update, Resources.Product, e.Message));
             }
         }
 
@@ -169,28 +176,30 @@ namespace GreenShop.Catalog.Api.Controllers
         /// Sample request:
         /// 
         ///     DELETE api/products/5
-        ///     {
-        ///         "id": 5,
-        ///         "name": "NewNameForProduct5"
-        ///     }
         /// 
         /// </remarks>
         /// <param name="id">Id for the Product that should be deleted</param>
         /// <response code="200">Product was deleted successfully</response>
-        /// <response code="400">Unable to successfully delete the Product</response>      
+        /// <response code="404">Unable to found the Product</response>  
+        /// <response code="500">Internal Server Error occured while processing the request</response>       
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProductAsync(int id)
         {
             try
             {
                 bool success = await _productsService.DeleteAsync(id);
-                return Ok(success);
+
+                if (success)
+                    return Ok(success);
+                else
+                    return NotFound(string.Format(Resources.FailureResponse, Resources.Delete, Resources.Product, Resources.EntityNotFound));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return StatusCode(500, string.Format(Resources.FailureResponse, Resources.Delete, Resources.Product, e.Message));
             }
         }
     }
