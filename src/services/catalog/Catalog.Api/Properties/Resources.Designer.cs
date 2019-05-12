@@ -167,5 +167,93 @@ namespace GreenShop.Catalog.Api.Properties {
                 return ResourceManager.GetString("SqlSection", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to FailureResponse.
+        /// </summary>
+        internal static string FailureResponse
+        {
+            get
+            {
+                return ResourceManager.GetString("Unable to successfully {0} the {1}: {2}", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        internal static string Category
+        {
+            get
+            {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Product.
+        /// </summary>
+        internal static string Product
+        {
+            get
+            {
+                return ResourceManager.GetString("Product", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        internal static string Comment
+        {
+            get
+            {
+                return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to EntityNotFound.
+        /// </summary>
+        internal static string EntityNotFound
+        {
+            get
+            {
+                return ResourceManager.GetString("Specified entity was not presented in the system", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to EntityNotFound.
+        /// </summary>
+        internal static string Delete
+        {
+            get
+            {
+                return ResourceManager.GetString("delete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        internal static string Update
+        {
+            get
+            {
+                return ResourceManager.GetString("update", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        internal static string Create
+        {
+            get
+            {
+                return ResourceManager.GetString("create", resourceCulture);
+            }
+        }
     }
 }

@@ -117,13 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+    <comment>Entity name</comment>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comment</value>
+    <comment>Entity name</comment>
+  </data>
   <data name="Connection" xml:space="preserve">
     <value>Connection</value>
     <comment>Environment variable</comment>
   </data>
+  <data name="Create" xml:space="preserve">
+    <value>create</value>
+    <comment>Operation</comment>
+  </data>
   <data name="DataSource" xml:space="preserve">
     <value>DataSource</value>
     <comment>Environment variable</comment>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>delete</value>
+    <comment>Operation</comment>
+  </data>
+  <data name="EntityNotFound" xml:space="preserve">
+    <value>Specified entity was not presented in the system</value>
+    <comment>Controller response</comment>
+  </data>
+  <data name="FailureResponse" xml:space="preserve">
+    <value>Unable to successfully {0} the {1}: {2}</value>
+    <comment>Controller response</comment>
   </data>
   <data name="InitialCatalog" xml:space="preserve">
     <value>InitialCatalog</value>
@@ -149,6 +173,10 @@
     <value>sqlProduct is null</value>
     <comment>Exception message</comment>
   </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+    <comment>Entity name</comment>
+  </data>
   <data name="Products" xml:space="preserve">
     <value>Products</value>
     <comment>MongoDB variable</comment>
@@ -164,5 +192,9 @@
   <data name="SqlSection" xml:space="preserve">
     <value>SQL</value>
     <comment>Environment variable</comment>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>update</value>
+    <comment>Operation</comment>
   </data>
 </root>
