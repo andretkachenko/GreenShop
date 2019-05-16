@@ -14,6 +14,7 @@
     <RepositoryType>Git</RepositoryType>
     <RootNamespace>GreenShop.Web.Bff.Shopping</RootNamespace>
     <AssemblyName>Web.Bff.Shopping.Api</AssemblyName>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
