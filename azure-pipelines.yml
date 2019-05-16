@@ -31,5 +31,5 @@ steps:
   displayName: 'Check code coverage'
   inputs:
     command: test
-    projects: '**/UnitTests/*.csproj'
+    projects: '**/*.UnitTests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
