@@ -24,6 +24,10 @@ namespace GreenShop.Web.Bff.Shopping
                 .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
             })
-                .UseStartup<Startup>();
+            .ConfigureAppConfiguration((host, config) =>
+            {
+                config.AddJsonFile("ocelot.json");
+            })
+            .UseStartup<Startup>();
     }
 }

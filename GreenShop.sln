@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D6D1E674-C612-42BF-A5EB-B1E6A9623C58}"
 EndProject
@@ -21,15 +21,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web.bff.shopping", "web.bff
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Bff.Shopping.Api", "src\gateways\web.bff.shopping\Web.Bff.Shopping.Api\Web.Bff.Shopping.Api.csproj", "{0F8F9D89-B266-46CF-8229-36388EB0D1F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Bff.Shopping.UnitTests", "src\gateways\web.bff.shopping\Web.Bff.Shopping.UnitTests\Web.Bff.Shopping.UnitTests.csproj", "{85E613EC-DC38-4968-BCAE-2727A85A2D1F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mvc", "mvc", "{98C8B8C6-D3FB-41DB-96E1-3C2D6D929977}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvc.App", "src\web\mvc\MVC.App\Mvc.App.csproj", "{AE2F2037-5361-4A26-805B-B1C2E123C350}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvc.UnitTests", "src\web\mvc\Mvc.UnitTests\Mvc.UnitTests.csproj", "{18EBFA00-4C27-45FD-8690-AAA0D58FADEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.IntegrationTests", "src\services\catalog\Catalog.IntegrationTests\Catalog.IntegrationTests.csproj", "{D946DC5C-B5FD-46D2-91B0-3F149A841B2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.IntegrationTests", "src\services\catalog\Catalog.IntegrationTests\Catalog.IntegrationTests.csproj", "{D946DC5C-B5FD-46D2-91B0-3F149A841B2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +47,6 @@ Global
 		{0F8F9D89-B266-46CF-8229-36388EB0D1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F8F9D89-B266-46CF-8229-36388EB0D1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F8F9D89-B266-46CF-8229-36388EB0D1F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{85E613EC-DC38-4968-BCAE-2727A85A2D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{85E613EC-DC38-4968-BCAE-2727A85A2D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{85E613EC-DC38-4968-BCAE-2727A85A2D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{85E613EC-DC38-4968-BCAE-2727A85A2D1F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE2F2037-5361-4A26-805B-B1C2E123C350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE2F2037-5361-4A26-805B-B1C2E123C350}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE2F2037-5361-4A26-805B-B1C2E123C350}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,7 +69,6 @@ Global
 		{AE339EF3-FED5-4D08-9C13-1C9044E21807} = {CC7868F7-BF34-46A8-934A-7CDA4885D8FD}
 		{880E7DCB-EF75-45F2-BA50-417739DC238D} = {D408927A-653E-491F-99D1-B123A7D7768B}
 		{0F8F9D89-B266-46CF-8229-36388EB0D1F5} = {880E7DCB-EF75-45F2-BA50-417739DC238D}
-		{85E613EC-DC38-4968-BCAE-2727A85A2D1F} = {880E7DCB-EF75-45F2-BA50-417739DC238D}
 		{98C8B8C6-D3FB-41DB-96E1-3C2D6D929977} = {1889F234-35DE-4096-B2F6-318E9B76238F}
 		{AE2F2037-5361-4A26-805B-B1C2E123C350} = {98C8B8C6-D3FB-41DB-96E1-3C2D6D929977}
 		{18EBFA00-4C27-45FD-8690-AAA0D58FADEA} = {98C8B8C6-D3FB-41DB-96E1-3C2D6D929977}

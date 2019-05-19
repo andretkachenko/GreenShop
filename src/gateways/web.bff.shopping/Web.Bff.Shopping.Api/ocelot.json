@@ -1,0 +1,18 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/catalog-api/categories",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44391
+        }
+      ]
+      }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:44346"
+  }
+}
