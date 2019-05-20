@@ -91,12 +91,13 @@ namespace GreenShop.Catalog.Api.Infrastructure.Products
         public async Task<bool> DeleteAsync(int id)
         {
             await _sql.Connection.ExecuteAsync(@"
-                    DELETE
-                    FROM [Products]
+                    UPDATE [Products]
+                    SET [Status] = @status
                     WHERE [Id] = @id
                 ", new
             {
-                id
+                id,
+                status = ProductStatus.Archived
             },
             transaction: Transaction);
 
@@ -119,7 +120,11 @@ namespace GreenShop.Catalog.Api.Infrastructure.Products
             {
                 query += " [Name] = @name";
             }
-            if (product.CategoryId != default(int))
+            if (!string.IsNullOrWhiteSpace(product.Name))
+            {
+                query += " [StatusCode] = @statusCode";
+            }
+            if (product.CategoryId != default)
             {
                 query += " [CategoryId] = @categoryId";
             }
@@ -138,9 +143,10 @@ namespace GreenShop.Catalog.Api.Infrastructure.Products
 
             query += " WHERE [Id] = @id";
 
-            int affectedRows = await _sql.Connection.ExecuteAsync(query, new
+            await _sql.Connection.ExecuteAsync(query, new
             {
                 id = product.Id,
+                statusCode = product.StatusCode,
                 name = product.Name,
                 parentId = product.CategoryId,
                 description = product.Description,

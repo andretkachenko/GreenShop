@@ -23,12 +23,15 @@ namespace GreenShop.Catalog.Api.Domain.Products
             Name = name;
             CategoryId = categoryId;
             Description = description;
+            StatusCode = ProductStatus.Active; 
         }
         #endregion
 
         #region Properties
         [BsonIgnore]
         public int Id { get; protected set; }
+        [BsonIgnore]
+        public char StatusCode { get; protected set; }
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string MongoId { get; protected set; }
@@ -133,10 +136,11 @@ namespace GreenShop.Catalog.Api.Domain.Products
         public bool HasSqlProperties()
         {
             return !string.IsNullOrWhiteSpace(Name)
-                    || CategoryId != default(int)
+                    || StatusCode != default
+                    || CategoryId != default
                     || !string.IsNullOrWhiteSpace(Description)
-                    || BasePrice != 0
-                    || Rating != 0;
+                    || BasePrice != default
+                    || Rating != default;
         }
         #endregion
     }

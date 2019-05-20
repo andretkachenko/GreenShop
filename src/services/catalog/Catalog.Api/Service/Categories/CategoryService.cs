@@ -12,7 +12,7 @@ namespace GreenShop.Catalog.Api.Service.Categories
     public class CategoryService : ICategoryService
     {
         private readonly IMapper _mapper;
-        private IDomainScope Scope;
+        private readonly IDomainScope Scope;
 
         public CategoryService(IMapper mapper, IDomainScope unitOfWork)
         {
