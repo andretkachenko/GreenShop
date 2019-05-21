@@ -69,12 +69,13 @@ namespace GreenShop.Catalog.Api.DataAccessor
         public async Task<bool> DeleteAsync(int id)
         {
             int affectedRows = await _sql.Connection.ExecuteAsync(@"
-                    DELETE
-                    FROM [Categories]
+                    UPDATE [Categories]
+                    SET [StatusCode] = @status 
                     WHERE [Id] = @id
                 ", new
             {
-                id
+                id,
+                status = CategoryStatus.Archived
             }, transaction: Transaction);
 
             return affectedRows == 1;
@@ -92,11 +93,15 @@ namespace GreenShop.Catalog.Api.DataAccessor
                     SET
                 ";
 
+            if(categoryDto.StatusCode != default)
+            {
+                query += " [StatusCode] = @statusCode";
+            }
             if (!string.IsNullOrWhiteSpace(categoryDto.Name))
             {
                 query += " [Name] = @name";
             }
-            if (categoryDto.ParentCategoryId != default(int))
+            if (categoryDto.ParentCategoryId != default)
             {
                 query += " [ParentCategoryId] = @parentId";
             }
@@ -107,7 +112,8 @@ namespace GreenShop.Catalog.Api.DataAccessor
             {
                 id = categoryDto.Id,
                 name = categoryDto.Name,
-                parentId = categoryDto.ParentCategoryId
+                parentId = categoryDto.ParentCategoryId,
+                statusCode = categoryDto.StatusCode
             }, transaction: Transaction);
 
             return affectedRows == 1;

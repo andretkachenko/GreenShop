@@ -16,17 +16,20 @@ namespace GreenShop.Catalog.Api.Domain.Categories
         public Category(string name)
         {
             Name = name;
+            StatusCode = CategoryStatus.Active;
         }
 
         public Category(string name, int parentId)
         {
             Name = name;
             ParentCategoryId = parentId;
+            StatusCode = CategoryStatus.Active;
         }
         #endregion
 
         #region Properties
         public int Id { get; protected set; }
+        public char StatusCode { get; protected set; }
         public string Name { get; protected set; }
         public int ParentCategoryId { get; protected set; }
         [Write(false)]
