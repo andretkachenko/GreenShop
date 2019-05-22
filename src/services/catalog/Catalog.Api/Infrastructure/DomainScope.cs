@@ -35,6 +35,9 @@ namespace GreenShop.Catalog.Api.Infrastructure
             Comments = comments;
         }
 
+        /// <summary>
+        /// Start Transactions in SQL and Mongo databases
+        /// </summary>
         public void Begin()
         {
             SqlContext.Connection.Open();
@@ -47,12 +50,18 @@ namespace GreenShop.Catalog.Api.Infrastructure
             CategoryRepository.SetSqlTransaction(SqlTransaction);
         }
 
+        /// <summary>
+        /// Persist changes made inside the current transaction to the SQL and Mongo databases
+        /// </summary>
         public void Commit()
         {
             SqlTransaction.Commit();
             MongoSession.CommitTransactionAsync();
         }
 
+        /// <summary>
+        /// Revert changes that were made throughout the current transaction
+        /// </summary>
         public void Rollback()
         {
             SqlTransaction.Rollback();
