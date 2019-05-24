@@ -50,6 +50,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <LangVersion>7.3</LangVersion>
+    <DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>444dfff0-9709-4b53-8749-110ff914102e</UserSecretsId>
   </PropertyGroup>
 
 </Project>

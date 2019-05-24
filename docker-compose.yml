@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  nosql.data:
+    image: mongo
+
+  sql.data:
+    image: microsoft/mssql-server-linux:2017-latest
+
+  catalog.api:
+    image: ${REGISTRY:-greenShop}/catalog.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/services/catalog/Catalog.Api/Dockerfile
+    depends_on:
+      - sql.data
+      - nosql.data
+
+  wbs.gateway:
+    image: ${REGISTRY:-greenShop}/wbs.gateway:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/gateways/web.bff.shopping/Web.Bff.Shopping.Api/Dockerfile
+    depends_on:
+      - nosql.data
+      - sql.data
+      - catalog.api
+
+  mvc.app:
+    image: ${REGISTRY:-greenShop}/mvc.app:${TAG:-latest}
+    build:
+      context: -
+      dockerfile: src/web/mvc/MVC.App/Dockerfile
+    depends_on:
+      - wbs.gateway
