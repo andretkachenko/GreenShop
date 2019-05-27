@@ -1,6 +1,7 @@
 ﻿using GreenShop.Catalog.Api.Properties;
 using GreenShop.Catalog.Api.Service.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,10 +14,13 @@ namespace GreenShop.Catalog.Api.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        private readonly ILogger<ProductsController> _logger;
         private readonly IProductService _productsService;
 
-        public ProductsController(IProductService productsService)
+        public ProductsController(ILogger<ProductsController> logger,
+            IProductService productsService)
         {
+            _logger = logger;
             _productsService = productsService;
         }
 
@@ -40,11 +44,16 @@ namespace GreenShop.Catalog.Api.Controllers
             try
             {
                 IEnumerable<ProductDto> products = await _productsService.GetAllAsync();
-                if (products == null) throw new ArgumentNullException();
+                if (products == null)
+                {
+                    _logger.LogError(Resources.EntityNotFound);
+                    throw new ArgumentNullException();
+                }
                 return Ok(products);
             }
-            catch (ArgumentNullException)
+            catch (ArgumentNullException e)
             {
+                _logger.LogError(e.Message);
                 return NotFound();
             }
         }
@@ -70,11 +79,16 @@ namespace GreenShop.Catalog.Api.Controllers
             try
             {
                 ProductDto product = await _productsService.GetAsync(id);
-                if (product == null) throw new ArgumentNullException();
+                if (product == null)
+                {
+                    _logger.LogError(Resources.EntityNotFound);
+                    throw new ArgumentNullException();
+                }
                 return Ok(product);
             }
-            catch (ArgumentNullException)
+            catch (ArgumentNullException e)
             {
+                _logger.LogError(e.Message);
                 return NotFound();
             }
         }
@@ -124,8 +138,9 @@ namespace GreenShop.Catalog.Api.Controllers
                 // Location → .../api/Products/4
                 return CreatedAtAction("GetProductAsync", new { id }, id);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return BadRequest();
             }
         }
@@ -165,7 +180,9 @@ namespace GreenShop.Catalog.Api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, string.Format(Resources.FailureResponse, Resources.Update, Resources.Product, e.Message));
+                string errorMessage = string.Format(Resources.FailureResponse, Resources.Update, Resources.Product, e.Message);
+                _logger.LogError(errorMessage);
+                return StatusCode(500, errorMessage);
             }
         }
 
@@ -199,7 +216,9 @@ namespace GreenShop.Catalog.Api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, string.Format(Resources.FailureResponse, Resources.Delete, Resources.Product, e.Message));
+                string errorMessage = string.Format(Resources.FailureResponse, Resources.Delete, Resources.Product, e.Message);
+                _logger.LogError(errorMessage);
+                return StatusCode(500, errorMessage);
             }
         }
     }
