@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
@@ -59,6 +61,16 @@ namespace GreenShop.Catalog.Api
                     .Services
                     .AddMvc()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            var elasticUri = Configuration["ElasticConfiguration:Uri"];
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
+                {
+                    AutoRegisterTemplate = true,
+                })
+            .CreateLogger();
 
             // Dependency injection block
             InjectDependencies(services);
