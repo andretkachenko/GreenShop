@@ -17,9 +17,9 @@ steps:
   displayName: 'Install .Net Core 2.2 SDK'
   inputs:
     version: '2.2.101'
-- script: dotnet restore
+- script: dotnet restore GreenShop.sln
   displayName: 'Restore NuGet packages'
-- script: dotnet build --configuration $(buildConfiguration)
+- script: dotnet build --configuration $(buildConfiguration) GreenShop.sln
   displayName: 'Make $(buildConfiguration) build'
 - task: DotNetCoreCLI@2
   displayName: 'Run Tests'
