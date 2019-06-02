@@ -1,0 +1,38 @@
+version: '3.4'
+services:
+  nosql.data:
+    image: mongo
+  sql.data:
+    image: microsoft/mssql-server-linux:2017-latest
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: elasticsearch
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.4
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+  catalog.api:
+    image: greenshop/catalog.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/services/catalog/Catalog.Api/Dockerfile
+    depends_on:
+      - sql.data
+      - nosql.data
+  wbs.gateway:
+    image: greenshop/wbs.gateway:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/gateways/web.bff.shopping/Web.Bff.Shopping.Api/Dockerfile
+    depends_on:
+      - nosql.data
+      - sql.data
+      - catalog.api
+  mvc.app:
+    image: greenshop/mvc.app:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: F:/GreenShop/src/web/mvc/MVC.App/Dockerfile
+    depends_on:
+      - wbs.gateway

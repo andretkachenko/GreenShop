@@ -1,0 +1,69 @@
+﻿@using GreenShop.Web.Mvc.App.ViewModels.Catalog
+@model ProductViewModel
+@{
+    ViewData["Title"] = Model.Product.Name;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<ul>
+    <li>
+        @Model.Product.Description
+    </li>
+    <li>
+        Rating: @Model.Product.Rating
+    </li>
+    <li>
+        Base Price: @Model.Product.BasePrice
+    </li>
+    @if (Model.Product.Category != null && !string.IsNullOrWhiteSpace(Model.Product.Category.Name))
+    {
+        <li>
+            Category: @Html.ActionLink(Model.Product.Category.Name, "Category", "Catalog", new { id = Model.Product.CategoryId }, null)
+        </li>
+    }
+    @if (Model.Product.Specifications != null && Model.Product.Specifications.Any())
+    {
+        <li>
+            Specifications:
+            <ul>
+                @foreach (var specification in Model.Product.Specifications)
+                {
+                    <li>
+                        @specification.Name
+                    </li>
+                    <li>
+                        Max allowed: @specification.MaxSelectionAvailable
+                    </li>
+                    @if (specification.Options != null && specification.Options.Any())
+                    {
+                        <li>
+                            Possible options:<br />
+                            <ul>
+                                @foreach (var option in specification.Options)
+                                {
+                                    <li>
+                                        @option
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+            </ul>
+        </li>
+    }
+    <li>
+        Comments:
+        <ul>
+            @foreach (var comment in Model.Product.Comments)
+            {
+                <il>
+                    Message: @comment.Message
+                </il>
+            }
+
+        </ul>
+    </li>
+</ul>
+

@@ -342,3 +342,8 @@ ASALocalRun/
 appsettings.[Dd]evelopment.json
 appsettings.[Ss]taging.json
 appsettings.[Pp]roduction.json
+appsettings.[Dd]ocker.json
+
+# Health Check Database
+healthchecksdb
+*.original

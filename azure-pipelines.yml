@@ -7,25 +7,29 @@ trigger:
 - master
 
 pool:
-  vmImage: 'vs2017-win2016'
+  vmImage: 'windows-2019'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet restore
+- task: DotNetCoreInstaller@0
+  displayName: 'Install .Net Core 2.2 SDK'
+  inputs:
+    version: '2.2.101'
+- script: dotnet restore GreenShop.sln
   displayName: 'Restore NuGet packages'
-- script: dotnet build --configuration $(buildConfiguration)
+- script: dotnet build --configuration $(buildConfiguration) GreenShop.sln
   displayName: 'Make $(buildConfiguration) build'
 - task: DotNetCoreCLI@2
   displayName: 'Run Tests'
   inputs:
     command: test
-    projects: '**/UnitTests/*.csproj'
+    projects: '**/*.UnitTests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
   displayName: 'Check code coverage'
   inputs:
     command: test
-    projects: '**/UnitTests/*.csproj'
+    projects: '**/*.UnitTests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
