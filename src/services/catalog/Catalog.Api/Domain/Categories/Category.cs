@@ -1,4 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
+using System;
 
 namespace GreenShop.Catalog.Api.Domain.Categories
 {
@@ -43,6 +44,8 @@ namespace GreenShop.Catalog.Api.Domain.Categories
         /// <param name="newName">New Name for the Category</param>
         public void ChangeCategoryName(string newName)
         {
+            if (string.IsNullOrWhiteSpace(newName)) throw new ArgumentNullException("New Name");
+
             Name = newName;
         }
 
