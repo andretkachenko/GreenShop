@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -62,6 +63,7 @@ namespace GreenShop.Catalog.Api.Domain.Products
         /// <param name="newRating">New rating value</param>
         public void UpdateRating(float newRating)
         {
+            if (newRating < 0) throw new ArgumentException("New Rating Value");
             Rating = newRating;
         }
 
