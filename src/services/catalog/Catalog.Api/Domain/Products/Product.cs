@@ -73,6 +73,7 @@ namespace GreenShop.Catalog.Api.Domain.Products
         /// <param name="newDescription">New Description</param>
         public void UpdateDescription(string newDescription)
         {
+            if (string.IsNullOrWhiteSpace(newDescription)) throw new ArgumentNullException("New Description");
             Description = newDescription;
         }
 
