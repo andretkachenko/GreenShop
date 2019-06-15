@@ -92,6 +92,7 @@ namespace GreenShop.Catalog.Api.Domain.Products
         /// <param name="newCategoryId">ID of the new Category</param>
         public void ChangeCategory(int newCategoryId)
         {
+            if (newCategoryId < 1) throw new ArgumentException("New Category ID");
             CategoryId = newCategoryId;
         }
 
