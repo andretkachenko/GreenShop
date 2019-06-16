@@ -102,6 +102,7 @@ namespace GreenShop.Catalog.Api.Domain.Products
         /// <param name="specifications">Updated list of Specifcations</param>
         public void UpdateSpecifications(IEnumerable<Specification> specifications)
         {
+            if (specifications == null) throw new ArgumentNullException("Specification List");
             Specifications = specifications;
         }
 
