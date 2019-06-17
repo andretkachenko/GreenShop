@@ -51,7 +51,7 @@ namespace GreenShop.Catalog.Api.Domain.Products
         public int CategoryId { get; protected set; }
 
         [Write(false), JsonIgnore, BsonIgnore]
-        public IEnumerable<Comment> Comments { get; set; }
+        public List<Comment> Comments { get; set; }
         [BsonElement("specifications"), Write(false)]
         public IEnumerable<Specification> Specifications { get; set; }
         #endregion
@@ -102,18 +102,29 @@ namespace GreenShop.Catalog.Api.Domain.Products
         /// <param name="specifications">Updated list of Specifcations</param>
         public void UpdateSpecifications(IEnumerable<Specification> specifications)
         {
-            if (specifications == null) throw new ArgumentNullException("Specification List");
-            Specifications = specifications;
+            Specifications = specifications ?? throw new ArgumentNullException("Specification List");
         }
 
         /// <summary>
         /// Add Comment to the Product
         /// </summary>
         /// <param name="comment">New Comment to add to the Product's Comment list.</param>
-        public void AddComment(Comment comment)
+        protected void AddComment(Comment comment)
         {
             if (Comments == null) Comments = new List<Comment>();
-            Comments.ToList().Add(comment);
+            Comments.Add(comment);
+        }
+
+        /// <summary>
+        /// Add Comment to the Product
+        /// </summary>
+        /// <param name="authorId">Id of the Author of the Comment</param>
+        /// <param name="message">Actual message</param>
+        public void AddComment(int authorId, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException("Message");
+            Comment comment = new Comment(authorId, message, Id);
+            AddComment(comment);
         }
 
         /// <summary>

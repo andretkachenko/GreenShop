@@ -47,7 +47,7 @@ namespace GreenShop.Catalog.Api.Service.Products
                 {
                     if(commentsDict.ContainsKey(product.Id))
                     {
-                        product.Comments = commentsDict[product.Id];
+                        product.Comments = commentsDict[product.Id]?.ToList();
                     }                    
                 }
 
@@ -81,7 +81,7 @@ namespace GreenShop.Catalog.Api.Service.Products
                 await Task.WhenAll(taskList);
 
                 Product product = MergeProduct(sqlGetTask.Result, mongoGetTask.Result);
-                product.Comments = getCommentsTask.Result;
+                product.Comments = getCommentsTask.Result?.ToList();
 
                 ProductDto result = _mapper.Map<Product, ProductDto>(product);
                 return result;
@@ -105,24 +105,8 @@ namespace GreenShop.Catalog.Api.Service.Products
                 product.UpdateRating(productDto.Rating);
                 product.SetMongoId(MongoHelper.GenerateMongoId());
 
-                if (productDto.Specifications != null && productDto.Specifications.Count() > 0)
-                {
-                    List<Specification> specs = new List<Specification>();
-                    foreach (SpecificationDto specDto in productDto.Specifications)
-                    {
-                        specs.Add(new Specification(specDto.Name, specDto.MaxSelectionAvailable, specDto.Options));
-                    }
-                    product.UpdateSpecifications(specs);
-                }
-
-                if (productDto.Comments != null && productDto.Comments.Count() > 0)
-                {
-                    foreach (CommentDto commentDto in productDto.Comments)
-                    {
-                        Comment comment = new Comment(commentDto.AuthorId, commentDto.Message, commentDto.ProductId);
-                        product.AddComment(comment);
-                    }
-                }
+                AddSpecificationsFromDtoList(product, productDto.Specifications);
+                AddCommentsFromDtoList(product, productDto.Comments);
 
                 try
                 {
@@ -169,24 +153,8 @@ namespace GreenShop.Catalog.Api.Service.Products
                 product.UpdateRating(productDto.Rating);
                 product.SetMongoId(MongoHelper.GenerateMongoId());
 
-                if (productDto.Specifications != null && productDto.Specifications.Count() > 0)
-                {
-                    List<Specification> specs = new List<Specification>();
-                    foreach (SpecificationDto specDto in productDto.Specifications)
-                    {
-                        specs.Add(new Specification(specDto.Name, specDto.MaxSelectionAvailable, specDto.Options));
-                    }
-                    product.UpdateSpecifications(specs);
-                }
-
-                if (productDto.Comments != null && productDto.Comments.Count() > 0)
-                {
-                    foreach (CommentDto commentDto in productDto.Comments)
-                    {
-                        Comment comment = new Comment(commentDto.AuthorId, commentDto.Message, commentDto.ProductId);
-                        product.AddComment(comment);
-                    }
-                }
+                AddSpecificationsFromDtoList(product, productDto.Specifications);
+                AddCommentsFromDtoList(product, productDto.Comments);
 
                 bool sqlTaskNeeded = product.HasSqlProperties();
                 bool mongoTaskNeeded = product.HasMongoProperties();
@@ -389,6 +357,30 @@ namespace GreenShop.Catalog.Api.Service.Products
             sqlProduct.Specifications = mongoProduct.Specifications;
 
             return sqlProduct;
+        }
+
+        private void AddCommentsFromDtoList(Product product, IEnumerable<CommentDto> commentDtos)
+        {
+            if (commentDtos != null && commentDtos.Count() > 0)
+            {
+                foreach (CommentDto commentDto in commentDtos)
+                {
+                    product.AddComment(commentDto.AuthorId, commentDto.Message);
+                }
+            }
+        }
+
+        private void AddSpecificationsFromDtoList(Product product, IEnumerable<SpecificationDto> specificationDtos)
+        {
+            if (specificationDtos != null && specificationDtos.Count() > 0)
+            {
+                List<Specification> specs = new List<Specification>();
+                foreach (SpecificationDto specDto in specificationDtos)
+                {
+                    specs.Add(new Specification(specDto.Name, specDto.MaxSelectionAvailable, specDto.Options));
+                }
+                product.UpdateSpecifications(specs);
+            }
         }
     }
 }
