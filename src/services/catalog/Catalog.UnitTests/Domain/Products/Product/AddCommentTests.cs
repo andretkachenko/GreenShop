@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using Target = GreenShop.Catalog.Api.Domain.Products.Product;
+using CommentSUT = GreenShop.Catalog.Api.Domain.Products.Comment;
 
 namespace GreenShop.UnitTests.Domain.Products.Product
 {
@@ -21,7 +22,7 @@ namespace GreenShop.UnitTests.Domain.Products.Product
 
             // Act
             productMock.AddComment(authorId, message);
-            Comment actualComment = productMock.Comments.First();
+            CommentSUT actualComment = productMock.Comments.First();
 
             // Assert
             Assert.AreEqual(authorId, actualComment.AuthorId);
