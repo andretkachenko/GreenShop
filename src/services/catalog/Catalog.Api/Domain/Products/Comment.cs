@@ -1,4 +1,6 @@
-﻿namespace GreenShop.Catalog.Api.Domain.Products
+﻿using System;
+
+namespace GreenShop.Catalog.Api.Domain.Products
 {
     public class Comment : IEntity
     {
@@ -33,6 +35,8 @@
         /// <returns>Result flag</returns>
         public void UpdateMessage(string newMessage)
         {
+            if (string.IsNullOrWhiteSpace(newMessage)) throw new ArgumentException("Update Message");
+
             Message = newMessage;
         }
         #endregion
